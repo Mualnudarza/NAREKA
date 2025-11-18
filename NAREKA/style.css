@@ -1,0 +1,130 @@
+/* --- 1. Pengaturan Dasar & Body --- */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding-top: 130px; /* Tambahkan padding agar konten tidak tertutup header fixed */
+    max-width: 100%; 
+    background-color: white; /* Latar belakang body putih */
+    color: #333;
+}
+
+/* --- 2. Styling Header Utama (Posisi dan Dimensi Fix) --- */
+header {
+    /* Posisi Tetap: Atas = 61px */
+    position: fixed; 
+    top: 61px; 
+    left: 0;
+    right: 0;
+    z-index: 1000; 
+    
+    background-color: white; 
+    /* Hilangkan box-shadow agar lebih bersih seperti gambar, atau gunakan box-shadow tipis jika perlu */
+    /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); */
+    height: 54px; /* H = 54 */
+}
+
+/* --- 3. Container Pembatas Dimensi Header (W = 1418.6) --- */
+.header-container {
+    width: 1418.6px; 
+    height: 54px; 
+    
+    /* Posisi: Kiri = 251, Kanan = 251 (Menggunakan margin: auto agar benar-benar di tengah jika layout 1920) */
+    margin: 0 auto; 
+    
+    display: flex;
+    justify-content: space-between; /* Untuk memisahkan Logo (Kiri) dan Navigasi/Tombol (Kanan) */
+    align-items: center; 
+}
+
+
+/* --- 4. Logo (Sisi Kiri, Panjang 330) --- */
+.logo {
+    width: 330px; /* Panjang 330 */
+    /* Menggunakan Flexbox untuk menengahkan logo secara vertikal di dalam area 54px */
+    display: flex;
+    align-items: center;
+    height: 54px;
+}
+
+.logo img {
+    /* Pastikan gambar logo tidak melebihi tinggi header */
+    max-height: 100%; 
+    /* Sesuaikan width atau height gambar logo agar sesuai dengan lebar 330px yang dialokasikan */
+    width: auto; 
+}
+
+
+/* --- 5. Area Navigasi & Tombol (Sisi Kanan) --- */
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex; 
+    align-items: center;
+    /* Jarak 65px ke link pertama: kita atur margin-left di .btn-cv */
+}
+
+/* Jarak antar elemen link sebesar 13px */
+nav ul li {
+    margin-right: 13px;
+}
+
+/* Aturan Jarak 65px ke link pertama (dari logo) di Flexbox akan terpenuhi karena space-between */
+/* Jarak 65px antara link terakhir dan tombol CV akan kita atur pada tombol CV */
+
+nav ul li a {
+    color: #333; /* Warna teks gelap */
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500; /* Dibuat sedikit tebal agar mirip gambar */
+    padding: 5px 0;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #FF6300; /* Efek hover warna tombol */
+}
+
+
+/* --- 6. Tombol Unduh CV --- */
+.btn-cv {
+    /* Jarak 54px dari link terakhir ke tombol */
+    margin-left: 54px; 
+    
+    /* Warna tombol = FF6300 */
+    background-color: #FF6300;
+    color: white;
+    
+    /* Dimensi: panjang = 191.6, tinggi = 54 */
+    width: 191.6px;
+    height: 54px; 
+    
+    display: flex; /* Gunakan flex untuk menengahkan teks */
+    justify-content: center;
+    align-items: center;
+    
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 4px;
+    flex-shrink: 0; 
+}
+
+.btn-cv:hover {
+    opacity: 0.9;
+}
+
+/* Styling Main dan Footer agar konten tidak menempel */
+main {
+    padding: 20px 251px; /* Padding samping agar konten mengikuti batas header */
+    max-width: 1920px;
+    margin: 0 auto;
+}
+
+footer {
+    text-align: center;
+    padding: 1em 0;
+    background-color: #333;
+    color: white;
+    margin-top: 50px;
+}
