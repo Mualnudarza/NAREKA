@@ -2205,7 +2205,7 @@
                 alert('Mohon lengkapi nama, email, dan pesan terlebih dahulu.');
                 return;
             }
-            const mailtoLink = `darwanzaalif@gmail.com?subject=${encodeURIComponent(subject || 'Pesan dari NAREKA Website')}&body=${encodeURIComponent('Dari: ' + name + ' (' + email + ')\n\n' + msg)}`;
+            const mailtoLink = `mailto:darwanzaalif@gmail.com?subject=${encodeURIComponent(subject || 'Pesan dari NAREKA Website')}&body=${encodeURIComponent('Dari: ' + name + ' (' + email + ')\n\n' + msg)}`;
             window.location.href = mailtoLink;
         }
         /* --- PROJECT CAROUSEL NAVIGATION --- */
