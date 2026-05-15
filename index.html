@@ -652,12 +652,106 @@
             color: rgba(255, 255, 255, .5);
         }
 
+        /* ── CAROUSEL LAYOUT ───────────────────────── */
+        .featured-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .carousel-nav {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .nav-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .15);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all .3s var(--ease);
+        }
+
+        .nav-btn:hover {
+            background: var(--cyan);
+            color: var(--navy);
+            border-color: var(--cyan);
+            transform: scale(1.05);
+        }
+
+        .nav-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Memastikan hanya 1 card penuh di layar */
         .project-card {
-            margin-top: 56px;
+            flex: 0 0 100%;
+            scroll-snap-align: center;
             background: rgba(255, 255, 255, .04);
             border: 1px solid rgba(255, 255, 255, .09);
             border-radius: 20px;
             overflow: hidden;
+        }
+
+        /* Responsif untuk HP agar tombol pindah ke bawah teks */
+        @media (max-width: 768px) {
+            .featured-header-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .carousel-nav {
+                margin-top: 20px;
+                margin-bottom: 0;
+            }
+        }
+
+        /* Menyembunyikan Scrollbar tapi tetap bisa di-scroll */
+        .projects-wrapper {
+            display: flex;
+            gap: 24px;
+            overflow-x: auto;
+            margin-top: 40px;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            /* Animasi geser mulus */
+
+            /* Sembunyikan scrollbar */
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* IE/Edge */
+        }
+
+        /* Kustomisasi scrollbar horizontal untuk Chrome/Safari/Edge */
+        .projects-wrapper::-webkit-scrollbar {
+            display: none;
+            /* Chrome/Safari/Edge */
+        }
+
+        .projects-wrapper::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, .05);
+            border-radius: 10px;
+        }
+
+        .projects-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(125, 211, 252, .4);
+            /* Menggunakan warna cyan dengan opacity */
+            border-radius: 10px;
+        }
+
+        .projects-wrapper::-webkit-scrollbar-thumb:hover {
+            background: rgba(125, 211, 252, .8);
         }
 
         .project-header {
@@ -1616,74 +1710,170 @@
                 <div class="section-label-line"></div>
                 <span class="section-label-text">Featured Project</span>
             </div>
-            <h2 class="section-heading">Proyek Unggulan</h2>
-            <p class="section-sub">Dokumentasi lengkap proses analisis dan rekomendasi bisnis berbasis data.</p>
-
-            <div class="project-card">
-                <div class="project-header">
-                    <div>
-                        <div class="project-badge">Capstone Project · RevoU Tech Academy</div>
-                        <h3 class="project-title">Analisis Cancellation Rate<br>E-Commerce Pakistan</h3>
-                        <p class="project-scope">Data Analytics &amp; Generative AI · 2024</p>
-                    </div>
-                    <div class="project-status">Live Documentation</div>
+            <div class="featured-header-row">
+                <div>
+                    <h2 class="section-heading">Proyek Unggulan</h2>
+                    <p class="section-sub">Dokumentasi lengkap proses analisis dan rekomendasi bisnis berbasis data.</p>
                 </div>
-
-                <div class="project-metrics">
-                    <div class="metric">
-                        <div class="metric-val"><em>28,39%</em></div>
-                        <div class="metric-label">Cancellation Rate</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-val">450<em>K+</em></div>
-                        <div class="metric-label">Rows Dataset</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-val">2<em>yr</em></div>
-                        <div class="metric-label">Data Period</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-val"><em>3</em></div>
-                        <div class="metric-label">Key Insights</div>
-                    </div>
-                </div>
-
-                <div class="project-body">
-                    <div>
-                        <div class="project-section-title">Key Business Insights</div>
-                        <ul class="insight-list">
-                            <li>Pola cancellation tertinggi terjadi pada metode pembayaran Cash on Delivery —
-                                menunjukkan friction pada proses konfirmasi</li>
-                            <li>Kategori produk tertentu memiliki cancellation rate 2x lebih tinggi dari rata-rata —
-                                peluang optimasi katalog</li>
-                            <li>Tren temporal menunjukkan lonjakan cancellation pada periode promosi tertentu — sinyal
-                                ketidaksesuaian ekspektasi</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <div class="project-section-title">Metodologi & Tools</div>
-                        <div class="tool-chips" style="margin-bottom:20px">
-                            <span class="tool-chip">SQL</span>
-                            <span class="tool-chip">Power BI</span>
-                            <span class="tool-chip">Data Cleaning</span>
-                            <span class="tool-chip">EDA</span>
-                            <span class="tool-chip">Dashboard</span>
-                        </div>
-                        <div class="project-section-title">Output</div>
-                        <ul class="insight-list">
-                            <li>Dashboard monitoring cancellation trend real-time</li>
-                            <li>Business recommendation report berbasis data</li>
-                            <li>Dokumentasi proses analitik end-to-end</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="project-footer">
-                    <a class="btn-project" href="/projects/cancellation-rate-ecommerce">
-                        Lihat Dokumentasi Lengkap →
-                    </a>
+                <div class="carousel-nav">
+                    <button class="nav-btn prev-btn" aria-label="Proyek Sebelumnya">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                    <button class="nav-btn next-btn" aria-label="Proyek Selanjutnya">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
                 </div>
             </div>
+
+            <!-- Container Baru untuk Scroll Horizontal -->
+            <div class="projects-wrapper">
+
+                <!-- Card Proyek 1 -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <div>
+                            <div class="project-badge">Capstone Project · RevoU Tech Academy</div>
+                            <h3 class="project-title">Analisis Cancellation Rate<br>E-Commerce Pakistan</h3>
+                            <p class="project-scope">Data Analytics &amp; Generative AI · 2024</p>
+                        </div>
+                        <div class="project-status">Live Documentation</div>
+                    </div>
+
+                    <div class="project-metrics">
+                        <div class="metric">
+                            <div class="metric-val"><em>28,39%</em></div>
+                            <div class="metric-label">Cancellation Rate</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-val">450<em>K+</em></div>
+                            <div class="metric-label">Rows Dataset</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-val">2<em>yr</em></div>
+                            <div class="metric-label">Data Period</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-val"><em>3</em></div>
+                            <div class="metric-label">Key Insights</div>
+                        </div>
+                    </div>
+
+                    <div class="project-body">
+                        <div>
+                            <div class="project-section-title">Key Business Insights</div>
+                            <ul class="insight-list">
+                                <li>Pola cancellation tertinggi terjadi pada metode pembayaran Cash on Delivery —
+                                    menunjukkan friction pada proses konfirmasi</li>
+                                <li>Kategori produk tertentu memiliki cancellation rate 2x lebih tinggi dari rata-rata —
+                                    peluang optimasi katalog</li>
+                                <li>Tren temporal menunjukkan lonjakan cancellation pada periode promosi tertentu —
+                                    sinyal ketidaksesuaian ekspektasi</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="project-section-title">Metodologi & Tools</div>
+                            <div class="tool-chips" style="margin-bottom:20px">
+                                <span class="tool-chip">SQL</span>
+                                <span class="tool-chip">Power BI</span>
+                                <span class="tool-chip">Data Cleaning</span>
+                                <span class="tool-chip">EDA</span>
+                                <span class="tool-chip">Dashboard</span>
+                            </div>
+                            <div class="project-section-title">Output</div>
+                            <ul class="insight-list">
+                                <li>Dashboard monitoring cancellation trend real-time</li>
+                                <li>Business recommendation report berbasis data</li>
+                                <li>Dokumentasi proses analitik end-to-end</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="project-footer">
+                        <a class="btn-project" href="/projects/cancellation-rate-ecommerce">
+                            Lihat Dokumentasi Lengkap →
+                        </a>
+                    </div>
+                </div>
+                <!-- Akhir Card Proyek 1 -->
+
+                <!-- Card Proyek 1 -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <div>
+                            <div class="project-badge">Capstone Project · RevoU Tech Academy</div>
+                            <h3 class="project-title">Analisis Cancellation Rate<br>E-Commerce Pakistan</h3>
+                            <p class="project-scope">Data Analytics &amp; Generative AI · 2024</p>
+                        </div>
+                        <div class="project-status">Live Documentation</div>
+                    </div>
+
+                    <div class="project-metrics">
+                        <div class="metric">
+                            <div class="metric-val"><em>28,39%</em></div>
+                            <div class="metric-label">Cancellation Rate</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-val">450<em>K+</em></div>
+                            <div class="metric-label">Rows Dataset</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-val">2<em>yr</em></div>
+                            <div class="metric-label">Data Period</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-val"><em>3</em></div>
+                            <div class="metric-label">Key Insights</div>
+                        </div>
+                    </div>
+
+                    <div class="project-body">
+                        <div>
+                            <div class="project-section-title">Key Business Insights</div>
+                            <ul class="insight-list">
+                                <li>Pola cancellation tertinggi terjadi pada metode pembayaran Cash on Delivery —
+                                    menunjukkan friction pada proses konfirmasi</li>
+                                <li>Kategori produk tertentu memiliki cancellation rate 2x lebih tinggi dari rata-rata —
+                                    peluang optimasi katalog</li>
+                                <li>Tren temporal menunjukkan lonjakan cancellation pada periode promosi tertentu —
+                                    sinyal ketidaksesuaian ekspektasi</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="project-section-title">Metodologi & Tools</div>
+                            <div class="tool-chips" style="margin-bottom:20px">
+                                <span class="tool-chip">SQL</span>
+                                <span class="tool-chip">Power BI</span>
+                                <span class="tool-chip">Data Cleaning</span>
+                                <span class="tool-chip">EDA</span>
+                                <span class="tool-chip">Dashboard</span>
+                            </div>
+                            <div class="project-section-title">Output</div>
+                            <ul class="insight-list">
+                                <li>Dashboard monitoring cancellation trend real-time</li>
+                                <li>Business recommendation report berbasis data</li>
+                                <li>Dokumentasi proses analitik end-to-end</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="project-footer">
+                        <a class="btn-project" href="/projects/cancellation-rate-ecommerce">
+                            Lihat Dokumentasi Lengkap →
+                        </a>
+                    </div>
+                </div>
+                <!-- Akhir Card Proyek 1 -->
+
+
+            </div>
+            <!-- Akhir Container -->
+
         </div>
     </section>
 
@@ -2015,8 +2205,26 @@
                 alert('Mohon lengkapi nama, email, dan pesan terlebih dahulu.');
                 return;
             }
-            const mailtoLink = `mailto:alif@example.com?subject=${encodeURIComponent(subject || 'Pesan dari NAREKA Website')}&body=${encodeURIComponent('Dari: ' + name + ' (' + email + ')\n\n' + msg)}`;
+            const mailtoLink = `darwanzaalif@gmail.com?subject=${encodeURIComponent(subject || 'Pesan dari NAREKA Website')}&body=${encodeURIComponent('Dari: ' + name + ' (' + email + ')\n\n' + msg)}`;
             window.location.href = mailtoLink;
+        }
+        /* --- PROJECT CAROUSEL NAVIGATION --- */
+        const wrapper = document.querySelector('.projects-wrapper');
+        const prevBtn = document.querySelector('.prev-btn');
+        const nextBtn = document.querySelector('.next-btn');
+
+        if (wrapper && prevBtn && nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                const cardWidth = wrapper.querySelector('.project-card').offsetWidth;
+                const gap = 24; // Sesuai dengan nilai gap di CSS
+                wrapper.scrollBy({ left: cardWidth + gap, behavior: 'smooth' });
+            });
+
+            prevBtn.addEventListener('click', () => {
+                const cardWidth = wrapper.querySelector('.project-card').offsetWidth;
+                const gap = 24;
+                wrapper.scrollBy({ left: -(cardWidth + gap), behavior: 'smooth' });
+            });
         }
     </script>
 
