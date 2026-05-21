@@ -1479,73 +1479,103 @@
         <div class="orb orb2" aria-hidden="true"></div>
 
         <!-- Animated Graph SVG -->
-        <svg class="hero-graph" aria-hidden="true" viewBox="0 0 420 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Animated Interactive Graph SVG -->
+        <svg class="hero-graph" id="interactive-network" aria-hidden="true" viewBox="0 0 420 360" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
             <defs>
+                <!-- Efek Glow untuk Node Utama -->
+                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="8" result="blur" />
+                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+
                 <style>
                     .g-node {
-                        fill: rgba(77, 168, 255, .08);
-                        stroke: rgba(77, 168, 255, .25);
-                        stroke-width: 1.2;
+                        fill: rgba(77, 168, 255, .1);
+                        stroke: rgba(77, 168, 255, .3);
+                        stroke-width: 1.5;
+                        transition: fill 0.3s;
+                    }
+
+                    .g-node:hover {
+                        fill: rgba(77, 168, 255, .25);
                     }
 
                     .g-node-c {
-                        fill: rgba(77, 168, 255, .18);
-                        stroke: rgba(77, 168, 255, .5);
-                        stroke-width: 1.5;
+                        fill: rgba(77, 168, 255, .25);
+                        stroke: rgba(125, 211, 252, .8);
+                        stroke-width: 2;
+                        cursor: crosshair;
                     }
 
                     .g-edge {
                         stroke: rgba(77, 168, 255, .15);
-                        stroke-width: 1;
+                        stroke-width: 1.2;
                     }
 
                     .g-edge-a {
-                        stroke: rgba(125, 211, 252, .3);
-                        stroke-width: 1.2;
-                        stroke-dasharray: 4 4;
-                        animation: dash 4s linear infinite;
+                        stroke: rgba(125, 211, 252, .4);
+                        stroke-width: 1.5;
+                        stroke-dasharray: 4 6;
+                        animation: dash 3s linear infinite;
                     }
 
                     .g-label {
-                        fill: rgba(77, 168, 255, .6);
+                        fill: rgba(77, 168, 255, .7);
                         font-family: 'JetBrains Mono', monospace;
-                        font-size: 10px;
+                        font-size: 10.5px;
+                        letter-spacing: 1px;
+                        pointer-events: none;
+                        /* Agar teks tidak mengganggu interaksi hover/kursor */
+                    }
+
+                    .g-label-c {
+                        fill: rgba(255, 255, 255, .9);
+                        font-family: 'JetBrains Mono', monospace;
+                        font-size: 11px;
+                        font-weight: 600;
+                        pointer-events: none;
                     }
 
                     @keyframes dash {
                         to {
-                            stroke-dashoffset: -16;
+                            stroke-dashoffset: -20;
                         }
                     }
                 </style>
             </defs>
-            <!-- edges -->
-            <line class="g-edge-a" x1="210" y1="180" x2="90" y2="80" />
-            <line class="g-edge-a" x1="210" y1="180" x2="330" y2="80" />
-            <line class="g-edge-a" x1="210" y1="180" x2="90" y2="280" />
-            <line class="g-edge-a" x1="210" y1="180" x2="330" y2="280" />
+
+            <!-- Static Background Edges -->
             <line class="g-edge" x1="90" y1="80" x2="330" y2="80" />
             <line class="g-edge" x1="90" y1="280" x2="330" y2="280" />
             <line class="g-edge" x1="90" y1="80" x2="90" y2="280" />
             <line class="g-edge" x1="330" y1="80" x2="330" y2="280" />
             <line class="g-edge" x1="90" y1="80" x2="210" y2="30" />
             <line class="g-edge" x1="330" y1="80" x2="210" y2="30" />
-            <!-- nodes -->
+
+            <!-- Dynamic Edges (Akan bergerak dengan JS) -->
+            <line id="dyn-line-1" class="g-edge-a" x1="210" y1="180" x2="90" y2="80" />
+            <line id="dyn-line-2" class="g-edge-a" x1="210" y1="180" x2="330" y2="80" />
+            <line id="dyn-line-3" class="g-edge-a" x1="210" y1="180" x2="90" y2="280" />
+            <line id="dyn-line-4" class="g-edge-a" x1="210" y1="180" x2="330" y2="280" />
+
+            <!-- Static Nodes -->
             <circle class="g-node" cx="90" cy="80" r="22" />
             <circle class="g-node" cx="330" cy="80" r="22" />
             <circle class="g-node" cx="90" cy="280" r="22" />
             <circle class="g-node" cx="330" cy="280" r="22" />
             <circle class="g-node" cx="210" cy="30" r="14" />
-            <circle class="g-node-c" cx="210" cy="180" r="32" />
-            <!-- labels -->
-            <text class="g-label" x="66" y="76" text-anchor="middle">REQ</text>
-            <text class="g-label" x="330" y="76" text-anchor="middle">DATA</text>
-            <text class="g-label" x="90" y="276" text-anchor="middle">BPMN</text>
-            <text class="g-label" x="330" y="276" text-anchor="middle">INSIGHT</text>
-            <text class="g-label" x="210" y="184" text-anchor="middle"
-                style="fill:rgba(77,168,255,.9);font-size:11px;font-weight:600">ANALYSIS</text>
-        </svg>
 
+            <!-- Center Dynamic Node -->
+            <circle id="center-node" class="g-node-c" cx="210" cy="180" r="32" filter="url(#glow)" />
+
+            <!-- Labels -->
+            <text class="g-label" x="90" y="84" text-anchor="middle">REQ</text>
+            <text class="g-label" x="330" y="84" text-anchor="middle">DATA</text>
+            <text class="g-label" x="90" y="284" text-anchor="middle">BPMN</text>
+            <text class="g-label" x="330" y="284" text-anchor="middle">INFO</text>
+            <text id="center-text" class="g-label-c" x="210" y="184" text-anchor="middle">ANALYSIS</text>
+        </svg>
         <div class="hero-content">
             <div class="hero-eyebrow">
                 <div class="hero-eyebrow-line"></div>
@@ -2225,6 +2255,76 @@
                 const gap = 24;
                 wrapper.scrollBy({ left: -(cardWidth + gap), behavior: 'smooth' });
             });
+        }
+
+        /* --- INTERACTIVE HERO NETWORK (CELL BEHAVIOR) --- */
+        const networkSvg = document.getElementById('interactive-network');
+        const centerNode = document.getElementById('center-node');
+        const centerText = document.getElementById('center-text');
+        const dynamicLines = [
+            document.getElementById('dyn-line-1'),
+            document.getElementById('dyn-line-2'),
+            document.getElementById('dyn-line-3'),
+            document.getElementById('dyn-line-4')
+        ];
+
+        // Titik tengah asli dari SVG
+        const baseCX = 210;
+        const baseCY = 180;
+
+        // Variabel untuk melacak posisi
+        let targetX = baseCX;
+        let targetY = baseCY;
+        let currentX = baseCX;
+        let currentY = baseCY;
+
+        // Kelembutan animasi (0.05 sampai 0.1 biasanya paling enak dilihat)
+        const easing = 0.06;
+
+        if (networkSvg && centerNode) {
+            document.addEventListener('mousemove', (e) => {
+                // Ambil koordinat kursor relatif terhadap layar
+                const windowCenterX = window.innerWidth / 2;
+                const windowCenterY = window.innerHeight / 2;
+
+                // Hitung jarak kursor dari tengah layar (dinormalisasi dari -1 ke 1)
+                const offsetX = (e.clientX - windowCenterX) / windowCenterX;
+                const offsetY = (e.clientY - windowCenterY) / windowCenterY;
+
+                // Radius maksimal pergerakan node (misal 50px ke segala arah)
+                const maxStretch = 50;
+
+                // Tentukan target koordinat baru untuk node tengah
+                targetX = baseCX + (offsetX * maxStretch);
+                targetY = baseCY + (offsetY * maxStretch);
+            });
+
+            // Fungsi animasi terus menerus
+            function animateNetwork() {
+                // Lerp (mendekatkan currentX ke targetX dengan halus)
+                currentX += (targetX - currentX) * easing;
+                currentY += (targetY - currentY) * easing;
+
+                // Update atribut SVG Node Tengah
+                centerNode.setAttribute('cx', currentX);
+                centerNode.setAttribute('cy', currentY);
+
+                // Update atribut SVG Teks Tengah (ditambah 4px agar vertikal tengah)
+                centerText.setAttribute('x', currentX);
+                centerText.setAttribute('y', currentY + 4);
+
+                // Update titik pangkal garis putus-putus (x1, y1) agar mengikuti node
+                dynamicLines.forEach(line => {
+                    line.setAttribute('x1', currentX);
+                    line.setAttribute('y1', currentY);
+                });
+
+                // Loop animasi
+                requestAnimationFrame(animateNetwork);
+            }
+
+            // Jalankan animasi
+            animateNetwork();
         }
     </script>
 
