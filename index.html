@@ -7,1575 +7,76 @@
     <title>NAREKA — Darwanza Alif</title>
     <meta name="description"
         content="Mengubah pemikiran abstrak menjadi sistem yang terstruktur dan dapat diterapkan. Portfolio & Research Ecosystem — Darwanza Alif." />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
         href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet" />
-    <style>
-        /* ── RESET & BASE ─────────────────────────────── */
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
 
-        :root {
-            --sky: #4DA8FF;
-            --navy: #0F172A;
-            --cyan: #7DD3FC;
-            --f8: #F8FAFC;
-            --cbd: #CBD5E1;
-            --slate: #64748B;
-            --white: #ffffff;
-            --ink: #1E293B;
-            --muted: #94A3B8;
-            --border: rgba(15, 23, 42, .08);
-            --border2: rgba(77, 168, 255, .15);
-            --serif: 'DM Serif Display', Georgia, serif;
-            --sans: 'Space Grotesk', sans-serif;
-            --body: 'Inter', sans-serif;
-            --mono: 'JetBrains Mono', monospace;
-            --ease: cubic-bezier(.22, .68, 0, 1.1);
-            --ease2: cubic-bezier(.4, 0, .2, 1);
-            --r: 12px;
-        }
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css" />
 
-        html {
-            scroll-behavior: smooth;
-            font-size: 16px;
-        }
-
-        body {
-            font-family: var(--body);
-            background: var(--white);
-            color: var(--ink);
-            line-height: 1.65;
-            -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-        }
-
-        ::selection {
-            background: rgba(77, 168, 255, .18);
-            color: var(--navy);
-        }
-
-        /* ── SCROLLBAR ──────────────────────────────── */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--f8);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--cbd);
-            border-radius: 3px;
-        }
-
-        /* ── UTILITY ────────────────────────────────── */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-        }
-
-        .tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-family: var(--mono);
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: .04em;
-            text-transform: uppercase;
-            color: var(--sky);
-            background: rgba(77, 168, 255, .08);
-            border: 1px solid rgba(77, 168, 255, .2);
-            padding: 4px 10px;
-            border-radius: 100px;
-        }
-
-        .tag::before {
-            content: '';
-            width: 5px;
-            height: 5px;
-            background: var(--sky);
-            border-radius: 50%;
-        }
-
-        /* ── NAV ────────────────────────────────────── */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 max(5vw, 32px);
-            height: 64px;
-            background: rgba(255, 255, 255, .72);
-            backdrop-filter: blur(20px) saturate(160%);
-            -webkit-backdrop-filter: blur(20px) saturate(160%);
-            border-bottom: 1px solid var(--border);
-            transition: box-shadow .3s;
-        }
-
-        nav.scrolled {
-            box-shadow: 0 1px 32px rgba(15, 23, 42, .06);
-        }
-
-        .nav-logo {
-            font-family: var(--sans);
-            font-weight: 700;
-            font-size: 18px;
-            color: var(--navy);
-            letter-spacing: -.02em;
-            text-decoration: none;
-        }
-
-        .nav-logo span {
-            color: var(--sky);
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 32px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            font-family: var(--body);
-            font-size: 13.5px;
-            font-weight: 400;
-            color: var(--slate);
-            text-decoration: none;
-            transition: color .2s;
-        }
-
-        .nav-links a:hover {
-            color: var(--navy);
-        }
-
-        .nav-cta {
-            font-family: var(--body);
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--sky);
-            text-decoration: none;
-            border: 1px solid rgba(77, 168, 255, .35);
-            padding: 7px 18px;
-            border-radius: 100px;
-            transition: background .2s, color .2s;
-        }
-
-        .nav-cta:hover {
-            background: var(--sky);
-            color: #fff;
-        }
-
-        /* ── HERO ───────────────────────────────────── */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 120px max(5vw, 32px) 80px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* animated grid background */
-        .hero-bg {
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            background-image:
-                linear-gradient(rgba(77, 168, 255, .04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(77, 168, 255, .04) 1px, transparent 1px);
-            background-size: 48px 48px;
-            animation: gridDrift 40s linear infinite;
-        }
-
-        @keyframes gridDrift {
-            0% {
-                background-position: 0 0, 0 0;
-            }
-
-            100% {
-                background-position: 48px 48px, 48px 48px;
-            }
-        }
-
-        /* floating orbs */
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: .18;
-            pointer-events: none;
-            animation: orbFloat 12s ease-in-out infinite;
-        }
-
-        .orb1 {
-            width: 420px;
-            height: 420px;
-            background: var(--sky);
-            top: -80px;
-            right: 10%;
-            animation-delay: 0s;
-        }
-
-        .orb2 {
-            width: 280px;
-            height: 280px;
-            background: var(--cyan);
-            bottom: 5%;
-            left: 15%;
-            animation-delay: -6s;
-        }
-
-        @keyframes orbFloat {
-
-            0%,
-            100% {
-                transform: translateY(0) scale(1);
-            }
-
-            50% {
-                transform: translateY(-30px) scale(1.06);
-            }
-        }
-
-        /* node graph decoration */
-        .hero-graph {
-            position: absolute;
-            right: max(4vw, 24px);
-            top: 50%;
-            transform: translateY(-50%);
-            width: clamp(200px, 35vw, 480px);
-            opacity: .55;
-            pointer-events: none;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 700px;
-        }
-
-        .hero-eyebrow {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 28px;
-            animation: fadeUp .8s var(--ease) both;
-        }
-
-        .hero-eyebrow-line {
-            width: 32px;
-            height: 1px;
-            background: var(--sky);
-        }
-
-        .hero-eyebrow-text {
-            font-family: var(--mono);
-            font-size: 11.5px;
-            font-weight: 500;
-            letter-spacing: .1em;
-            text-transform: uppercase;
-            color: var(--sky);
-        }
-
-        .hero-name {
-            font-family: var(--serif);
-            font-size: clamp(14px, 2vw, 18px);
-            font-weight: 400;
-            color: var(--slate);
-            margin-bottom: 12px;
-            animation: fadeUp .8s var(--ease) .1s both;
-        }
-
-        .hero-title {
-            font-family: var(--sans);
-            font-weight: 700;
-            font-size: clamp(38px, 5.5vw, 76px);
-            line-height: 1.05;
-            letter-spacing: -.03em;
-            color: var(--navy);
-            animation: fadeUp .8s var(--ease) .2s both;
-        }
-
-        .hero-title em {
-            font-style: normal;
-            color: var(--sky);
-        }
-
-        .hero-tagline {
-            margin-top: 28px;
-            font-family: var(--body);
-            font-size: clamp(16px, 1.8vw, 19px);
-            font-weight: 300;
-            line-height: 1.6;
-            color: var(--slate);
-            max-width: 540px;
-            border-left: 2px solid var(--sky);
-            padding-left: 20px;
-            animation: fadeUp .8s var(--ease) .35s both;
-        }
-
-        .hero-actions {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-top: 40px;
-            flex-wrap: wrap;
-            animation: fadeUp .8s var(--ease) .48s both;
-        }
-
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: var(--body);
-            font-size: 14px;
-            font-weight: 500;
-            color: #fff;
-            background: var(--sky);
-            padding: 12px 28px;
-            border-radius: 100px;
-            text-decoration: none;
-            border: none;
-            transition: transform .2s var(--ease), box-shadow .2s;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(77, 168, 255, .35);
-        }
-
-        .btn-primary svg {
-            width: 16px;
-            height: 16px;
-        }
-
-        .btn-ghost {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: var(--body);
-            font-size: 14px;
-            font-weight: 400;
-            color: var(--slate);
-            text-decoration: none;
-            transition: color .2s;
-        }
-
-        .btn-ghost:hover {
-            color: var(--sky);
-        }
-
-        .btn-ghost svg {
-            width: 16px;
-            height: 16px;
-        }
-
-        .hero-meta {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            margin-top: 56px;
-            animation: fadeUp .8s var(--ease) .6s both;
-        }
-
-        .hero-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .hero-meta-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--sky);
-        }
-
-        .hero-meta-text {
-            font-family: var(--mono);
-            font-size: 11px;
-            color: var(--muted);
-            letter-spacing: .05em;
-        }
-
-        /* ── SECTION SHELL ──────────────────────────── */
-        section {
-            padding: 100px max(5vw, 32px);
-        }
-
-        .section-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .section-label {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .section-label-line {
-            width: 24px;
-            height: 1px;
-            background: var(--sky);
-        }
-
-        .section-label-text {
-            font-family: var(--mono);
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: .1em;
-            text-transform: uppercase;
-            color: var(--sky);
-        }
-
-        .section-heading {
-            font-family: var(--sans);
-            font-weight: 700;
-            font-size: clamp(28px, 3.5vw, 44px);
-            line-height: 1.1;
-            letter-spacing: -.025em;
-            color: var(--navy);
-        }
-
-        .section-sub {
-            margin-top: 12px;
-            max-width: 520px;
-            font-family: var(--body);
-            font-size: 16px;
-            font-weight: 300;
-            line-height: 1.7;
-            color: var(--slate);
-        }
-
-        /* ── PHILOSOPHY SECTION ─────────────────────── */
-        .philosophy {
-            background: var(--f8);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .philosophy-grid {
-            margin-top: 56px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2px;
-        }
-
-        .phil-card {
-            background: var(--white);
-            padding: 36px 40px;
-            border: 1px solid var(--border);
-            position: relative;
-            overflow: hidden;
-            transition: box-shadow .3s;
-        }
-
-        .phil-card:hover {
-            box-shadow: 0 4px 32px rgba(77, 168, 255, .08);
-        }
-
-        .phil-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 3px;
-            height: 100%;
-            background: transparent;
-            transition: background .3s;
-        }
-
-        .phil-card:hover::after {
-            background: var(--sky);
-        }
-
-        .phil-num {
-            font-family: var(--mono);
-            font-size: 11px;
-            color: var(--sky);
-            letter-spacing: .08em;
-            margin-bottom: 16px;
-        }
-
-        .phil-title {
-            font-family: var(--sans);
-            font-weight: 600;
-            font-size: 18px;
-            color: var(--navy);
-            margin-bottom: 10px;
-        }
-
-        .phil-desc {
-            font-family: var(--body);
-            font-size: 14.5px;
-            font-weight: 300;
-            color: var(--slate);
-            line-height: 1.7;
-        }
-
-        /* ── JOURNEY / TIMELINE ─────────────────────── */
-        .timeline {
-            position: relative;
-        }
-
-        .timeline-track {
-            margin-top: 60px;
-            position: relative;
-            padding-left: 32px;
-        }
-
-        .timeline-track::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 8px;
-            bottom: 0;
-            width: 1px;
-            background: var(--border);
-        }
-
-        .tl-item {
-            position: relative;
-            margin-bottom: 48px;
-            opacity: 0;
-            transform: translateX(-12px);
-            transition: opacity .6s var(--ease2), transform .6s var(--ease2);
-        }
-
-        .tl-item.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .tl-dot {
-            position: absolute;
-            left: -36px;
-            top: 6px;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--white);
-            border: 2px solid var(--sky);
-            transition: background .3s;
-        }
-
-        .tl-item:hover .tl-dot {
-            background: var(--sky);
-        }
-
-        .tl-year {
-            font-family: var(--mono);
-            font-size: 11px;
-            color: var(--sky);
-            letter-spacing: .07em;
-            margin-bottom: 6px;
-        }
-
-        .tl-role {
-            font-family: var(--sans);
-            font-weight: 600;
-            font-size: 17px;
-            color: var(--navy);
-        }
-
-        .tl-org {
-            font-family: var(--body);
-            font-size: 13.5px;
-            color: var(--slate);
-            margin-bottom: 8px;
-        }
-
-        .tl-desc {
-            font-family: var(--body);
-            font-size: 14px;
-            font-weight: 300;
-            color: var(--slate);
-            line-height: 1.7;
-            max-width: 600px;
-        }
-
-        .tl-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 10px;
-        }
-
-        .tl-tag {
-            font-family: var(--mono);
-            font-size: 10.5px;
-            color: var(--slate);
-            border: 1px solid var(--border);
-            padding: 3px 9px;
-            border-radius: 100px;
-        }
-
-        /* ── FEATURED PROJECT ───────────────────────── */
-        .featured {
-            background: var(--navy);
-        }
-
-        .featured .section-label-text {
-            color: var(--cyan);
-        }
-
-        .featured .section-label-line {
-            background: var(--cyan);
-        }
-
-        .featured .section-heading {
-            color: var(--white);
-        }
-
-        .featured .section-sub {
-            color: rgba(255, 255, 255, .5);
-        }
-
-        /* ── CAROUSEL LAYOUT ───────────────────────── */
-        .featured-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            gap: 20px;
-            margin-top: 10px;
-        }
-
-        .carousel-nav {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .nav-btn {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, .05);
-            border: 1px solid rgba(255, 255, 255, .15);
-            color: var(--white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all .3s var(--ease);
-        }
-
-        .nav-btn:hover {
-            background: var(--cyan);
-            color: var(--navy);
-            border-color: var(--cyan);
-            transform: scale(1.05);
-        }
-
-        .nav-btn svg {
-            width: 20px;
-            height: 20px;
-        }
-
-        /* Memastikan hanya 1 card penuh di layar */
-        .project-card {
-            flex: 0 0 100%;
-            scroll-snap-align: center;
-            background: rgba(255, 255, 255, .04);
-            border: 1px solid rgba(255, 255, 255, .09);
-            border-radius: 20px;
-            overflow: hidden;
-        }
-
-        /* Responsif untuk HP agar tombol pindah ke bawah teks */
-        @media (max-width: 768px) {
-            .featured-header-row {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .carousel-nav {
-                margin-top: 20px;
-                margin-bottom: 0;
-            }
-        }
-
-        /* Menyembunyikan Scrollbar tapi tetap bisa di-scroll */
-        .projects-wrapper {
-            display: flex;
-            gap: 24px;
-            overflow-x: auto;
-            margin-top: 40px;
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
-            /* Animasi geser mulus */
-
-            /* Sembunyikan scrollbar */
-            scrollbar-width: none;
-            /* Firefox */
-            -ms-overflow-style: none;
-            /* IE/Edge */
-        }
-
-        /* Kustomisasi scrollbar horizontal untuk Chrome/Safari/Edge */
-        .projects-wrapper::-webkit-scrollbar {
-            display: none;
-            /* Chrome/Safari/Edge */
-        }
-
-        .projects-wrapper::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, .05);
-            border-radius: 10px;
-        }
-
-        .projects-wrapper::-webkit-scrollbar-thumb {
-            background: rgba(125, 211, 252, .4);
-            /* Menggunakan warna cyan dengan opacity */
-            border-radius: 10px;
-        }
-
-        .projects-wrapper::-webkit-scrollbar-thumb:hover {
-            background: rgba(125, 211, 252, .8);
-        }
-
-        .project-header {
-            padding: 40px 48px 32px;
-            border-bottom: 1px solid rgba(255, 255, 255, .06);
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 24px;
-            align-items: start;
-        }
-
-        .project-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-family: var(--mono);
-            font-size: 10.5px;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-            color: var(--cyan);
-            background: rgba(125, 211, 252, .1);
-            border: 1px solid rgba(125, 211, 252, .2);
-            padding: 4px 12px;
-            border-radius: 100px;
-            margin-bottom: 16px;
-        }
-
-        .project-badge::before {
-            content: '';
-            width: 5px;
-            height: 5px;
-            background: var(--cyan);
-            border-radius: 50%;
-        }
-
-        .project-title {
-            font-family: var(--sans);
-            font-weight: 700;
-            font-size: clamp(22px, 2.8vw, 34px);
-            line-height: 1.1;
-            letter-spacing: -.02em;
-            color: var(--white);
-        }
-
-        .project-scope {
-            font-family: var(--body);
-            font-size: 14px;
-            font-weight: 300;
-            color: rgba(255, 255, 255, .45);
-            margin-top: 10px;
-        }
-
-        .project-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: var(--mono);
-            font-size: 11px;
-            color: #4ADE80;
-            white-space: nowrap;
-        }
-
-        .project-status::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            background: #4ADE80;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1
-            }
-
-            50% {
-                opacity: .4
-            }
-        }
-
-        .project-metrics {
-            padding: 32px 48px;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1px;
-            background: rgba(255, 255, 255, .06);
-            border-bottom: 1px solid rgba(255, 255, 255, .06);
-        }
-
-        .metric {
-            padding: 20px 0;
-            text-align: center;
-        }
-
-        .metric-val {
-            font-family: var(--sans);
-            font-weight: 700;
-            font-size: clamp(22px, 2.5vw, 32px);
-            color: var(--white);
-            letter-spacing: -.02em;
-        }
-
-        .metric-val em {
-            font-style: normal;
-            color: var(--cyan);
-        }
-
-        .metric-label {
-            font-family: var(--mono);
-            font-size: 10.5px;
-            color: rgba(255, 255, 255, .35);
-            letter-spacing: .07em;
-            text-transform: uppercase;
-            margin-top: 4px;
-        }
-
-        .project-body {
-            padding: 36px 48px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-        }
-
-        .project-section-title {
-            font-family: var(--mono);
-            font-size: 11px;
-            letter-spacing: .1em;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, .3);
-            margin-bottom: 16px;
-        }
-
-        .insight-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .insight-list li {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            font-family: var(--body);
-            font-size: 14px;
-            font-weight: 300;
-            color: rgba(255, 255, 255, .65);
-            line-height: 1.6;
-        }
-
-        .insight-list li::before {
-            content: '→';
-            font-family: var(--mono);
-            color: var(--cyan);
-            flex-shrink: 0;
-            margin-top: 1px;
-        }
-
-        .tool-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .tool-chip {
-            font-family: var(--mono);
-            font-size: 11.5px;
-            color: rgba(255, 255, 255, .6);
-            border: 1px solid rgba(255, 255, 255, .12);
-            padding: 5px 14px;
-            border-radius: 100px;
-        }
-
-        .project-footer {
-            padding: 24px 48px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            border-top: 1px solid rgba(255, 255, 255, .06);
-        }
-
-        .btn-project {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: var(--body);
-            font-size: 13.5px;
-            font-weight: 500;
-            color: var(--navy);
-            background: var(--cyan);
-            padding: 10px 24px;
-            border-radius: 100px;
-            text-decoration: none;
-            transition: opacity .2s, transform .2s var(--ease);
-        }
-
-        .btn-project:hover {
-            opacity: .9;
-            transform: translateY(-1px);
-        }
-
-        /* ── ANALYSIS FRAMEWORK ─────────────────────── */
-        .framework {
-            background: var(--f8);
-        }
-
-        .bento {
-            margin-top: 56px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: auto;
-            gap: 2px;
-        }
-
-        .bento-card {
-            background: var(--white);
-            border: 1px solid var(--border);
-            padding: 32px 36px;
-            position: relative;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(16px);
-            transition: opacity .5s var(--ease2), transform .5s var(--ease2), box-shadow .3s;
-        }
-
-        .bento-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .bento-card:hover {
-            box-shadow: 0 4px 40px rgba(77, 168, 255, .1);
-        }
-
-        .bento-card.wide {
-            grid-column: span 2;
-        }
-
-        .bento-card.tall {
-            grid-row: span 2;
-        }
-
-        .bento-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: rgba(77, 168, 255, .08);
-            border: 1px solid rgba(77, 168, 255, .15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .bento-icon svg {
-            width: 18px;
-            height: 18px;
-            stroke: var(--sky);
-        }
-
-        .bento-title {
-            font-family: var(--sans);
-            font-weight: 600;
-            font-size: 16px;
-            color: var(--navy);
-            margin-bottom: 8px;
-        }
-
-        .bento-desc {
-            font-family: var(--body);
-            font-size: 13.5px;
-            font-weight: 300;
-            color: var(--slate);
-            line-height: 1.7;
-        }
-
-        .bento-badge-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 16px;
-        }
-
-        .bento-badge {
-            font-family: var(--mono);
-            font-size: 10.5px;
-            color: var(--sky);
-            background: rgba(77, 168, 255, .07);
-            border: 1px solid rgba(77, 168, 255, .15);
-            padding: 3px 10px;
-            border-radius: 100px;
-        }
-
-        /* big quote card */
-        .bento-quote {
-            font-family: var(--serif);
-            font-size: 20px;
-            font-style: italic;
-            color: var(--navy);
-            line-height: 1.5;
-        }
-
-        .bento-quote-attr {
-            margin-top: 16px;
-            font-family: var(--mono);
-            font-size: 10.5px;
-            color: var(--muted);
-            letter-spacing: .06em;
-        }
-
-        /* ── WRITING ────────────────────────────────── */
-        .writing-grid {
-            margin-top: 56px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-        }
-
-        .article-card {
-            border: 1px solid var(--border);
-            border-radius: var(--r);
-            padding: 28px 28px 24px;
-            background: var(--white);
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(12px);
-            transition: opacity .5s var(--ease2), transform .5s var(--ease2), box-shadow .3s, border-color .3s;
-        }
-
-        .article-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .article-card:hover {
-            border-color: rgba(77, 168, 255, .3);
-            box-shadow: 0 4px 32px rgba(77, 168, 255, .08);
-        }
-
-        .article-cat {
-            font-family: var(--mono);
-            font-size: 10.5px;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-            color: var(--sky);
-            margin-bottom: 12px;
-        }
-
-        .article-title {
-            font-family: var(--sans);
-            font-weight: 600;
-            font-size: 17px;
-            color: var(--navy);
-            line-height: 1.3;
-            margin-bottom: 10px;
-            flex: 1;
-        }
-
-        .article-desc {
-            font-family: var(--body);
-            font-size: 13.5px;
-            font-weight: 300;
-            color: var(--slate);
-            line-height: 1.65;
-            margin-bottom: 20px;
-        }
-
-        .article-meta {
-            font-family: var(--mono);
-            font-size: 11px;
-            color: var(--muted);
-            display: flex;
-            gap: 12px;
-        }
-
-        .writing-cta {
-            margin-top: 36px;
-            text-align: center;
-        }
-
-        .btn-outline {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: var(--body);
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--sky);
-            text-decoration: none;
-            border: 1px solid rgba(77, 168, 255, .35);
-            padding: 11px 28px;
-            border-radius: 100px;
-            transition: background .2s, color .2s;
-        }
-
-        .btn-outline:hover {
-            background: var(--sky);
-            color: #fff;
-        }
-
-        /* ── CONTACT ────────────────────────────────── */
-        .contact {
-            background: var(--navy);
-        }
-
-        .contact .section-heading {
-            color: var(--white);
-        }
-
-        .contact .section-sub {
-            color: rgba(255, 255, 255, .45);
-        }
-
-        .contact .section-label-text {
-            color: var(--cyan);
-        }
-
-        .contact .section-label-line {
-            background: var(--cyan);
-        }
-
-        .contact-grid {
-            margin-top: 56px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 48px;
-            align-items: start;
-        }
-
-        .contact-intro {
-            font-family: var(--serif);
-            font-size: clamp(22px, 2.5vw, 32px);
-            color: var(--white);
-            line-height: 1.4;
-        }
-
-        .contact-intro em {
-            font-style: italic;
-            color: var(--cyan);
-        }
-
-        .contact-note {
-            margin-top: 20px;
-            font-family: var(--body);
-            font-size: 14.5px;
-            font-weight: 300;
-            color: rgba(255, 255, 255, .45);
-            line-height: 1.7;
-        }
-
-        .contact-links {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-top: 32px;
-        }
-
-        .contact-link {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            text-decoration: none;
-            padding: 16px 20px;
-            background: rgba(255, 255, 255, .04);
-            border: 1px solid rgba(255, 255, 255, .09);
-            border-radius: 12px;
-            transition: border-color .2s, background .2s;
-        }
-
-        .contact-link:hover {
-            border-color: rgba(125, 211, 252, .3);
-            background: rgba(125, 211, 252, .06);
-        }
-
-        .contact-link-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            background: rgba(77, 168, 255, .15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .contact-link-icon svg {
-            width: 16px;
-            height: 16px;
-            stroke: var(--cyan);
-        }
-
-        .contact-link-info {}
-
-        .contact-link-label {
-            font-family: var(--mono);
-            font-size: 10.5px;
-            color: rgba(255, 255, 255, .3);
-            letter-spacing: .07em;
-            text-transform: uppercase;
-        }
-
-        .contact-link-val {
-            font-family: var(--body);
-            font-size: 14px;
-            color: rgba(255, 255, 255, .75);
-        }
-
-        .contact-form-area {}
-
-        .form-row {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .form-field {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-        }
-
-        .form-label {
-            font-family: var(--mono);
-            font-size: 10.5px;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, .35);
-        }
-
-        .form-input {
-            background: rgba(255, 255, 255, .04);
-            border: 1px solid rgba(255, 255, 255, .09);
-            border-radius: 10px;
-            padding: 12px 16px;
-            font-family: var(--body);
-            font-size: 14px;
-            color: rgba(255, 255, 255, .75);
-            outline: none;
-            transition: border-color .2s;
-        }
-
-        .form-input::placeholder {
-            color: rgba(255, 255, 255, .2);
-        }
-
-        .form-input:focus {
-            border-color: rgba(125, 211, 252, .4);
-        }
-
-        textarea.form-input {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .btn-send {
-            margin-top: 6px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-family: var(--body);
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--navy);
-            background: var(--cyan);
-            padding: 13px 32px;
-            border-radius: 100px;
-            border: none;
-            cursor: pointer;
-            transition: opacity .2s, transform .2s var(--ease);
-            width: 100%;
-        }
-
-        .btn-send:hover {
-            opacity: .88;
-            transform: translateY(-2px);
-        }
-
-        /* ── FOOTER ─────────────────────────────────── */
-        footer {
-            background: #080F1E;
-            padding: 36px max(5vw, 32px);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
-            border-top: 1px solid rgba(255, 255, 255, .05);
-        }
-
-        .footer-logo {
-            font-family: var(--sans);
-            font-weight: 700;
-            font-size: 16px;
-            color: rgba(255, 255, 255, .4);
-            letter-spacing: -.01em;
-        }
-
-        .footer-logo span {
-            color: rgba(77, 168, 255, .6);
-        }
-
-        .footer-copy {
-            font-family: var(--mono);
-            font-size: 11px;
-            color: rgba(255, 255, 255, .2);
-            letter-spacing: .04em;
-        }
-
-        .footer-nav {
-            display: flex;
-            gap: 24px;
-            list-style: none;
-        }
-
-        .footer-nav a {
-            font-family: var(--body);
-            font-size: 12.5px;
-            color: rgba(255, 255, 255, .25);
-            text-decoration: none;
-            transition: color .2s;
-        }
-
-        .footer-nav a:hover {
-            color: rgba(255, 255, 255, .55);
-        }
-
-        /* ── FADE-UP KEYFRAME ───────────────────────── */
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ── RESPONSIVE ─────────────────────────────── */
-        @media (max-width: 900px) {
-            .philosophy-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .bento {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .bento-card.wide {
-                grid-column: span 2;
-            }
-
-            .writing-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .contact-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .project-metrics {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .project-body {
-                grid-template-columns: 1fr;
-            }
-
-            .project-header {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .bento {
-                grid-template-columns: 1fr;
-            }
-
-            .bento-card.wide {
-                grid-column: auto;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .project-metrics {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .hero-graph {
-                display: none;
-            }
-        }
-    </style>
+    <!-- Favicon placeholder -->
+    <link rel="icon" href="assets/favicon.png" type="image/png" />
 </head>
 
 <body>
 
-    <!-- NAV -->
+    <!-- ── NAVBAR ──────────────────────────────────────── -->
     <nav id="nav" role="navigation" aria-label="Main navigation">
         <a class="nav-logo" href="/">NAR<span>EKA</span></a>
+
         <ul class="nav-links">
             <li><a href="#philosophy">Tentang</a></li>
             <li><a href="#journey">Perjalanan</a></li>
             <li><a href="#project">Proyek</a></li>
             <li><a href="#writing">Tulisan</a></li>
+            <li class="nav-item-dropdown">
+                <a href="#">Karya Rekayasa ▾</a>
+                <div class="dropdown-menu" role="menu">
+                    <a href="./marktype/index.html" role="menuitem">
+                        <span class="dd-dot"></span>
+                        MARKTYPE
+                    </a>
+                </div>
+            </li>
         </ul>
+
         <a class="nav-cta" href="#contact">Hubungi →</a>
+
+        <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle navigation" aria-expanded="false"
+            aria-controls="mobile-nav">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </nav>
 
-    <!-- ── HERO ─────────────────────────────────── -->
+    <!-- Mobile Nav Drawer -->
+    <div class="mobile-nav" id="mobile-nav" role="navigation" aria-label="Mobile navigation">
+        <a href="#philosophy">Tentang</a>
+        <a href="#journey">Perjalanan</a>
+        <a href="#project">Proyek</a>
+        <a href="#writing">Tulisan</a>
+        <a href="#">Karya Rekayasa</a>
+        <a href="./marktype/index.html" class="indent">↳ MARKTYPE</a>
+        <a href="#contact">Hubungi</a>
+    </div>
+
+
+    <!-- ── HERO ────────────────────────────────────────── -->
     <section class="hero" aria-label="Hero">
         <div class="hero-bg" aria-hidden="true"></div>
         <div class="orb orb1" aria-hidden="true"></div>
         <div class="orb orb2" aria-hidden="true"></div>
 
-        <!-- Animated Graph SVG -->
-        <!-- Animated Interactive Graph SVG -->
-        <svg class="hero-graph" id="interactive-network" aria-hidden="true" viewBox="0 0 420 360" fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <!-- Efek Glow untuk Node Utama -->
-                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feGaussianBlur stdDeviation="8" result="blur" />
-                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                </filter>
+        <!-- Illustration -->
+        <div class="hero-illustration" aria-hidden="true">
+            <img src="assets/achievement.svg" alt="Achievement Illustration" />
+        </div>
 
-                <style>
-                    .g-node {
-                        fill: rgba(77, 168, 255, .1);
-                        stroke: rgba(77, 168, 255, .3);
-                        stroke-width: 1.5;
-                        transition: fill 0.3s;
-                    }
-
-                    .g-node:hover {
-                        fill: rgba(77, 168, 255, .25);
-                    }
-
-                    .g-node-c {
-                        fill: rgba(77, 168, 255, .25);
-                        stroke: rgba(125, 211, 252, .8);
-                        stroke-width: 2;
-                        cursor: crosshair;
-                    }
-
-                    .g-edge {
-                        stroke: rgba(77, 168, 255, .15);
-                        stroke-width: 1.2;
-                    }
-
-                    .g-edge-a {
-                        stroke: rgba(125, 211, 252, .4);
-                        stroke-width: 1.5;
-                        stroke-dasharray: 4 6;
-                        animation: dash 3s linear infinite;
-                    }
-
-                    .g-label {
-                        fill: rgba(77, 168, 255, .7);
-                        font-family: 'JetBrains Mono', monospace;
-                        font-size: 10.5px;
-                        letter-spacing: 1px;
-                        pointer-events: none;
-                        /* Agar teks tidak mengganggu interaksi hover/kursor */
-                    }
-
-                    .g-label-c {
-                        fill: rgba(255, 255, 255, .9);
-                        font-family: 'JetBrains Mono', monospace;
-                        font-size: 11px;
-                        font-weight: 600;
-                        pointer-events: none;
-                    }
-
-                    @keyframes dash {
-                        to {
-                            stroke-dashoffset: -20;
-                        }
-                    }
-                </style>
-            </defs>
-
-            <!-- Static Background Edges -->
-            <line class="g-edge" x1="90" y1="80" x2="330" y2="80" />
-            <line class="g-edge" x1="90" y1="280" x2="330" y2="280" />
-            <line class="g-edge" x1="90" y1="80" x2="90" y2="280" />
-            <line class="g-edge" x1="330" y1="80" x2="330" y2="280" />
-            <line class="g-edge" x1="90" y1="80" x2="210" y2="30" />
-            <line class="g-edge" x1="330" y1="80" x2="210" y2="30" />
-
-            <!-- Dynamic Edges (Akan bergerak dengan JS) -->
-            <line id="dyn-line-1" class="g-edge-a" x1="210" y1="180" x2="90" y2="80" />
-            <line id="dyn-line-2" class="g-edge-a" x1="210" y1="180" x2="330" y2="80" />
-            <line id="dyn-line-3" class="g-edge-a" x1="210" y1="180" x2="90" y2="280" />
-            <line id="dyn-line-4" class="g-edge-a" x1="210" y1="180" x2="330" y2="280" />
-
-            <!-- Static Nodes -->
-            <circle class="g-node" cx="90" cy="80" r="22" />
-            <circle class="g-node" cx="330" cy="80" r="22" />
-            <circle class="g-node" cx="90" cy="280" r="22" />
-            <circle class="g-node" cx="330" cy="280" r="22" />
-            <circle class="g-node" cx="210" cy="30" r="14" />
-
-            <!-- Center Dynamic Node -->
-            <circle id="center-node" class="g-node-c" cx="210" cy="180" r="32" filter="url(#glow)" />
-
-            <!-- Labels -->
-            <text class="g-label" x="90" y="84" text-anchor="middle">REQ</text>
-            <text class="g-label" x="330" y="84" text-anchor="middle">DATA</text>
-            <text class="g-label" x="90" y="284" text-anchor="middle">BPMN</text>
-            <text class="g-label" x="330" y="284" text-anchor="middle">INFO</text>
-            <text id="center-text" class="g-label-c" x="210" y="184" text-anchor="middle">ANALYSIS</text>
-        </svg>
         <div class="hero-content">
             <div class="hero-eyebrow">
                 <div class="hero-eyebrow-line"></div>
@@ -1598,7 +99,7 @@
                 <a class="btn-primary" href="#project">
                     Lihat Proyek
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
+                        stroke-linejoin="round" aria-hidden="true">
                         <line x1="5" y1="12" x2="19" y2="12" />
                         <polyline points="12 5 19 12 12 19" />
                     </svg>
@@ -1606,7 +107,7 @@
                 <a class="btn-ghost" href="#philosophy">
                     Tentang Pendekatan Saya
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
+                        stroke-linejoin="round" aria-hidden="true">
                         <polyline points="6 9 12 15 18 9" />
                     </svg>
                 </a>
@@ -1629,12 +130,13 @@
         </div>
     </section>
 
-    <!-- ── PHILOSOPHY ─────────────────────────────── -->
+
+    <!-- ── PHILOSOPHY ──────────────────────────────────── -->
     <section class="philosophy" id="philosophy">
         <div class="section-inner">
             <div class="section-label">
                 <div class="section-label-line"></div>
-                <span class="section-label-text">Pendekatan & Filosofi</span>
+                <span class="section-label-text">Pendekatan &amp; Filosofi</span>
             </div>
             <h2 class="section-heading">Cara Saya Berpikir</h2>
             <p class="section-sub">
@@ -1672,7 +174,8 @@
         </div>
     </section>
 
-    <!-- ── TIMELINE ───────────────────────────────── -->
+
+    <!-- ── JOURNEY / TIMELINE ──────────────────────────── -->
     <section id="journey">
         <div class="section-inner">
             <div class="section-label">
@@ -1687,7 +190,7 @@
                 <div class="tl-item">
                     <div class="tl-dot"></div>
                     <div class="tl-year">2024 — Sekarang</div>
-                    <div class="tl-role">Capstone Project — Data Analytics & Generative AI</div>
+                    <div class="tl-role">Capstone Project — Data Analytics &amp; Generative AI</div>
                     <div class="tl-org">RevoU Tech Academy</div>
                     <p class="tl-desc">Menganalisis cancellation rate e-commerce Pakistan sebesar 28,39% menggunakan
                         dataset 450.616 baris (2017–2018). Menghasilkan business recommendation berbasis data melalui
@@ -1703,8 +206,8 @@
                 <div class="tl-item">
                     <div class="tl-dot"></div>
                     <div class="tl-year">2023</div>
-                    <div class="tl-role">Riset & Analisis Proses Bisnis</div>
-                    <div class="tl-org">Proyek Akademik & Independen</div>
+                    <div class="tl-role">Riset &amp; Analisis Proses Bisnis</div>
+                    <div class="tl-org">Proyek Akademik &amp; Independen</div>
                     <p class="tl-desc">Mengembangkan kemampuan dalam requirement gathering, BPMN modeling, stakeholder
                         analysis, dan pendekatan Data-Driven Decision Making (DDDM) untuk berbagai konteks bisnis.</p>
                     <div class="tl-tags">
@@ -1718,8 +221,8 @@
                 <div class="tl-item">
                     <div class="tl-dot"></div>
                     <div class="tl-year">2022 — 2023</div>
-                    <div class="tl-role">Fondasi Analitik & Research Thinking</div>
-                    <div class="tl-org">Studi Mandiri & Akademik</div>
+                    <div class="tl-role">Fondasi Analitik &amp; Research Thinking</div>
+                    <div class="tl-org">Studi Mandiri &amp; Akademik</div>
                     <p class="tl-desc">Membangun fondasi dalam pemikiran sistematis, manajemen tugas, dan pendekatan
                         research-oriented — yang menjadi landasan cara kerja analitik saat ini.</p>
                     <div class="tl-tags">
@@ -1733,13 +236,15 @@
         </div>
     </section>
 
-    <!-- ── FEATURED PROJECT ──────────────────────── -->
+
+    <!-- ── FEATURED PROJECT ─────────────────────────────── -->
     <section class="featured" id="project">
         <div class="section-inner">
             <div class="section-label">
                 <div class="section-label-line"></div>
                 <span class="section-label-text">Featured Project</span>
             </div>
+
             <div class="featured-header-row">
                 <div>
                     <h2 class="section-heading">Proyek Unggulan</h2>
@@ -1748,23 +253,22 @@
                 <div class="carousel-nav">
                     <button class="nav-btn prev-btn" aria-label="Proyek Sebelumnya">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
+                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <polyline points="15 18 9 12 15 6"></polyline>
                         </svg>
                     </button>
                     <button class="nav-btn next-btn" aria-label="Proyek Selanjutnya">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
+                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </button>
                 </div>
             </div>
 
-            <!-- Container Baru untuk Scroll Horizontal -->
             <div class="projects-wrapper">
 
-                <!-- Card Proyek 1 -->
+                <!-- Project Card 1 -->
                 <div class="project-card">
                     <div class="project-header">
                         <div>
@@ -1807,8 +311,8 @@
                             </ul>
                         </div>
                         <div>
-                            <div class="project-section-title">Metodologi & Tools</div>
-                            <div class="tool-chips" style="margin-bottom:20px">
+                            <div class="project-section-title">Metodologi &amp; Tools</div>
+                            <div class="tool-chips" style="margin-bottom:18px">
                                 <span class="tool-chip">SQL</span>
                                 <span class="tool-chip">Power BI</span>
                                 <span class="tool-chip">Data Cleaning</span>
@@ -1830,89 +334,83 @@
                         </a>
                     </div>
                 </div>
-                <!-- Akhir Card Proyek 1 -->
+                <!-- End Card 1 -->
 
-                <!-- Card Proyek 1 -->
+                <!-- Project Card 2 (placeholder — duplicate removed, add real project here) -->
                 <div class="project-card">
                     <div class="project-header">
                         <div>
-                            <div class="project-badge">Capstone Project · RevoU Tech Academy</div>
-                            <h3 class="project-title">Analisis Cancellation Rate<br>E-Commerce Pakistan</h3>
-                            <p class="project-scope">Data Analytics &amp; Generative AI · 2024</p>
+                            <div class="project-badge">Proyek Akademik · Independen</div>
+                            <h3 class="project-title">Pemodelan Proses Bisnis<br>dengan BPMN &amp; AHP</h3>
+                            <p class="project-scope">Business Analysis · 2023</p>
                         </div>
-                        <div class="project-status">Live Documentation</div>
+                        <div class="project-status">Documented</div>
                     </div>
 
                     <div class="project-metrics">
                         <div class="metric">
-                            <div class="metric-val"><em>28,39%</em></div>
-                            <div class="metric-label">Cancellation Rate</div>
+                            <div class="metric-val"><em>4+</em></div>
+                            <div class="metric-label">Proses Bisnis</div>
                         </div>
                         <div class="metric">
-                            <div class="metric-val">450<em>K+</em></div>
-                            <div class="metric-label">Rows Dataset</div>
+                            <div class="metric-val">AHP<em>+</em></div>
+                            <div class="metric-label">Framework</div>
                         </div>
                         <div class="metric">
-                            <div class="metric-val">2<em>yr</em></div>
-                            <div class="metric-label">Data Period</div>
+                            <div class="metric-val">3<em>mo</em></div>
+                            <div class="metric-label">Duration</div>
                         </div>
                         <div class="metric">
-                            <div class="metric-val"><em>3</em></div>
-                            <div class="metric-label">Key Insights</div>
+                            <div class="metric-val"><em>5</em></div>
+                            <div class="metric-label">Stakeholders</div>
                         </div>
                     </div>
 
                     <div class="project-body">
                         <div>
-                            <div class="project-section-title">Key Business Insights</div>
+                            <div class="project-section-title">Highlights</div>
                             <ul class="insight-list">
-                                <li>Pola cancellation tertinggi terjadi pada metode pembayaran Cash on Delivery —
-                                    menunjukkan friction pada proses konfirmasi</li>
-                                <li>Kategori produk tertentu memiliki cancellation rate 2x lebih tinggi dari rata-rata —
-                                    peluang optimasi katalog</li>
-                                <li>Tren temporal menunjukkan lonjakan cancellation pada periode promosi tertentu —
-                                    sinyal ketidaksesuaian ekspektasi</li>
+                                <li>Pemetaan alur kerja lintas departemen menggunakan notasi BPMN standar</li>
+                                <li>Analisis prioritas kriteria keputusan dengan Analytical Hierarchy Process (AHP)</li>
+                                <li>Dokumentasi gap antara proses as-is dan to-be untuk perbaikan sistem</li>
                             </ul>
                         </div>
                         <div>
-                            <div class="project-section-title">Metodologi & Tools</div>
-                            <div class="tool-chips" style="margin-bottom:20px">
-                                <span class="tool-chip">SQL</span>
-                                <span class="tool-chip">Power BI</span>
-                                <span class="tool-chip">Data Cleaning</span>
-                                <span class="tool-chip">EDA</span>
-                                <span class="tool-chip">Dashboard</span>
+                            <div class="project-section-title">Metodologi &amp; Tools</div>
+                            <div class="tool-chips" style="margin-bottom:18px">
+                                <span class="tool-chip">BPMN</span>
+                                <span class="tool-chip">AHP</span>
+                                <span class="tool-chip">Stakeholder Analysis</span>
+                                <span class="tool-chip">Bizagi</span>
                             </div>
                             <div class="project-section-title">Output</div>
                             <ul class="insight-list">
-                                <li>Dashboard monitoring cancellation trend real-time</li>
-                                <li>Business recommendation report berbasis data</li>
-                                <li>Dokumentasi proses analitik end-to-end</li>
+                                <li>Diagram BPMN lengkap untuk setiap proses</li>
+                                <li>Matriks keputusan berbasis AHP</li>
+                                <li>Laporan rekomendasi perbaikan proses</li>
                             </ul>
                         </div>
                     </div>
 
                     <div class="project-footer">
-                        <a class="btn-project" href="/projects/cancellation-rate-ecommerce">
+                        <a class="btn-project" href="/projects/bpmn-ahp">
                             Lihat Dokumentasi Lengkap →
                         </a>
                     </div>
                 </div>
-                <!-- Akhir Card Proyek 1 -->
-
+                <!-- End Card 2 -->
 
             </div>
-            <!-- Akhir Container -->
-
         </div>
     </section>
 
-    <!-- ── ANALYSIS FRAMEWORK ────────────────────── -->
+
+    <!-- ── ANALYSIS FRAMEWORK ───────────────────────────── -->
     <section class="framework" id="framework">
         <div class="section-inner">
             <div class="section-label">
                 <div class="section-label-line"></div>
-                <span class="section-label-text">Keahlian & Framework</span>
+                <span class="section-label-text">Keahlian &amp; Framework</span>
             </div>
             <h2 class="section-heading">Analytical Toolkit</h2>
             <p class="section-sub">Kerangka analisis yang saya gunakan untuk memahami, mendokumentasikan, dan
@@ -1920,18 +418,18 @@
 
             <div class="bento">
 
-                <!-- wide: quote -->
+                <!-- Wide: quote -->
                 <div class="bento-card wide">
                     <p class="bento-quote">"Analisis yang baik bukan hanya menjawab 'apa yang terjadi' — tetapi
                         menjelaskan 'mengapa' dan merekomendasikan 'apa selanjutnya'."</p>
                     <p class="bento-quote-attr">— Prinsip kerja Darwanza Alif</p>
                 </div>
 
-                <!-- business process -->
+                <!-- Business Process -->
                 <div class="bento-card">
                     <div class="bento-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
-                            stroke-linejoin="round">
+                            stroke-linejoin="round" aria-hidden="true">
                             <path d="M3 3h6v6H3zM15 3h6v6h-6zM9 9l3 3M9 15l3-3M15 15h6v6h-6zM3 15h6v6H3z" />
                         </svg>
                     </div>
@@ -1945,11 +443,11 @@
                     </div>
                 </div>
 
-                <!-- requirements -->
+                <!-- Requirement Gathering -->
                 <div class="bento-card">
                     <div class="bento-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
-                            stroke-linejoin="round">
+                            stroke-linejoin="round" aria-hidden="true">
                             <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
                             <rect x="9" y="3" width="6" height="4" rx="2" />
                             <line x1="9" y1="12" x2="15" y2="12" />
@@ -1969,7 +467,7 @@
                 <div class="bento-card">
                     <div class="bento-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
-                            stroke-linejoin="round">
+                            stroke-linejoin="round" aria-hidden="true">
                             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
                         </svg>
                     </div>
@@ -1983,14 +481,13 @@
                     </div>
                 </div>
 
-                <!-- data viz -->
+                <!-- Data Visualization -->
                 <div class="bento-card">
                     <div class="bento-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
-                            stroke-linejoin="round">
+                            stroke-linejoin="round" aria-hidden="true">
                             <rect x="3" y="3" width="18" height="18" rx="2" />
                             <path d="M3 9h18M3 15h18M9 3v18M15 3v18" opacity=".4" />
-                            <rect x="9" y="9" width="6" height="6" fill="rgba(77,168,255,.2)" />
                         </svg>
                     </div>
                     <div class="bento-title">Data Visualization</div>
@@ -2002,16 +499,15 @@
                     </div>
                 </div>
 
-                <!-- documentation -->
+                <!-- Documentation -->
                 <div class="bento-card">
                     <div class="bento-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
-                            stroke-linejoin="round">
+                            stroke-linejoin="round" aria-hidden="true">
                             <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
                             <polyline points="14 2 14 8 20 8" />
                             <line x1="16" y1="13" x2="8" y2="13" />
                             <line x1="16" y1="17" x2="8" y2="17" />
-                            <polyline points="10 9 9 9 8 9" />
                         </svg>
                     </div>
                     <div class="bento-title">Dokumentasi &amp; Arsip</div>
@@ -2027,12 +523,13 @@
         </div>
     </section>
 
-    <!-- ── WRITING ───────────────────────────────── -->
+
+    <!-- ── WRITING ──────────────────────────────────────── -->
     <section id="writing">
         <div class="section-inner">
             <div class="section-label">
                 <div class="section-label-line"></div>
-                <span class="section-label-text">Tulisan & Riset</span>
+                <span class="section-label-text">Tulisan &amp; Riset</span>
             </div>
             <h2 class="section-heading">Writing &amp; Research Notes</h2>
             <p class="section-sub">Dokumentasi pemikiran, insight bisnis, dan catatan penelitian — bukan sekadar
@@ -2085,12 +582,13 @@
         </div>
     </section>
 
-    <!-- ── CONTACT ───────────────────────────────── -->
+
+    <!-- ── CONTACT ──────────────────────────────────────── -->
     <section class="contact" id="contact">
         <div class="section-inner">
             <div class="section-label">
                 <div class="section-label-line"></div>
-                <span class="section-label-text">Kontak & Kolaborasi</span>
+                <span class="section-label-text">Kontak &amp; Kolaborasi</span>
             </div>
             <h2 class="section-heading">Mari Berdiskusi</h2>
             <p class="section-sub">Terbuka untuk kolaborasi riset, peluang profesional, dan pertukaran ide analitik.</p>
@@ -2106,10 +604,10 @@
                     </p>
 
                     <div class="contact-links">
-                        <a class="contact-link" href="mailto:alif@example.com">
+                        <a class="contact-link" href="mailto:darwanzaalif@gmail.com">
                             <div class="contact-link-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
-                                    stroke-linejoin="round">
+                                    stroke-linejoin="round" aria-hidden="true">
                                     <path
                                         d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                                     <polyline points="22,6 12,13 2,6" />
@@ -2120,11 +618,12 @@
                                 <div class="contact-link-val">darwanzaalif@gmail.com</div>
                             </div>
                         </a>
+
                         <a class="contact-link" href="https://linkedin.com/in/darwanzaalif" target="_blank"
                             rel="noopener">
                             <div class="contact-link-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
-                                    stroke-linejoin="round">
+                                    stroke-linejoin="round" aria-hidden="true">
                                     <path
                                         d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z" />
                                     <rect x="2" y="9" width="4" height="12" />
@@ -2136,10 +635,11 @@
                                 <div class="contact-link-val">Darwanza Alif</div>
                             </div>
                         </a>
+
                         <a class="contact-link" href="https://github.com/mualnudarza" target="_blank" rel="noopener">
                             <div class="contact-link-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
-                                    stroke-linejoin="round">
+                                    stroke-linejoin="round" aria-hidden="true">
                                     <path
                                         d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" />
                                 </svg>
@@ -2176,8 +676,8 @@
                         </div>
                         <button class="btn-send" type="button" onclick="handleSend()">
                             Kirim Pesan
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <line x1="22" y1="2" x2="11" y2="13" />
                                 <polygon points="22 2 15 22 11 13 2 9 22 2" />
                             </svg>
@@ -2188,7 +688,8 @@
         </div>
     </section>
 
-    <!-- ── FOOTER ─────────────────────────────────── -->
+
+    <!-- ── FOOTER ───────────────────────────────────────── -->
     <footer>
         <div class="footer-logo">NAR<span>EKA</span></div>
         <ul class="footer-nav">
@@ -2201,132 +702,8 @@
         <div class="footer-copy">© 2024 Darwanza Alif · NAREKA.github.io</div>
     </footer>
 
-    <!-- ── SCRIPTS ───────────────────────────────── -->
-    <script>
-        /* nav scroll shadow */
-        const nav = document.getElementById('nav');
-        window.addEventListener('scroll', () => {
-            nav.classList.toggle('scrolled', window.scrollY > 40);
-        }, { passive: true });
-
-        /* intersection observer for fade-in elements */
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((e, i) => {
-                if (e.isIntersecting) {
-                    const delay = e.target.dataset.delay || 0;
-                    setTimeout(() => e.target.classList.add('visible'), delay);
-                    observer.unobserve(e.target);
-                }
-            });
-        }, { threshold: 0.12 });
-
-        document.querySelectorAll('.tl-item, .bento-card, .article-card').forEach((el, i) => {
-            el.dataset.delay = (i % 4) * 80;
-            observer.observe(el);
-        });
-
-        /* contact form send */
-        function handleSend() {
-            const name = document.getElementById('f-name').value.trim();
-            const email = document.getElementById('f-email').value.trim();
-            const subject = document.getElementById('f-subject').value.trim();
-            const msg = document.getElementById('f-msg').value.trim();
-            if (!name || !email || !msg) {
-                alert('Mohon lengkapi nama, email, dan pesan terlebih dahulu.');
-                return;
-            }
-            const mailtoLink = `mailto:darwanzaalif@gmail.com?subject=${encodeURIComponent(subject || 'Pesan dari NAREKA Website')}&body=${encodeURIComponent('Dari: ' + name + ' (' + email + ')\n\n' + msg)}`;
-            window.location.href = mailtoLink;
-        }
-        /* --- PROJECT CAROUSEL NAVIGATION --- */
-        const wrapper = document.querySelector('.projects-wrapper');
-        const prevBtn = document.querySelector('.prev-btn');
-        const nextBtn = document.querySelector('.next-btn');
-
-        if (wrapper && prevBtn && nextBtn) {
-            nextBtn.addEventListener('click', () => {
-                const cardWidth = wrapper.querySelector('.project-card').offsetWidth;
-                const gap = 24; // Sesuai dengan nilai gap di CSS
-                wrapper.scrollBy({ left: cardWidth + gap, behavior: 'smooth' });
-            });
-
-            prevBtn.addEventListener('click', () => {
-                const cardWidth = wrapper.querySelector('.project-card').offsetWidth;
-                const gap = 24;
-                wrapper.scrollBy({ left: -(cardWidth + gap), behavior: 'smooth' });
-            });
-        }
-
-        /* --- INTERACTIVE HERO NETWORK (CELL BEHAVIOR) --- */
-        const networkSvg = document.getElementById('interactive-network');
-        const centerNode = document.getElementById('center-node');
-        const centerText = document.getElementById('center-text');
-        const dynamicLines = [
-            document.getElementById('dyn-line-1'),
-            document.getElementById('dyn-line-2'),
-            document.getElementById('dyn-line-3'),
-            document.getElementById('dyn-line-4')
-        ];
-
-        // Titik tengah asli dari SVG
-        const baseCX = 210;
-        const baseCY = 180;
-
-        // Variabel untuk melacak posisi
-        let targetX = baseCX;
-        let targetY = baseCY;
-        let currentX = baseCX;
-        let currentY = baseCY;
-
-        // Kelembutan animasi (0.05 sampai 0.1 biasanya paling enak dilihat)
-        const easing = 0.06;
-
-        if (networkSvg && centerNode) {
-            document.addEventListener('mousemove', (e) => {
-                // Ambil koordinat kursor relatif terhadap layar
-                const windowCenterX = window.innerWidth / 2;
-                const windowCenterY = window.innerHeight / 2;
-
-                // Hitung jarak kursor dari tengah layar (dinormalisasi dari -1 ke 1)
-                const offsetX = (e.clientX - windowCenterX) / windowCenterX;
-                const offsetY = (e.clientY - windowCenterY) / windowCenterY;
-
-                // Radius maksimal pergerakan node (misal 50px ke segala arah)
-                const maxStretch = 50;
-
-                // Tentukan target koordinat baru untuk node tengah
-                targetX = baseCX + (offsetX * maxStretch);
-                targetY = baseCY + (offsetY * maxStretch);
-            });
-
-            // Fungsi animasi terus menerus
-            function animateNetwork() {
-                // Lerp (mendekatkan currentX ke targetX dengan halus)
-                currentX += (targetX - currentX) * easing;
-                currentY += (targetY - currentY) * easing;
-
-                // Update atribut SVG Node Tengah
-                centerNode.setAttribute('cx', currentX);
-                centerNode.setAttribute('cy', currentY);
-
-                // Update atribut SVG Teks Tengah (ditambah 4px agar vertikal tengah)
-                centerText.setAttribute('x', currentX);
-                centerText.setAttribute('y', currentY + 4);
-
-                // Update titik pangkal garis putus-putus (x1, y1) agar mengikuti node
-                dynamicLines.forEach(line => {
-                    line.setAttribute('x1', currentX);
-                    line.setAttribute('y1', currentY);
-                });
-
-                // Loop animasi
-                requestAnimationFrame(animateNetwork);
-            }
-
-            // Jalankan animasi
-            animateNetwork();
-        }
-    </script>
+    <!-- Script -->
+    <script src="script.js"></script>
 
 </body>
 
