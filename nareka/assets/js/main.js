@@ -227,6 +227,7 @@ function initDinoGame() {
   let gameOver = false;
   let started = false;
   let speed = 4;
+  let nextSpeedUp = 100;
 
   // Dino state
   const dino = {
@@ -316,8 +317,8 @@ function initDinoGame() {
   // Obstacles
   const obstacles = [];
   let obstacleTimer = 0;
-  const OBSTACLE_INTERVAL_MIN = 60;
-  const OBSTACLE_INTERVAL_RANGE = 60;
+  const OBSTACLE_INTERVAL_MIN = 120;
+  const OBSTACLE_INTERVAL_RANGE = 100;
   let nextObstacle = OBSTACLE_INTERVAL_MIN + Math.random() * OBSTACLE_INTERVAL_RANGE;
 
   function spawnObstacle() {
@@ -425,7 +426,8 @@ function initDinoGame() {
     ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#555' : '#AAAAAA';
     ctx.font = `${PIXEL * 3}px 'Press Start 2P'`;
     ctx.textAlign = 'right';
-    ctx.fillText(`HI ${String(hiScore).padStart(5, '0')}  ${String(score).padStart(5, '0')}`, canvas.width - PIXEL * 2, PIXEL * 4 + 8);
+    // Gunakan Math.floor(score) agar angka desimal tidak tampil di layar
+    ctx.fillText(`HI ${String(hiScore).padStart(5, '0')}  ${String(Math.floor(score)).padStart(5, '0')}`, canvas.width - PIXEL * 2, PIXEL * 4 + 8);
     ctx.restore();
   }
 
@@ -466,6 +468,7 @@ function initDinoGame() {
     nextObstacle = OBSTACLE_INTERVAL_MIN + Math.random() * OBSTACLE_INTERVAL_RANGE;
     score = 0;
     speed = 4;
+    nextSpeedUp = 100;
     gameOver = false;
     started = true;
   }
@@ -522,16 +525,24 @@ function initDinoGame() {
         if (checkCollision(dino.getBounds(), obstacles[i].getBounds())) {
           gameOver = true;
           dino.dead = true;
-          if (score > hiScore) {
-            hiScore = score;
+          // Gunakan Math.floor untuk perbandingan hiScore
+          if (Math.floor(score) > hiScore) {
+            hiScore = Math.floor(score);
             localStorage.setItem('nareka-hiscore', hiScore);
           }
         }
       }
 
       dino.update();
-      score++;
-      if (score % 200 === 0) speed = Math.min(speed + 0.5, 12);
+
+      // 1. Perlambat skor (bertambah 0.08 per frame, butuh waktu lebih lama untuk mencapai 100)
+      score += 0.08;
+
+      // 2. Naikkan kecepatan secara halus setiap kelipatan 100
+      if (score >= nextSpeedUp) {
+        speed = Math.min(speed + 0.25, 9); // Naik hanya 0.25 (sangat halus), batas maksimal speed 9
+        nextSpeedUp += 100; // Set target naik kecepatan berikutnya
+      }
     } else {
       // Gambar kaktus yang tersisa agar tetap terlihat saat game belum mulai / game over
       obstacles.forEach(o => o.draw(ctx));
