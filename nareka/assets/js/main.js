@@ -223,45 +223,42 @@ function initDinoGame() {
   window.addEventListener('resize', resize, { passive: true });
 
   const PIXEL = 4;
-  const GROUND_Y = canvas.height - 64;
-  const COLORS = {
-    dino: getComputedStyle(document.documentElement).getPropertyValue('--black').trim() || '#1A1A1A',
-    cactus: getComputedStyle(document.documentElement).getPropertyValue('--orange').trim() || '#F97316',
-    cloud: '#E0E0E0',
-    ground: '#AAAAAA',
-    score: '#6B6B6B'
-  };
+  // GROUND_Y diturunkan agar ada lebih banyak ruang di atas saat melompat (tidak kepotong)
+  const GROUND_Y = canvas.height - 32;
 
   let score = 0;
   let hiScore = parseInt(localStorage.getItem('nareka-hiscore') || '0');
   let gameOver = false;
   let started = false;
-  let speed = 4;
+  let speed = 5;
 
-  // Dino state
+  // Dino state (Parasaurolophus)
   const dino = {
-    x: 80, y: GROUND_Y, w: 44, h: 52,
+    x: 80, y: GROUND_Y, w: 56, h: 60,
     vy: 0, jumping: false, frame: 0, frameTimer: 0,
     dead: false,
 
     jump() {
       if (!this.jumping && !this.dead) {
-        this.vy = -15;
+        this.vy = -11; // Kecepatan lompat disesuaikan agar tidak over-height
         this.jumping = true;
       }
     },
 
     update() {
       if (this.dead) return;
-      this.vy += 0.8;
+      this.vy += 0.6; // Gravitasi lebih halus
       this.y += this.vy;
+
+      // Mencegah tembus batas bawah
       if (this.y >= GROUND_Y) {
         this.y = GROUND_Y;
         this.vy = 0;
         this.jumping = false;
       }
+
       // Animation frames
-      if (!this.jumping) {
+      if (!this.jumping && started) {
         this.frameTimer++;
         if (this.frameTimer > 8) {
           this.frame = (this.frame + 1) % 2;
@@ -272,59 +269,77 @@ function initDinoGame() {
 
     draw(ctx) {
       ctx.save();
-      ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#F0F0F0' : '#1A1A1A';
+      const isDark = document.body.classList.contains('dark-mode');
+      ctx.fillStyle = isDark ? '#F0F0F0' : '#1A1A1A';
       const P = PIXEL;
       const x = this.x;
       const y = this.y;
       const f = this.frame;
 
-      // Pixel dino body (Chrome Dino style)
-      // Head
-      ctx.fillRect(x + P * 3, y - P * 10, P * 7, P * 6);
-      // Eye
-      ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#1A1A1A' : '#fff';
-      ctx.fillRect(x + P * 8, y - P * 9, P * 2, P * 2);
-      ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#F0F0F0' : '#1A1A1A';
-      // Mouth/jaw
-      ctx.fillRect(x + P * 8, y - P * 5, P * 2, P * 1);
-      // Body
-      ctx.fillRect(x, y - P * 8, P * 10, P * 8);
-      // Arm
-      ctx.fillRect(x + P * 2, y - P * 6, P * 3, P * 2);
-      // Tail
-      ctx.fillRect(x - P * 2, y - P * 4, P * 3, P * 2);
+      // --- PARASAUROLOPHUS DETAIL PIXEL ---
+      // Ekor (Meruncing panjang ke belakang)
+      ctx.fillRect(x - P * 8, y - P * 6, P * 3, P);
+      ctx.fillRect(x - P * 5, y - P * 7, P * 4, P * 2);
 
-      // Legs (animated)
+      // Paha Belakang & Perut (Melengkung)
+      ctx.fillRect(x - P * 1, y - P * 9, P * 9, P * 6);
+      ctx.fillRect(x, y - P * 3, P * 6, P * 2);
+
+      // Dada & Leher Depan
+      ctx.fillRect(x + P * 6, y - P * 13, P * 3, P * 6);
+      ctx.fillRect(x + P * 5, y - P * 10, P, P * 3);
+
+      // Kepala
+      ctx.fillRect(x + P * 6, y - P * 16, P * 4, P * 3);
+      // Moncong bawah & atas (Duck-bill)
+      ctx.fillRect(x + P * 10, y - P * 14, P * 3, P * 2);
+      ctx.fillRect(x + P * 10, y - P * 15, P * 2, P);
+
+      // Jambul (Crest) - Melengkung panjang ke belakang
+      ctx.fillRect(x + P * 4, y - P * 18, P * 3, P);
+      ctx.fillRect(x + P * 2, y - P * 17, P * 3, P);
+      ctx.fillRect(x + P * 4, y - P * 16, P * 2, P);
+
+      // Mata
+      ctx.fillStyle = isDark ? '#1A1A1A' : '#fff';
+      ctx.fillRect(x + P * 7, y - P * 15, P, P);
+      ctx.fillStyle = isDark ? '#F0F0F0' : '#1A1A1A';
+
+      // Lengan depan (T-Rex style tapi lebih panjang sedikit)
+      ctx.fillRect(x + P * 8, y - P * 7, P * 2, P * 3);
+
+      // Kaki Bawah (Animasi Jalan)
       if (this.jumping) {
-        ctx.fillRect(x + P * 2, y - P * 1, P * 2, P * 2);
-        ctx.fillRect(x + P * 5, y - P * 1, P * 2, P * 2);
+        ctx.fillRect(x + P * 1, y - P * 2, P * 2, P * 2); // Kaki kiri naik
+        ctx.fillRect(x + P * 5, y - P * 1, P * 2, P * 2); // Kaki kanan naik
       } else if (f === 0) {
-        ctx.fillRect(x + P * 2, y, P * 2, P * 3);
-        ctx.fillRect(x + P * 5, y - P * 1, P * 2, P * 2);
+        ctx.fillRect(x + P * 1, y - P * 1, P * 2, P * 3);
+        ctx.fillRect(x + P * 6, y - P * 2, P * 2, P * 2);
       } else {
-        ctx.fillRect(x + P * 2, y - P * 1, P * 2, P * 2);
-        ctx.fillRect(x + P * 5, y, P * 2, P * 3);
+        ctx.fillRect(x + P * 1, y - P * 2, P * 2, P * 2);
+        ctx.fillRect(x + P * 5, y - P * 1, P * 2, P * 3);
       }
       ctx.restore();
     },
 
     getBounds() {
-      return { x: this.x + PIXEL, y: this.y - PIXEL * 9, w: this.w - PIXEL * 2, h: PIXEL * 9 };
+      // Bounding box disesuaikan dengan proporsi baru Parasaurolophus
+      return { x: this.x - PIXEL * 4, y: this.y - PIXEL * 16, w: PIXEL * 16, h: PIXEL * 16 };
     }
   };
 
-  // Obstacles
+  // Obstacles (Kaktus/Tanaman Purba Baru)
   const obstacles = [];
   let obstacleTimer = 0;
   const OBSTACLE_INTERVAL_MIN = 60;
-  const OBSTACLE_INTERVAL_RANGE = 60;
+  const OBSTACLE_INTERVAL_RANGE = 70;
   let nextObstacle = OBSTACLE_INTERVAL_MIN + Math.random() * OBSTACLE_INTERVAL_RANGE;
 
   function spawnObstacle() {
     const types = [
-      { w: PIXEL * 3, h: PIXEL * 8 },
-      { w: PIXEL * 3, h: PIXEL * 12 },
-      { w: PIXEL * 6, h: PIXEL * 8 },
+      { w: PIXEL * 5, h: PIXEL * 9 },
+      { w: PIXEL * 7, h: PIXEL * 12 },
+      { w: PIXEL * 6, h: PIXEL * 10 },
     ];
     const t = types[Math.floor(Math.random() * types.length)];
     obstacles.push({
@@ -337,35 +352,39 @@ function initDinoGame() {
         ctx.fillStyle = '#F97316';
         const x = this.x, y = this.y, w = this.w, h = this.h;
         const P = PIXEL;
-        // Cactus pixel art
-        ctx.fillRect(x + w / 2 - P, y, P * 2, h);
-        if (h > P * 8) {
-          ctx.fillRect(x, y + P * 3, w, P * 2);
+
+        // Desain Tanaman / Kaktus Baru yang lebih kokoh dan asimetris
+        // Batang utama
+        ctx.fillRect(x + w / 2 - P, y + P * 2, P * 2, h - P * 2);
+        // Cabang kiri
+        ctx.fillRect(x, y + h / 3 - P, P * 2, P * 4);
+        ctx.fillRect(x + P, y + h / 3 + P * 3, P * 2, P * 2);
+        // Cabang kanan
+        if (h > P * 9) {
+          ctx.fillRect(x + w - P * 2, y, P * 2, P * 5);
+          ctx.fillRect(x + w - P * 3, y + P * 5, P * 2, P * 2);
         }
-        ctx.fillRect(x, y + h / 2 - P, P * 2, P * 4);
-        ctx.fillRect(x + w - P * 2, y + h / 2, P * 2, P * 4);
         ctx.restore();
       },
       getBounds() {
-        return { x: this.x + PIXEL, y: this.y + PIXEL, w: this.w - PIXEL * 2, h: this.h - PIXEL };
+        return { x: this.x, y: this.y, w: this.w, h: this.h };
       }
     });
   }
 
-  // Clouds
+  // Clouds & Ground
   const clouds = [];
   let cloudTimer = 0;
   for (let i = 0; i < 3; i++) {
     clouds.push({
       x: Math.random() * canvas.width,
-      y: 20 + Math.random() * 50,
+      y: 10 + Math.random() * 40,
       speed: 0.5 + Math.random() * 0.5
     });
   }
 
-  // Ground particles
   const groundDots = [];
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 25; i++) {
     groundDots.push({ x: Math.random() * canvas.width, size: PIXEL * (Math.random() < 0.5 ? 1 : 2) });
   }
 
@@ -394,12 +413,15 @@ function initDinoGame() {
     ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#555' : '#AAAAAA';
     ctx.font = `${PIXEL * 3}px 'Press Start 2P'`;
     ctx.textAlign = 'right';
-    ctx.fillText(`HI ${String(hiScore).padStart(5, '0')}  ${String(score).padStart(5, '0')}`, canvas.width - PIXEL * 2, PIXEL * 4 + 8);
+    ctx.fillText(`HI ${String(hiScore).padStart(5, '0')}  ${String(Math.floor(score)).padStart(5, '0')}`, canvas.width - PIXEL * 2, PIXEL * 4 + 8);
     ctx.restore();
   }
 
   function checkCollision(a, b) {
-    return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+    // Toleransi hitbox (dikecilkan sedikit agar tidak terlalu sensitif)
+    const padding = PIXEL;
+    return a.x + padding < b.x + b.w && a.x + a.w - padding > b.x &&
+      a.y + padding < b.y + b.h && a.y + a.h - padding > b.y;
   }
 
   function showGameOver(ctx) {
@@ -407,10 +429,10 @@ function initDinoGame() {
     ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#F0F0F0' : '#1A1A1A';
     ctx.font = `${PIXEL * 3}px 'Press Start 2P'`;
     ctx.textAlign = 'center';
-    ctx.fillText('GAME OVER', canvas.width / 2, GROUND_Y - PIXEL * 10);
+    ctx.fillText('GAME OVER', canvas.width / 2, GROUND_Y - PIXEL * 12);
     ctx.font = `${PIXEL * 2}px 'Press Start 2P'`;
     ctx.fillStyle = '#F97316';
-    ctx.fillText('PRESS SPACE/TAP TO RESTART', canvas.width / 2, GROUND_Y - PIXEL * 5);
+    ctx.fillText('PRESS SPACE/TAP TO RESTART', canvas.width / 2, GROUND_Y - PIXEL * 6);
     ctx.restore();
   }
 
@@ -420,7 +442,7 @@ function initDinoGame() {
     ctx.font = `${PIXEL * 2}px 'Press Start 2P'`;
     ctx.textAlign = 'center';
     ctx.fillStyle = '#F97316';
-    ctx.fillText('PRESS SPACE / TAP TO START', canvas.width / 2, GROUND_Y - PIXEL * 5);
+    ctx.fillText('PRESS SPACE / TAP TO WALK', canvas.width / 2, GROUND_Y - PIXEL * 10);
     ctx.restore();
   }
 
@@ -434,7 +456,7 @@ function initDinoGame() {
     obstacleTimer = 0;
     nextObstacle = OBSTACLE_INTERVAL_MIN + Math.random() * OBSTACLE_INTERVAL_RANGE;
     score = 0;
-    speed = 4;
+    speed = 5;
     gameOver = false;
     started = true;
   }
@@ -443,32 +465,25 @@ function initDinoGame() {
   function loop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Update clouds
     cloudTimer++;
     clouds.forEach(c => {
       c.x -= c.speed;
       if (c.x < -80) c.x = canvas.width + 20;
     });
-
-    // Draw clouds
     clouds.forEach(c => drawCloud(ctx, c.x, c.y));
-
-    // Draw ground
     drawGround(ctx);
 
-    // Move ground dots
-    groundDots.forEach(d => {
-      d.x -= speed;
-      if (d.x < 0) d.x = canvas.width;
-    });
-
     if (started && !gameOver) {
-      // Obstacles
+      groundDots.forEach(d => {
+        d.x -= speed;
+        if (d.x < 0) d.x = canvas.width;
+      });
+
       obstacleTimer++;
       if (obstacleTimer >= nextObstacle) {
         spawnObstacle();
         obstacleTimer = 0;
-        nextObstacle = (OBSTACLE_INTERVAL_MIN + Math.random() * OBSTACLE_INTERVAL_RANGE) * Math.max(0.5, 1 - score / 2000);
+        nextObstacle = (OBSTACLE_INTERVAL_MIN + Math.random() * OBSTACLE_INTERVAL_RANGE) * Math.max(0.6, 1 - score / 3000);
       }
 
       for (let i = obstacles.length - 1; i >= 0; i--) {
@@ -479,20 +494,21 @@ function initDinoGame() {
         }
         obstacles[i].draw(ctx);
 
-        // Collision
         if (checkCollision(dino.getBounds(), obstacles[i].getBounds())) {
           gameOver = true;
           dino.dead = true;
           if (score > hiScore) {
-            hiScore = score;
+            hiScore = Math.floor(score);
             localStorage.setItem('nareka-hiscore', hiScore);
           }
         }
       }
 
       dino.update();
-      score++;
-      if (score % 200 === 0) speed = Math.min(speed + 0.5, 12);
+      score += 0.1;
+      if (Math.floor(score) % 100 === 0 && Math.floor(score) > 0) {
+        speed = Math.min(speed + 0.2, 10); //max speed 10
+      }
     } else {
       obstacles.forEach(o => o.draw(ctx));
     }
@@ -506,26 +522,35 @@ function initDinoGame() {
     animId = requestAnimationFrame(loop);
   }
 
-  // Controls
-  function handleJump() {
-    if (!started || gameOver) { reset(); return; }
+  // Controls (Revisi Loop Mulai)
+  function handleInput() {
+    if (gameOver) {
+      reset(); // Jika mati, klik untuk reset dan langsung mulai jalan lagi
+      return;
+    }
+    if (!started) {
+      reset(); // Klik pertama HANYA memicu jalan/mulai, tidak langsung lompat
+      return;
+    }
+    // Jika sudah mulai dan hidup, baru bisa lompat
     dino.jump();
   }
 
   document.addEventListener('keydown', (e) => {
     if (e.code === 'Space' || e.code === 'ArrowUp') {
       e.preventDefault();
-      // Only act if dino section visible
       const section = document.getElementById('hero');
       if (section) {
         const rect = section.getBoundingClientRect();
-        if (rect.bottom > 0 && rect.top < window.innerHeight) handleJump();
+        if (rect.bottom > 0 && rect.top < window.innerHeight) handleInput();
+      } else {
+        handleInput();
       }
     }
   });
 
-  canvas.addEventListener('click', handleJump);
-  canvas.addEventListener('touchstart', (e) => { e.preventDefault(); handleJump(); }, { passive: false });
+  canvas.addEventListener('click', handleInput);
+  canvas.addEventListener('touchstart', (e) => { e.preventDefault(); handleInput(); }, { passive: false });
 
   loop();
 }
