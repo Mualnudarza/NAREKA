@@ -97,18 +97,28 @@ function initNavbar() {
 // ============================================
 function initDarkMode() {
   const btn = document.getElementById('dark-mode-btn');
-  if (!btn) return;
+  const iconImg = document.getElementById('dark-mode-icon');
+
+  if (!btn || !iconImg) return;
+
+  const pathIconLight = 'assets/icon/icon-light.png'; // Ikon matahari / light mode
+  const pathIconDark = 'assets/icon/icon-dark.png';   // Ikon bulan / dark mode
 
   const saved = localStorage.getItem('nareka-darkmode') === 'true';
   if (saved) {
     document.body.classList.add('dark-mode');
-    btn.textContent = '☀️';
+    iconImg.src = pathIconLight;
+  } else {
+    iconImg.src = pathIconDark;
   }
 
   btn.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
     const isDark = document.body.classList.contains('dark-mode');
-    btn.textContent = isDark ? '☀️' : '🌙';
+
+    // Ubah src gambar secara dinamis berdasarkan status mode
+    iconImg.src = isDark ? pathIconLight : pathIconDark;
+
     localStorage.setItem('nareka-darkmode', isDark);
   });
 }
@@ -121,11 +131,11 @@ function initTyping() {
   if (!el) return;
 
   const phrases = [
-    'Full Stack Developer',
-    'UI/UX Designer',
-    'Pixel Art Enthusiast',
-    'Creative Coder',
-    'Problem Solver'
+    'Business Analyst',
+    'Data Analyst',
+    'Data Visualization',
+    'Business Intelligence',
+    'Data Scientist'
   ];
 
   let phraseIdx = 0;
