@@ -321,32 +321,63 @@ function initDinoGame() {
   let nextObstacle = OBSTACLE_INTERVAL_MIN + Math.random() * OBSTACLE_INTERVAL_RANGE;
 
   function spawnObstacle() {
+    // Menambahkan properti 'type' untuk menggambar bentuk spesifik
     const types = [
-      { w: PIXEL * 3, h: PIXEL * 8 },
-      { w: PIXEL * 3, h: PIXEL * 12 },
-      { w: PIXEL * 6, h: PIXEL * 8 },
+      { type: 1, w: PIXEL * 4, h: PIXEL * 9 },   // Tipe 1: Kaktus kecil
+      { type: 2, w: PIXEL * 8, h: PIXEL * 12 },  // Tipe 2: Kaktus besar Saguaro
+      { type: 3, w: PIXEL * 7, h: PIXEL * 10 },  // Tipe 3: Grup 2 kaktus
     ];
     const t = types[Math.floor(Math.random() * types.length)];
+
     obstacles.push({
       x: canvas.width + 20,
       y: GROUND_Y - t.h + PIXEL * 2,
       w: t.w, h: t.h,
+      type: t.type, // Simpan tipe untuk dirender
 
       draw(ctx) {
         ctx.save();
-        ctx.fillStyle = '#F97316';
+        // Warnanya menyesuaikan agar kontras namun tetap selaras dengan tema
+        ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#F97316' : '#EA580C';
         const x = this.x, y = this.y, w = this.w, h = this.h;
         const P = PIXEL;
-        // Cactus pixel art
-        ctx.fillRect(x + w / 2 - P, y, P * 2, h);
-        if (h > P * 8) {
-          ctx.fillRect(x, y + P * 3, w, P * 2);
+
+        if (this.type === 1) {
+          // --- TIPE 1: Kaktus Kecil ---
+          ctx.fillRect(x + P, y, P * 2, h);             // Batang utama
+          ctx.fillRect(x, y + P * 2, P, P * 3);         // Cabang kiri
+          ctx.fillRect(x + P * 3, y + P * 3, P, P * 3); // Cabang kanan
+          ctx.fillRect(x, y + P * 4, P * 2, P);         // Sambungan kiri
+          ctx.fillRect(x + P * 2, y + P * 5, P * 2, P); // Sambungan kanan
+
+        } else if (this.type === 2) {
+          // --- TIPE 2: Kaktus Besar (Saguaro) ---
+          ctx.fillRect(x + P * 3, y, P * 2, h);         // Batang utama tebal
+          // Cabang kiri
+          ctx.fillRect(x, y + P * 2, P * 2, P * 4);
+          ctx.fillRect(x + P, y + P * 5, P * 2, P * 2);
+          // Cabang kanan
+          ctx.fillRect(x + P * 6, y + P * 4, P * 2, P * 4);
+          ctx.fillRect(x + P * 5, y + P * 7, P * 2, P * 2);
+
+        } else if (this.type === 3) {
+          // --- TIPE 3: Grup 2 Kaktus ---
+          // Kaktus Pertama (Kiri, lebih pendek)
+          ctx.fillRect(x, y + P * 2, P * 2, h - P * 2);
+          ctx.fillRect(x - P, y + P * 4, P, P * 2);     // Cabang luar kiri
+          ctx.fillRect(x - P, y + P * 5, P * 2, P);
+          // Kaktus Kedua (Kanan, lebih tinggi)
+          ctx.fillRect(x + P * 4, y, P * 2, h);
+          ctx.fillRect(x + P * 6, y + P * 3, P, P * 3); // Cabang luar kanan
+          ctx.fillRect(x + P * 5, y + P * 5, P * 2, P);
         }
-        ctx.fillRect(x, y + h / 2 - P, P * 2, P * 4);
-        ctx.fillRect(x + w - P * 2, y + h / 2, P * 2, P * 4);
+
         ctx.restore();
       },
+
       getBounds() {
+        // Area tabrakan (hitbox) dibuat sedikit lebih kecil ke dalam (padding 1 Pixel) 
+        // agar game terasa lebih adil dan tidak terlalu sensitif saat disentuh ekor dino
         return { x: this.x + PIXEL, y: this.y + PIXEL, w: this.w - PIXEL * 2, h: this.h - PIXEL };
       }
     });
