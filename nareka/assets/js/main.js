@@ -223,7 +223,6 @@ function initDinoGame() {
   window.addEventListener('resize', resize, { passive: true });
 
   const PIXEL = 4;
-  // GROUND_Y diturunkan agar ada lebih banyak ruang di atas saat melompat (tidak kepotong)
   const GROUND_Y = canvas.height - 32;
 
   let score = 0;
@@ -231,8 +230,8 @@ function initDinoGame() {
   let gameOver = false;
   let started = false;
   let speed = 5;
+  let nextSpeedUp = 100;
 
-  // Dino state (Parasaurolophus)
   const dino = {
     x: 80, y: GROUND_Y, w: 56, h: 60,
     vy: 0, jumping: false, frame: 0, frameTimer: 0,
@@ -240,24 +239,22 @@ function initDinoGame() {
 
     jump() {
       if (!this.jumping && !this.dead) {
-        this.vy = -11; // Kecepatan lompat disesuaikan agar tidak over-height
+        this.vy = -11; // kecepatan lompat
         this.jumping = true;
       }
     },
 
     update() {
       if (this.dead) return;
-      this.vy += 0.6; // Gravitasi lebih halus
+      this.vy += 0.6; // gravitasi
       this.y += this.vy;
 
-      // Mencegah tembus batas bawah
       if (this.y >= GROUND_Y) {
         this.y = GROUND_Y;
         this.vy = 0;
         this.jumping = false;
       }
 
-      // Animation frames
       if (!this.jumping && started) {
         this.frameTimer++;
         if (this.frameTimer > 8) {
@@ -323,12 +320,11 @@ function initDinoGame() {
     },
 
     getBounds() {
-      // Bounding box disesuaikan dengan proporsi baru Parasaurolophus
       return { x: this.x - PIXEL * 4, y: this.y - PIXEL * 16, w: PIXEL * 16, h: PIXEL * 16 };
     }
   };
 
-  // Obstacles (Kaktus/Tanaman Purba Baru)
+  // Obstacles
   const obstacles = [];
   let obstacleTimer = 0;
   const OBSTACLE_INTERVAL_MIN = 60;
@@ -353,7 +349,6 @@ function initDinoGame() {
         const x = this.x, y = this.y, w = this.w, h = this.h;
         const P = PIXEL;
 
-        // Desain Tanaman / Kaktus Baru yang lebih kokoh dan asimetris
         // Batang utama
         ctx.fillRect(x + w / 2 - P, y + P * 2, P * 2, h - P * 2);
         // Cabang kiri
@@ -418,7 +413,6 @@ function initDinoGame() {
   }
 
   function checkCollision(a, b) {
-    // Toleransi hitbox (dikecilkan sedikit agar tidak terlalu sensitif)
     const padding = PIXEL;
     return a.x + padding < b.x + b.w && a.x + a.w - padding > b.x &&
       a.y + padding < b.y + b.h && a.y + a.h - padding > b.y;
@@ -457,6 +451,7 @@ function initDinoGame() {
     nextObstacle = OBSTACLE_INTERVAL_MIN + Math.random() * OBSTACLE_INTERVAL_RANGE;
     score = 0;
     speed = 5;
+    nextSpeedUp = 100;
     gameOver = false;
     started = true;
   }
@@ -506,8 +501,9 @@ function initDinoGame() {
 
       dino.update();
       score += 0.1;
-      if (Math.floor(score) % 100 === 0 && Math.floor(score) > 0) {
-        speed = Math.min(speed + 0.2, 10); //max speed 10
+      if (score >= nextSpeedUp) {
+        speed = Math.min(speed + 0.3, 10); // percepatan
+        nextSpeedUp += 100;
       }
     } else {
       obstacles.forEach(o => o.draw(ctx));
@@ -525,14 +521,14 @@ function initDinoGame() {
   // Controls (Revisi Loop Mulai)
   function handleInput() {
     if (gameOver) {
-      reset(); // Jika mati, klik untuk reset dan langsung mulai jalan lagi
+      reset();
       return;
     }
     if (!started) {
-      reset(); // Klik pertama HANYA memicu jalan/mulai, tidak langsung lompat
+      reset();
       return;
     }
-    // Jika sudah mulai dan hidup, baru bisa lompat
+
     dino.jump();
   }
 
