@@ -97,18 +97,28 @@ function initNavbar() {
 // ============================================
 function initDarkMode() {
   const btn = document.getElementById('dark-mode-btn');
-  if (!btn) return;
+  const iconImg = document.getElementById('dark-mode-icon');
+
+  if (!btn || !iconImg) return;
+
+  const pathIconLight = 'assets/icon/icon-light.png';
+  const pathIconDark = 'assets/icon/icon-dark.png';
 
   const saved = localStorage.getItem('nareka-darkmode') === 'true';
   if (saved) {
     document.body.classList.add('dark-mode');
-    btn.textContent = '☀️';
+    iconImg.src = pathIconLight;
+  } else {
+    iconImg.src = pathIconDark;
   }
 
   btn.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
     const isDark = document.body.classList.contains('dark-mode');
-    btn.textContent = isDark ? '☀️' : '🌙';
+
+    // Ubah src gambar secara dinamis berdasarkan status mode
+    iconImg.src = isDark ? pathIconLight : pathIconDark;
+
     localStorage.setItem('nareka-darkmode', isDark);
   });
 }
@@ -121,7 +131,7 @@ function initTyping() {
   if (!el) return;
 
   const phrases = [
-    'Full Stack Developer',
+    'Business Analyst',
     'UI/UX Designer',
     'Pixel Art Enthusiast',
     'Creative Coder',
@@ -270,36 +280,36 @@ function initDinoGame() {
 
       // Pixel dino body (Chrome Dino style)
       // Head
-      ctx.fillRect(x+P*3, y-P*10, P*7, P*6);
+      ctx.fillRect(x + P * 3, y - P * 10, P * 7, P * 6);
       // Eye
       ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#1A1A1A' : '#fff';
-      ctx.fillRect(x+P*8, y-P*9, P*2, P*2);
+      ctx.fillRect(x + P * 8, y - P * 9, P * 2, P * 2);
       ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#F0F0F0' : '#1A1A1A';
       // Mouth/jaw
-      ctx.fillRect(x+P*8, y-P*5, P*2, P*1);
+      ctx.fillRect(x + P * 8, y - P * 5, P * 2, P * 1);
       // Body
-      ctx.fillRect(x, y-P*8, P*10, P*8);
+      ctx.fillRect(x, y - P * 8, P * 10, P * 8);
       // Arm
-      ctx.fillRect(x+P*2, y-P*6, P*3, P*2);
+      ctx.fillRect(x + P * 2, y - P * 6, P * 3, P * 2);
       // Tail
-      ctx.fillRect(x-P*2, y-P*4, P*3, P*2);
+      ctx.fillRect(x - P * 2, y - P * 4, P * 3, P * 2);
 
       // Legs (animated)
       if (this.jumping) {
-        ctx.fillRect(x+P*2, y-P*1, P*2, P*2);
-        ctx.fillRect(x+P*5, y-P*1, P*2, P*2);
+        ctx.fillRect(x + P * 2, y - P * 1, P * 2, P * 2);
+        ctx.fillRect(x + P * 5, y - P * 1, P * 2, P * 2);
       } else if (f === 0) {
-        ctx.fillRect(x+P*2, y, P*2, P*3);
-        ctx.fillRect(x+P*5, y-P*1, P*2, P*2);
+        ctx.fillRect(x + P * 2, y, P * 2, P * 3);
+        ctx.fillRect(x + P * 5, y - P * 1, P * 2, P * 2);
       } else {
-        ctx.fillRect(x+P*2, y-P*1, P*2, P*2);
-        ctx.fillRect(x+P*5, y, P*2, P*3);
+        ctx.fillRect(x + P * 2, y - P * 1, P * 2, P * 2);
+        ctx.fillRect(x + P * 5, y, P * 2, P * 3);
       }
       ctx.restore();
     },
 
     getBounds() {
-      return { x: this.x + PIXEL, y: this.y - PIXEL*9, w: this.w - PIXEL*2, h: PIXEL*9 };
+      return { x: this.x + PIXEL, y: this.y - PIXEL * 9, w: this.w - PIXEL * 2, h: PIXEL * 9 };
     }
   };
 
@@ -312,14 +322,14 @@ function initDinoGame() {
 
   function spawnObstacle() {
     const types = [
-      { w: PIXEL*3, h: PIXEL*8 },
-      { w: PIXEL*3, h: PIXEL*12 },
-      { w: PIXEL*6, h: PIXEL*8 },
+      { w: PIXEL * 3, h: PIXEL * 8 },
+      { w: PIXEL * 3, h: PIXEL * 12 },
+      { w: PIXEL * 6, h: PIXEL * 8 },
     ];
     const t = types[Math.floor(Math.random() * types.length)];
     obstacles.push({
       x: canvas.width + 20,
-      y: GROUND_Y - t.h + PIXEL*2,
+      y: GROUND_Y - t.h + PIXEL * 2,
       w: t.w, h: t.h,
 
       draw(ctx) {
@@ -328,16 +338,16 @@ function initDinoGame() {
         const x = this.x, y = this.y, w = this.w, h = this.h;
         const P = PIXEL;
         // Cactus pixel art
-        ctx.fillRect(x + w/2 - P, y, P*2, h);
-        if (h > P*8) {
-          ctx.fillRect(x, y + P*3, w, P*2);
+        ctx.fillRect(x + w / 2 - P, y, P * 2, h);
+        if (h > P * 8) {
+          ctx.fillRect(x, y + P * 3, w, P * 2);
         }
-        ctx.fillRect(x, y + h/2 - P, P*2, P*4);
-        ctx.fillRect(x + w - P*2, y + h/2, P*2, P*4);
+        ctx.fillRect(x, y + h / 2 - P, P * 2, P * 4);
+        ctx.fillRect(x + w - P * 2, y + h / 2, P * 2, P * 4);
         ctx.restore();
       },
       getBounds() {
-        return { x: this.x + PIXEL, y: this.y + PIXEL, w: this.w - PIXEL*2, h: this.h - PIXEL };
+        return { x: this.x + PIXEL, y: this.y + PIXEL, w: this.w - PIXEL * 2, h: this.h - PIXEL };
       }
     });
   }
@@ -363,18 +373,18 @@ function initDinoGame() {
     ctx.save();
     ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#333' : '#E0E0E0';
     const P = PIXEL;
-    ctx.fillRect(x, y + P, P*8, P*2);
-    ctx.fillRect(x + P, y, P*6, P);
-    ctx.fillRect(x + P*2, y - P, P*4, P);
+    ctx.fillRect(x, y + P, P * 8, P * 2);
+    ctx.fillRect(x + P, y, P * 6, P);
+    ctx.fillRect(x + P * 2, y - P, P * 4, P);
     ctx.restore();
   }
 
   function drawGround(ctx) {
     ctx.save();
     ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#333' : '#AAAAAA';
-    ctx.fillRect(0, GROUND_Y + PIXEL*2, canvas.width, 3);
+    ctx.fillRect(0, GROUND_Y + PIXEL * 2, canvas.width, 3);
     groundDots.forEach(d => {
-      ctx.fillRect(d.x, GROUND_Y + PIXEL*3, d.size, d.size);
+      ctx.fillRect(d.x, GROUND_Y + PIXEL * 3, d.size, d.size);
     });
     ctx.restore();
   }
@@ -382,9 +392,9 @@ function initDinoGame() {
   function drawScore(ctx) {
     ctx.save();
     ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#555' : '#AAAAAA';
-    ctx.font = `${PIXEL*3}px 'Press Start 2P'`;
+    ctx.font = `${PIXEL * 3}px 'Press Start 2P'`;
     ctx.textAlign = 'right';
-    ctx.fillText(`HI ${String(hiScore).padStart(5, '0')}  ${String(score).padStart(5, '0')}`, canvas.width - PIXEL*2, PIXEL*4 + 8);
+    ctx.fillText(`HI ${String(hiScore).padStart(5, '0')}  ${String(score).padStart(5, '0')}`, canvas.width - PIXEL * 2, PIXEL * 4 + 8);
     ctx.restore();
   }
 
@@ -395,22 +405,22 @@ function initDinoGame() {
   function showGameOver(ctx) {
     ctx.save();
     ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#F0F0F0' : '#1A1A1A';
-    ctx.font = `${PIXEL*3}px 'Press Start 2P'`;
+    ctx.font = `${PIXEL * 3}px 'Press Start 2P'`;
     ctx.textAlign = 'center';
-    ctx.fillText('GAME OVER', canvas.width / 2, GROUND_Y - PIXEL*10);
-    ctx.font = `${PIXEL*2}px 'Press Start 2P'`;
+    ctx.fillText('GAME OVER', canvas.width / 2, GROUND_Y - PIXEL * 10);
+    ctx.font = `${PIXEL * 2}px 'Press Start 2P'`;
     ctx.fillStyle = '#F97316';
-    ctx.fillText('PRESS SPACE/TAP TO RESTART', canvas.width / 2, GROUND_Y - PIXEL*5);
+    ctx.fillText('PRESS SPACE/TAP TO RESTART', canvas.width / 2, GROUND_Y - PIXEL * 5);
     ctx.restore();
   }
 
   function showStart(ctx) {
     ctx.save();
     ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#F0F0F0' : '#1A1A1A';
-    ctx.font = `${PIXEL*2}px 'Press Start 2P'`;
+    ctx.font = `${PIXEL * 2}px 'Press Start 2P'`;
     ctx.textAlign = 'center';
     ctx.fillStyle = '#F97316';
-    ctx.fillText('PRESS SPACE / TAP TO START', canvas.width / 2, GROUND_Y - PIXEL*5);
+    ctx.fillText('PRESS SPACE / TAP TO START', canvas.width / 2, GROUND_Y - PIXEL * 5);
     ctx.restore();
   }
 
@@ -538,21 +548,21 @@ function drawProjectThumbnail(canvas, colorScheme) {
   // Pixel grid
   ctx.strokeStyle = colorScheme.grid;
   ctx.lineWidth = 1;
-  for (let x = 0; x < w; x += P*4) {
+  for (let x = 0; x < w; x += P * 4) {
     ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
   }
-  for (let y = 0; y < h; y += P*4) {
+  for (let y = 0; y < h; y += P * 4) {
     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
   }
 
   // Decorative pixels
   const rects = [
-    [0.2, 0.2, P*6, P*4],
-    [0.5, 0.3, P*4, P*6],
-    [0.7, 0.15, P*5, P*3],
-    [0.15, 0.6, P*3, P*5],
-    [0.6, 0.6, P*7, P*4],
-    [0.35, 0.7, P*4, P*3],
+    [0.2, 0.2, P * 6, P * 4],
+    [0.5, 0.3, P * 4, P * 6],
+    [0.7, 0.15, P * 5, P * 3],
+    [0.15, 0.6, P * 3, P * 5],
+    [0.6, 0.6, P * 7, P * 4],
+    [0.35, 0.7, P * 4, P * 3],
   ];
 
   rects.forEach(([rx, ry, rw, rh]) => {
@@ -564,15 +574,15 @@ function drawProjectThumbnail(canvas, colorScheme) {
   // Central logo pixel art
   ctx.globalAlpha = 1;
   ctx.fillStyle = colorScheme.accent;
-  const cx = w / 2 - P*4;
-  const cy = h / 2 - P*4;
+  const cx = w / 2 - P * 4;
+  const cy = h / 2 - P * 4;
   // Simple window/browser icon
-  ctx.fillRect(cx, cy, P*8, P*8);
+  ctx.fillRect(cx, cy, P * 8, P * 8);
   ctx.fillStyle = colorScheme.bg;
-  ctx.fillRect(cx+P, cy+P*2, P*6, P*5);
+  ctx.fillRect(cx + P, cy + P * 2, P * 6, P * 5);
   ctx.fillStyle = colorScheme.accent;
-  ctx.fillRect(cx+P, cy+P, P*2, P);
-  ctx.fillRect(cx+P*3, cy+P, P*2, P);
+  ctx.fillRect(cx + P, cy + P, P * 2, P);
+  ctx.fillRect(cx + P * 3, cy + P, P * 2, P);
 
   ctx.globalAlpha = 1;
 }
@@ -619,10 +629,10 @@ function drawPixelAvatar() {
   // Pixel grid overlay
   ctx.strokeStyle = isDark ? '#3a2a1a' : '#FED7AA';
   ctx.lineWidth = 1;
-  for (let x = 0; x < 220; x += P*2) {
+  for (let x = 0; x < 220; x += P * 2) {
     ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 220); ctx.stroke();
   }
-  for (let y = 0; y < 220; y += P*2) {
+  for (let y = 0; y < 220; y += P * 2) {
     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(220, y); ctx.stroke();
   }
 
@@ -636,48 +646,48 @@ function drawPixelAvatar() {
   const oy = 3;
 
   // Hair
-  draw(ox+2, oy+1, 9, 3, hair);
-  draw(ox+1, oy+2, 11, 2, hair);
-  draw(ox+1, oy+4, 2, 3, hair);
-  draw(ox+10, oy+4, 2, 3, hair);
+  draw(ox + 2, oy + 1, 9, 3, hair);
+  draw(ox + 1, oy + 2, 11, 2, hair);
+  draw(ox + 1, oy + 4, 2, 3, hair);
+  draw(ox + 10, oy + 4, 2, 3, hair);
 
   // Face
-  draw(ox+2, oy+3, 9, 7, skin);
+  draw(ox + 2, oy + 3, 9, 7, skin);
 
   // Eyes
-  draw(ox+3, oy+5, 2, 2, '#2D2D2D');
-  draw(ox+8, oy+5, 2, 2, '#2D2D2D');
+  draw(ox + 3, oy + 5, 2, 2, '#2D2D2D');
+  draw(ox + 8, oy + 5, 2, 2, '#2D2D2D');
 
   // Smile
-  draw(ox+4, oy+8, 1, 1, '#2D2D2D');
-  draw(ox+8, oy+8, 1, 1, '#2D2D2D');
-  draw(ox+5, oy+9, 3, 1, '#2D2D2D');
+  draw(ox + 4, oy + 8, 1, 1, '#2D2D2D');
+  draw(ox + 8, oy + 8, 1, 1, '#2D2D2D');
+  draw(ox + 5, oy + 9, 3, 1, '#2D2D2D');
 
   // Neck
-  draw(ox+5, oy+10, 3, 2, skin);
+  draw(ox + 5, oy + 10, 3, 2, skin);
 
   // Shirt/Body
-  draw(ox+2, oy+12, 9, 7, shirt);
+  draw(ox + 2, oy + 12, 9, 7, shirt);
 
   // Collar
-  draw(ox+5, oy+12, 3, 2, '#EA580C');
+  draw(ox + 5, oy + 12, 3, 2, '#EA580C');
 
   // Arms
-  draw(ox, oy+12, 3, 5, shirt);
-  draw(ox+10, oy+12, 3, 5, shirt);
+  draw(ox, oy + 12, 3, 5, shirt);
+  draw(ox + 10, oy + 12, 3, 5, shirt);
 
   // Hands
-  draw(ox, oy+17, 3, 2, skin);
-  draw(ox+10, oy+17, 3, 2, skin);
+  draw(ox, oy + 17, 3, 2, skin);
+  draw(ox + 10, oy + 17, 3, 2, skin);
 
   // Laptop
-  draw(ox+2, oy+18, 9, 5, '#2D2D2D');
-  draw(ox+3, oy+19, 7, 3, '#3B82F6');
-  draw(ox+4, oy+20, 2, 1, '#F97316');
-  draw(ox+7, oy+20, 1, 1, '#F97316');
+  draw(ox + 2, oy + 18, 9, 5, '#2D2D2D');
+  draw(ox + 3, oy + 19, 7, 3, '#3B82F6');
+  draw(ox + 4, oy + 20, 2, 1, '#F97316');
+  draw(ox + 7, oy + 20, 1, 1, '#F97316');
 
   // Orange highlight on shirt
-  draw(ox+4, oy+14, 5, 1, '#FED7AA');
+  draw(ox + 4, oy + 14, 5, 1, '#FED7AA');
 }
 
 // ============================================
@@ -784,7 +794,7 @@ function initEasterEgg() {
 
   // Konami code
   let konamiSeq = [];
-  const code = [38,38,40,40,37,39,37,39,66,65];
+  const code = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
   document.addEventListener('keydown', (e) => {
     konamiSeq.push(e.keyCode);
     if (konamiSeq.length > code.length) konamiSeq.shift();
