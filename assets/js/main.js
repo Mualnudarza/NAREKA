@@ -880,43 +880,189 @@ function initEasterEgg() {
 }
 
 // ============================================
-// MUSIC TOGGLE (retro beeps via Web Audio)
+// RETRO DINO AMBIENCE MUSIC
+// Intro -> Middle -> Outro -> Loop
 // ============================================
+
 function initMusicToggle() {
   const btn = document.getElementById('music-toggle');
   if (!btn) return;
 
   let audioCtx = null;
   let playing = false;
-  let intervalId = null;
+  let musicTimeouts = [];
 
-  const melody = [523, 659, 784, 659, 784, 880, 784, 659, 523, 440, 523];
-  let noteIdx = 0;
+  // ============================================
+  // NOTE PLAYER
+  // ============================================
 
-  function playNote(freq) {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  function playNote(freq, duration = 0.35, volume = 0.03, type = 'square') {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
+
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+    gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+
+    // smooth fade
+    gain.gain.exponentialRampToValueAtTime(
+      0.0001,
+      audioCtx.currentTime + duration
+    );
+
     osc.connect(gain);
     gain.connect(audioCtx.destination);
-    osc.type = 'square';
-    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+
     osc.start();
-    osc.stop(audioCtx.currentTime + 0.2);
+    osc.stop(audioCtx.currentTime + duration);
   }
 
-  btn.addEventListener('click', () => {
+  // ============================================
+  // SONG STRUCTURE
+  // ============================================
+
+  // INTRO (slow & empty)
+  const intro = [
+    523, 659, 784, 659,
+    523, 494, 523, 659
+  ];
+
+  // MIDDLE (main ambience groove)
+  const middle = [
+    659, 698, 784, 698,
+    659, 523, 587, 659,
+
+    784, 880, 784, 698,
+    659, 587, 523, 587
+  ];
+
+  // OUTRO (calm down)
+  const outro = [
+    659, 587, 523, 494,
+    440, 494, 523
+  ];
+
+  // ============================================
+  // SECTION PLAYER
+  // ============================================
+
+  function scheduleSection(notes, speed, startDelay = 0) {
+    let currentDelay = startDelay;
+
+    notes.forEach((note, index) => {
+      const timeout = setTimeout(() => {
+        if (!playing) return;
+
+        // lead
+        playNote(note, speed / 1000, 0.03, 'square');
+
+        // soft bass
+        playNote(note / 2, speed / 800, 0.015, 'triangle');
+
+      }, currentDelay);
+
+      musicTimeouts.push(timeout);
+
+      currentDelay += speed;
+    });
+
+    return currentDelay;
+  }
+
+  // ============================================
+  // MAIN LOOP
+  // ============================================
+
+  function startMusicLoop() {
+
+    let timeline = 0;
+
+    // ========================================
+    // INTRO
+    // ========================================
+    timeline = scheduleSection(
+      intro,
+      700,
+      timeline
+    );
+
+    // tiny pause
+    timeline += 600;
+
+    // ========================================
+    // MIDDLE
+    // ========================================
+    timeline = scheduleSection(
+      middle,
+      420,
+      timeline
+    );
+
+    // second middle layer
+    timeline = scheduleSection(
+      middle,
+      420,
+      timeline
+    );
+
+    // ========================================
+    // OUTRO
+    // ========================================
+    timeline += 400;
+
+    timeline = scheduleSection(
+      outro,
+      650,
+      timeline
+    );
+
+    // ========================================
+    // LOOP AGAIN
+    // ========================================
+    const loopTimeout = setTimeout(() => {
+      if (playing) {
+        startMusicLoop();
+      }
+    }, timeline + 1000);
+
+    musicTimeouts.push(loopTimeout);
+  }
+
+  // ============================================
+  // STOP ALL MUSIC
+  // ============================================
+
+  function stopMusic() {
+    musicTimeouts.forEach(timeout => clearTimeout(timeout));
+    musicTimeouts = [];
+  }
+
+  // ============================================
+  // BUTTON TOGGLE
+  // ============================================
+
+  btn.addEventListener('click', async () => {
+
+    if (!audioCtx) {
+      audioCtx = new (
+        window.AudioContext ||
+        window.webkitAudioContext
+      )();
+    }
+
     playing = !playing;
+
     btn.textContent = playing ? '🔊' : '🔇';
+
     if (playing) {
-      intervalId = setInterval(() => {
-        playNote(melody[noteIdx % melody.length]);
-        noteIdx++;
-      }, 300);
+      startMusicLoop();
     } else {
-      clearInterval(intervalId);
+      stopMusic();
     }
   });
 }
