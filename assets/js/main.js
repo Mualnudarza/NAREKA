@@ -680,91 +680,301 @@ function initProjectThumbnails() {
 }
 
 // ============================================
-// PIXEL AVATAR CANVAS
+// NEXT-GEN PROCEDURAL PIXEL AVATAR ENGINE
 // ============================================
-function drawPixelAvatar() {
+
+function initPersonalAvatar() {
   const canvas = document.getElementById('avatar-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  const P = 8;
-  canvas.width = 220;
-  canvas.height = 220;
 
-  const isDark = document.body.classList.contains('dark-mode');
-  const skin = '#FFCC99';
-  const hair = isDark ? '#E0E0E0' : '#2D2D2D';
-  const shirt = '#F97316';
-  const bg = isDark ? '#2a1a0a' : '#FFF7ED';
+  // Konfigurasi Kepadatan Pixel & Grid
+  const P = 4; // Ukuran pixel multiplier (lebih kecil = resolusi lebih tinggi)
+  const GRID_SIZE = 64; // Virtual grid 64x64
 
-  ctx.imageSmoothingEnabled = false;
+  canvas.width = GRID_SIZE * P;
+  canvas.height = GRID_SIZE * P;
 
-  // BG
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, 220, 220);
-
-  // Pixel grid overlay
-  ctx.strokeStyle = isDark ? '#3a2a1a' : '#FED7AA';
-  ctx.lineWidth = 1;
-  for (let x = 0; x < 220; x += P * 2) {
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 220); ctx.stroke();
-  }
-  for (let y = 0; y < 220; y += P * 2) {
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(220, y); ctx.stroke();
-  }
-
-  const draw = (x, y, w, h, color) => {
-    ctx.fillStyle = color;
-    ctx.fillRect(x * P, y * P, w * P, h * P);
+  // Palette Warna (Premium Modern Retro)
+  const C = {
+    skin: '#f2cfae', skinShadow: '#d9ad8b',
+    hair: '#1f1e24', hairLight: '#2c2b33',
+    jacket: '#79798f', jacketShadow: '#5b5b70',
+    shirt: '#f0f4f8', shirtShadow: '#d3dae3',
+    lanyardBase: '#ffffff', lanyardAccent: '#f5c518',
+    lanyardBlack: '#111111', badge: '#3b3b4f',
+    eye: '#111111', eyeWhite: '#ffffff',
+    mustache: '#473a33', mouth: '#b8746c'
   };
 
-  // Body (centered in 220x220 = 27.5 pixels)
-  const ox = 6; // offset
-  const oy = 3;
+  // State Manager & Animation Targets
+  const state = {
+    headX: 0, headY: 0,
+    eyeX: 0, eyeY: 0,
+    shoulderY: 0,
+    smile: 0, squint: 0,
+    focus: 0, bodyZ: 0,
+    breathSpeed: 1,
+    glitch: false
+  };
 
-  // Hair
-  draw(ox + 2, oy + 1, 9, 3, hair);
-  draw(ox + 1, oy + 2, 11, 2, hair);
-  draw(ox + 1, oy + 4, 2, 3, hair);
-  draw(ox + 10, oy + 4, 2, 3, hair);
+  // Actual values (Lerped for smooth transition)
+  const actual = { ...state };
 
-  // Face
-  draw(ox + 2, oy + 3, 9, 7, skin);
+  // Physics & Secondary Motion
+  const physics = {
+    lanyardX: 0, lanyardY: 0,
+    hairBounceX: 0, hairBounceY: 0,
+    lastHeadX: 0, lastHeadY: 0
+  };
 
-  // Eyes
-  draw(ox + 3, oy + 5, 2, 2, '#2D2D2D');
-  draw(ox + 8, oy + 5, 2, 2, '#2D2D2D');
+  // Timers & Delta Time
+  let lastTime = performance.now();
+  let runTime = 0;
+  let blinkTimer = 0;
+  let isBlinking = false;
+  let segmentCooldown = 0;
 
-  // Smile
-  draw(ox + 4, oy + 8, 1, 1, '#2D2D2D');
-  draw(ox + 8, oy + 8, 1, 1, '#2D2D2D');
-  draw(ox + 5, oy + 9, 3, 1, '#2D2D2D');
+  // --------------------------------------------
+  // UTILITIES
+  // --------------------------------------------
+  const lerp = (start, end, amt) => (1 - amt) * start + amt * end;
+  const rand = (min, max) => Math.random() * (max - min) + min;
 
-  // Neck
-  draw(ox + 5, oy + 10, 3, 2, skin);
+  // --------------------------------------------
+  // ANIMATION SCHEDULER & SEGMENTS
+  // --------------------------------------------
+  const segments = [
+    { id: 'idle', weight: 40, apply: () => { resetTarget(); } },
+    { id: 'lookLeft', weight: 15, apply: () => { resetTarget(); state.headX = -2; state.eyeX = -3; } },
+    { id: 'lookRight', weight: 15, apply: () => { resetTarget(); state.headX = 2; state.eyeX = 3; } },
+    { id: 'thinking', weight: 10, apply: () => { resetTarget(); state.headY = 1.5; state.eyeY = 2; state.focus = 1; state.breathSpeed = 0.6; } },
+    { id: 'typing', weight: 10, apply: () => { resetTarget(); state.bodyZ = 1; state.focus = 1; state.headY = 0.5; state.breathSpeed = 1.2; } },
+    { id: 'smile', weight: 8, apply: () => { resetTarget(); state.smile = 1; state.squint = 1; state.headY = -0.5; } },
+    { id: 'shoulderAdjust', weight: 5, apply: () => { resetTarget(); state.shoulderY = -1.5; setTimeout(() => state.shoulderY = 0, 400); } },
+    { id: 'focus', weight: 10, apply: () => { resetTarget(); state.focus = 1; state.eyeX = 0; state.eyeY = 0; state.breathSpeed = 0.8; } }
+  ];
 
-  // Shirt/Body
-  draw(ox + 2, oy + 12, 9, 7, shirt);
+  function resetTarget() {
+    state.headX = 0; state.headY = 0;
+    state.eyeX = 0; state.eyeY = 0;
+    state.shoulderY = 0; state.smile = 0;
+    state.squint = 0; state.focus = 0;
+    state.bodyZ = 0; state.breathSpeed = 1;
+  }
 
-  // Collar
-  draw(ox + 5, oy + 12, 3, 2, '#EA580C');
+  function pickRandomSegment() {
+    let totalWeight = segments.reduce((sum, seg) => sum + seg.weight, 0);
+    let randomVal = rand(0, totalWeight);
+    for (let seg of segments) {
+      if (randomVal < seg.weight) {
+        seg.apply();
+        break;
+      }
+      randomVal -= seg.weight;
+    }
+    // Rare Glitch Event (1%)
+    if (Math.random() < 0.01) triggerGlitch();
+  }
 
-  // Arms
-  draw(ox, oy + 12, 3, 5, shirt);
-  draw(ox + 10, oy + 12, 3, 5, shirt);
+  function triggerGlitch() {
+    state.glitch = true;
+    setTimeout(() => { state.glitch = false; }, 100); // 1-2 frames at 60fps
+  }
 
-  // Hands
-  draw(ox, oy + 17, 3, 2, skin);
-  draw(ox + 10, oy + 17, 3, 2, skin);
+  // --------------------------------------------
+  // PROCEDURAL DRAWING SYSTEM
+  // --------------------------------------------
+  function drawRect(x, y, w, h, color) {
+    ctx.fillStyle = color;
+    ctx.fillRect(Math.round(x) * P, Math.round(y) * P, Math.round(w) * P, Math.round(h) * P);
+  }
 
-  // Laptop
-  draw(ox + 2, oy + 18, 9, 5, '#2D2D2D');
-  draw(ox + 3, oy + 19, 7, 3, '#3B82F6');
-  draw(ox + 4, oy + 20, 2, 1, '#F97316');
-  draw(ox + 7, oy + 20, 1, 1, '#F97316');
+  // Layer Rendering with Parallax
+  function drawLayer(offsetX, offsetY, depthX, depthY, drawFn) {
+    const px = actual.headX * depthX + offsetX;
+    const py = actual.headY * depthY + offsetY;
+    drawFn(px, py);
+  }
 
-  // Orange highlight on shirt
-  draw(ox + 4, oy + 14, 5, 1, '#FED7AA');
+  function renderAvatar() {
+    // 1. Floating & Breathing Idle System
+    const floatY = Math.sin(runTime * 1.5) * 0.5;
+    const breathY = Math.sin(runTime * 3 * actual.breathSpeed) * 0.8;
+    const baseOffsetY = 15 + floatY;
+    const baseX = 32; // Center X
+
+    // 2. Base Body & Shoulders (Depth: 0.1)
+    drawLayer(baseX, baseOffsetY + breathY + actual.shoulderY - actual.bodyZ, 0.1, 0.1, (x, y) => {
+      // Jas Almamater
+      drawRect(x - 22, y + 25, 44, 25, C.jacket);
+      drawRect(x - 20, y + 24, 40, 26, C.jacketShadow);
+      // Kemeja Terang
+      drawRect(x - 8, y + 23, 16, 27, C.shirt);
+      drawRect(x - 6, y + 24, 12, 26, C.shirtShadow);
+      // Leher
+      drawRect(x - 4, y + 18, 8, 8, C.skinShadow);
+    });
+
+    // 3. Lanyard Physics & Render (Secondary Motion)
+    drawLayer(baseX + physics.lanyardX, baseOffsetY + breathY + physics.lanyardY - actual.bodyZ, 0.15, 0.15, (x, y) => {
+      // Tali putih
+      drawRect(x - 5, y + 23, 2, 15, C.lanyardBase);
+      drawRect(x + 3, y + 23, 2, 15, C.lanyardBase);
+      // Aksen kuning/hitam
+      drawRect(x - 5, y + 30, 2, 2, C.lanyardAccent);
+      drawRect(x + 3, y + 30, 2, 2, C.lanyardBlack);
+      // Badge
+      drawRect(x - 3, y + 37, 6, 8, C.badge);
+    });
+
+    // 4. Back Hair (Depth: 0.3)
+    drawLayer(baseX, baseOffsetY + floatY, 0.3, 0.3, (x, y) => {
+      drawRect(x - 12, y - 5, 24, 22, C.hair);
+    });
+
+    // 5. Head & Face Base (Depth: 0.5)
+    drawLayer(baseX, baseOffsetY + floatY, 0.5, 0.5, (x, y) => {
+      // Telinga
+      drawRect(x - 11, y + 6, 3, 5, C.skinShadow);
+      drawRect(x + 8, y + 6, 3, 5, C.skinShadow);
+      // Wajah Ramping
+      drawRect(x - 9, y - 2, 18, 22, C.skin);
+      // Shadow rahang
+      drawRect(x - 8, y + 18, 16, 3, C.skinShadow);
+    });
+
+    // 6. Facial Features (Depth: 0.7 - 0.9)
+    drawLayer(baseX, baseOffsetY + floatY, 0.8, 0.8, (x, y) => {
+      // Kumis Tipis Natural
+      drawRect(x - 5, y + 14, 10, 1, C.mustache);
+
+      // Senyum/Mulut (Interpolated)
+      let mouthW = 6 + (actual.smile * 2);
+      let mouthY = y + 16 - (actual.smile * 0.5);
+      drawRect(x - (mouthW / 2), mouthY, mouthW, 1, C.mouth);
+      if (actual.smile > 0.5) {
+        drawRect(x - (mouthW / 2) - 1, mouthY - 1, 1, 1, C.mouth);
+        drawRect(x + (mouthW / 2), mouthY - 1, 1, 1, C.mouth);
+      }
+
+      // Mata & Tracking (Depth: 1.0)
+      let ex = x + actual.eyeX;
+      let ey = y + 5 + actual.eyeY;
+
+      if (!isBlinking) {
+        let eyeHeight = 3 - (actual.squint * 1.5) - (actual.focus * 0.5);
+        // Sklera
+        drawRect(ex - 6, ey, 4, eyeHeight, C.eyeWhite);
+        drawRect(ex + 2, ey, 4, eyeHeight, C.eyeWhite);
+        // Pupil
+        let px = ex + (actual.eyeX * 0.5);
+        let py = ey + (actual.eyeY * 0.2);
+        drawRect(px - 5, py, 2, eyeHeight, C.eye);
+        drawRect(px + 3, py, 2, eyeHeight, C.eye);
+      } else {
+        // Blink frame
+        drawRect(ex - 6, ey + 1, 4, 1, C.skinShadow);
+        drawRect(ex + 2, ey + 1, 4, 1, C.skinShadow);
+      }
+
+      // Alis
+      let browY = ey - 3 + (actual.focus * 1) - (actual.smile * 0.5);
+      drawRect(x - 7, browY, 5, 1, C.hairLight);
+      drawRect(x + 2, browY, 5, 1, C.hairLight);
+    });
+
+    // 7. Front Hair & Micro Bounce (Depth: 1.2)
+    drawLayer(baseX, baseOffsetY + floatY, 1.2, 1.2, (x, y) => {
+      let hx = x + physics.hairBounceX;
+      let hy = y + physics.hairBounceY;
+
+      // Messy Bangs
+      drawRect(hx - 10, hy - 6, 20, 6, C.hair);
+      drawRect(hx - 11, hy - 3, 3, 5, C.hair);
+      drawRect(hx + 8, hy - 3, 3, 4, C.hair);
+      drawRect(hx - 4, hy, 4, 3, C.hairLight); // highlight
+      drawRect(hx + 2, hy, 3, 2, C.hair);
+    });
+  }
+
+  // --------------------------------------------
+  // MAIN ANIMATION LOOP
+  // --------------------------------------------
+  function loop(timestamp) {
+    const dt = (timestamp - lastTime) / 1000;
+    lastTime = timestamp;
+    runTime += dt;
+
+    ctx.imageSmoothingEnabled = false;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // 1. Procedural Scheduling
+    segmentCooldown -= dt;
+    if (segmentCooldown <= 0) {
+      pickRandomSegment();
+      segmentCooldown = rand(1.5, 4.0); // Random delay between actions
+    }
+
+    // 2. Blink System (Anti-repeat, Natural timing)
+    blinkTimer -= dt;
+    if (blinkTimer <= 0) {
+      isBlinking = true;
+      setTimeout(() => { isBlinking = false; }, rand(100, 150)); // Quick curve blink
+      blinkTimer = rand(2.5, 6.0); // Don't blink too often
+    }
+
+    // 3. Smooth Interpolation (Lerp)
+    const lerpSpeed = 5 * dt;
+    actual.headX = lerp(actual.headX, state.headX, lerpSpeed);
+    actual.headY = lerp(actual.headY, state.headY, lerpSpeed);
+    actual.eyeX = lerp(actual.eyeX, state.eyeX, lerpSpeed * 1.5);
+    actual.eyeY = lerp(actual.eyeY, state.eyeY, lerpSpeed * 1.5);
+    actual.shoulderY = lerp(actual.shoulderY, state.shoulderY, lerpSpeed * 2);
+    actual.smile = lerp(actual.smile, state.smile, lerpSpeed);
+    actual.squint = lerp(actual.squint, state.squint, lerpSpeed);
+    actual.focus = lerp(actual.focus, state.focus, lerpSpeed);
+    actual.bodyZ = lerp(actual.bodyZ, state.bodyZ, lerpSpeed);
+    actual.breathSpeed = lerp(actual.breathSpeed, state.breathSpeed, lerpSpeed * 0.5);
+
+    // 4. Secondary Physics Math
+    // Lanyard dragging behind shoulder/body movement
+    physics.lanyardX = lerp(physics.lanyardX, actual.headX * 0.3, lerpSpeed * 0.8);
+    physics.lanyardY = lerp(physics.lanyardY, actual.shoulderY * 0.5, lerpSpeed * 0.8);
+
+    // Hair micro bounce based on head velocity
+    const headVelX = actual.headX - physics.lastHeadX;
+    const headVelY = actual.headY - physics.lastHeadY;
+    physics.hairBounceX = lerp(physics.hairBounceX, -headVelX * 2, lerpSpeed * 2);
+    physics.hairBounceY = lerp(physics.hairBounceY, -headVelY * 2, lerpSpeed * 2);
+    physics.lastHeadX = actual.headX;
+    physics.lastHeadY = actual.headY;
+
+    // 5. Glitch Pass
+    if (state.glitch) {
+      ctx.save();
+      ctx.translate(rand(-2, 2) * P, rand(-2, 2) * P);
+      ctx.globalCompositeOperation = Math.random() > 0.5 ? 'color-dodge' : 'difference';
+    }
+
+    // 6. Render Layers
+    renderAvatar();
+
+    if (state.glitch) {
+      // Add retro scanline/RGB shift artifact during glitch
+      ctx.fillStyle = 'rgba(0, 255, 100, 0.2)';
+      ctx.fillRect(0, rand(0, canvas.height), canvas.width, P * 2);
+      ctx.restore();
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  // Start Engine
+  requestAnimationFrame(loop);
 }
+
+window.addEventListener('DOMContentLoaded', initPersonalAvatar);
 
 // ============================================
 // PROJECT FILTER
@@ -1446,14 +1656,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initHoverSounds();
   initSectionIndicator();
 
-  // Draw avatar after a tick
+  // Init project thumbnails
   setTimeout(() => {
-    drawPixelAvatar();
     initProjectThumbnails();
   }, 100);
-
-  // Re-draw on dark mode toggle
-  document.getElementById('dark-mode-btn')?.addEventListener('click', () => {
-    setTimeout(() => { drawPixelAvatar(); }, 50);
-  });
 });
