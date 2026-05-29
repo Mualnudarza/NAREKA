@@ -249,6 +249,7 @@ function initDinoGame() {
       if (!this.jumping && !this.dead) {
         this.vy = -15;
         this.jumping = true;
+        if (window._dinoSfx) window._dinoSfx.jump();
       }
     },
 
@@ -535,6 +536,7 @@ function initDinoGame() {
         if (checkCollision(dino.getBounds(), obstacles[i].getBounds())) {
           gameOver = true;
           dino.dead = true;
+          if (window._dinoSfx) window._dinoSfx.gameOver();
           // Gunakan Math.floor untuk perbandingan hiScore
           if (Math.floor(score) > hiScore) {
             hiScore = Math.floor(score);
@@ -881,188 +883,471 @@ function initEasterEgg() {
 
 // ============================================
 // RETRO DINO AMBIENCE MUSIC
-// Intro -> Middle -> Outro -> Loop
+// Segment-Loop Day/Night Soundtrack
 // ============================================
 
 function initMusicToggle() {
+
   const btn = document.getElementById('music-toggle');
   if (!btn) return;
 
+  // ============================================
+  // AUDIO ENGINE
+  // ============================================
+
   let audioCtx = null;
-  let playing = false;
-  let musicTimeouts = [];
+  let masterGain = null;
+  let lowpass = null;
+  let compressor = null;
+  let activeOsc = 0;
+  const MAX_OSC = 16;
 
-  // ============================================
-  // NOTE PLAYER
-  // ============================================
+  function initAudio() {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.setValueAtTime(0.7, audioCtx.currentTime);
 
-  function playNote(freq, duration = 0.35, volume = 0.03, type = 'square') {
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
+    lowpass = audioCtx.createBiquadFilter();
+    lowpass.type = 'lowpass';
+    lowpass.frequency.value = 3200;
+    lowpass.Q.value = 0.5;
+
+    compressor = audioCtx.createDynamicsCompressor();
+    compressor.threshold.setValueAtTime(-22, audioCtx.currentTime);
+    compressor.knee.setValueAtTime(14, audioCtx.currentTime);
+    compressor.ratio.setValueAtTime(5, audioCtx.currentTime);
+    compressor.attack.setValueAtTime(0.008, audioCtx.currentTime);
+    compressor.release.setValueAtTime(0.22, audioCtx.currentTime);
+
+    masterGain.connect(lowpass);
+    lowpass.connect(compressor);
+    compressor.connect(audioCtx.destination);
+  }
+
+  // [schedule note — anti-crack envelope]
+
+  function scheduleNote(freq, startTime, dur, vol, wave) {
+    if (!freq || !audioCtx) return;
+    if (activeOsc >= MAX_OSC) return;
+
+    const d = Math.max(dur, 0.05);
+    const attack = Math.min(0.022, d * 0.18);
+    const release = Math.min(0.075, d * 0.38);
+    const holdEnd = Math.max(startTime + attack, startTime + d - release);
+    const v = Math.min(Math.max(vol, 0.0001), 0.45);
 
     const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
+    const gn = audioCtx.createGain();
 
-    osc.type = type;
-    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    osc.type = wave;
+    osc.frequency.setValueAtTime(freq, startTime);
 
-    gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+    gn.gain.setValueAtTime(0.0001, startTime);
+    gn.gain.linearRampToValueAtTime(v, startTime + attack);
+    gn.gain.setValueAtTime(v, holdEnd);
+    gn.gain.exponentialRampToValueAtTime(0.0001, startTime + d);
 
-    // smooth fade
-    gain.gain.exponentialRampToValueAtTime(
-      0.0001,
-      audioCtx.currentTime + duration
-    );
+    osc.connect(gn);
+    gn.connect(masterGain);
+    osc.start(startTime);
+    osc.stop(startTime + d + 0.008);
 
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-
-    osc.start();
-    osc.stop(audioCtx.currentTime + duration);
+    activeOsc++;
+    osc.onended = () => { activeOsc--; osc.disconnect(); gn.disconnect(); };
   }
 
   // ============================================
-  // SONG STRUCTURE
+  // NOTE TABLE
   // ============================================
 
-  // INTRO (slow & empty)
-  const intro = [
-    523, 659, 784, 659,
-    523, 494, 523, 659
-  ];
-
-  // MIDDLE (main ambience groove)
-  const middle = [
-    659, 698, 784, 698,
-    659, 523, 587, 659,
-
-    784, 880, 784, 698,
-    659, 587, 523, 587
-  ];
-
-  // OUTRO (calm down)
-  const outro = [
-    659, 587, 523, 494,
-    440, 494, 523
-  ];
+  const N = {
+    C3: 130.81, D3: 146.83, E3: 164.81, F3: 174.61,
+    G3: 196.00, A3: 220.00, B3: 246.94,
+    C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23,
+    G4: 392.00, A4: 440.00, B4: 493.88,
+    C5: 523.25, D5: 587.33, E5: 659.25,
+    R: 0
+  };
 
   // ============================================
-  // SECTION PLAYER
+  // DAY SEGMENTS — energetic, arcade, fast
+  // BPM ~160 | step = 0.187s
+  // square dominant, intense beat
   // ============================================
 
-  function scheduleSection(notes, speed, startDelay = 0) {
-    let currentDelay = startDelay;
+  const DAY_STEP = 0.1875;  // 60/160/2
+  const DAY_LOOKAHEAD = 0.12;
+  const DAY_TICK = 22;
 
-    notes.forEach((note, index) => {
-      const timeout = setTimeout(() => {
-        if (!playing) return;
+  const DAY_SEGMENTS = [
 
-        // lead
-        playNote(note, speed / 1000, 0.03, 'square');
+    // 0 — Dino Sprint (C major pentatonic run)
+    {
+      name: 'DINO SPRINT',
+      melody: [N.C4, N.E4, N.G4, N.C5, N.G4, N.E4, N.C4, N.E4,
+      N.G4, N.C5, N.E5, N.C5, N.G4, N.E4, N.G4, N.C4],
+      bass: [N.C3, N.G3, N.C3, N.G3],
+      loop: 2
+    },
 
-        // soft bass
-        playNote(note / 2, speed / 800, 0.015, 'triangle');
+    // 1 — Pixel Rush (G major, upward energy)
+    {
+      name: 'PIXEL RUSH',
+      melody: [N.G4, N.B4, N.D5, N.B4, N.G4, N.D4, N.G4, N.B4,
+      N.D5, N.G4, N.D5, N.B4, N.D4, N.G4, N.B4, N.D5],
+      bass: [N.G3, N.D3, N.G3, N.B3],
+      loop: 2
+    },
 
-      }, currentDelay);
+    // 2 — Arcade Jump (F major, bouncy)
+    {
+      name: 'ARCADE JUMP',
+      melody: [N.F4, N.A4, N.C5, N.A4, N.F4, N.C4, N.F4, N.A4,
+      N.C5, N.A4, N.C5, N.E5, N.C5, N.A4, N.F4, N.C4],
+      bass: [N.F3, N.C3, N.F3, N.A3],
+      loop: 2
+    },
 
-      musicTimeouts.push(timeout);
+    // 3 — Turbo Run (D major, driving)
+    {
+      name: 'TURBO RUN',
+      melody: [N.D4, N.F4, N.A4, N.D5, N.A4, N.F4, N.D4, N.A4,
+      N.D5, N.A4, N.F4, N.D5, N.A4, N.F4, N.A4, N.D4],
+      bass: [N.D3, N.A3, N.D3, N.F3],
+      loop: 2
+    },
 
-      currentDelay += speed;
-    });
+    // 4 — Score Attack (E minor, tense energy)
+    {
+      name: 'SCORE ATTACK',
+      melody: [N.E4, N.G4, N.B4, N.E5, N.B4, N.G4, N.E4, N.B3,
+      N.E4, N.G4, N.B4, N.D5, N.B4, N.G4, N.E4, N.G4],
+      bass: [N.E3, N.B3, N.G3, N.B3],
+      loop: 2
+    },
 
-    return currentDelay;
-  }
+    // 5 — Level Up (A major, bright)
+    {
+      name: 'LEVEL UP',
+      melody: [N.A4, N.C5, N.E5, N.C5, N.A4, N.E4, N.A4, N.C5,
+      N.E5, N.C5, N.A4, N.C5, N.E4, N.A4, N.E4, N.C4],
+      bass: [N.A3, N.E3, N.A3, N.C4],
+      loop: 2
+    },
 
-  // ============================================
-  // MAIN LOOP
-  // ============================================
+    // 6 — Hyper Dash (C pentatonic, short loop)
+    {
+      name: 'HYPER DASH',
+      melody: [N.C5, N.G4, N.E4, N.G4, N.C5, N.E5, N.C5, N.G4],
+      bass: [N.C3, N.G3, N.E3, N.G3],
+      loop: 3
+    },
 
-  function startMusicLoop() {
-
-    let timeline = 0;
-
-    // ========================================
-    // INTRO
-    // ========================================
-    timeline = scheduleSection(
-      intro,
-      700,
-      timeline
-    );
-
-    // tiny pause
-    timeline += 600;
-
-    // ========================================
-    // MIDDLE
-    // ========================================
-    timeline = scheduleSection(
-      middle,
-      420,
-      timeline
-    );
-
-    // second middle layer
-    timeline = scheduleSection(
-      middle,
-      420,
-      timeline
-    );
-
-    // ========================================
-    // OUTRO
-    // ========================================
-    timeline += 400;
-
-    timeline = scheduleSection(
-      outro,
-      650,
-      timeline
-    );
-
-    // ========================================
-    // LOOP AGAIN
-    // ========================================
-    const loopTimeout = setTimeout(() => {
-      if (playing) {
-        startMusicLoop();
-      }
-    }, timeline + 1000);
-
-    musicTimeouts.push(loopTimeout);
-  }
-
-  // ============================================
-  // STOP ALL MUSIC
-  // ============================================
-
-  function stopMusic() {
-    musicTimeouts.forEach(timeout => clearTimeout(timeout));
-    musicTimeouts = [];
-  }
-
-  // ============================================
-  // BUTTON TOGGLE
-  // ============================================
-
-  btn.addEventListener('click', async () => {
-
-    if (!audioCtx) {
-      audioCtx = new (
-        window.AudioContext ||
-        window.webkitAudioContext
-      )();
+    // 7 — Coin Chase (G pentatonic, syncopated)
+    {
+      name: 'COIN CHASE',
+      melody: [N.G4, N.A4, N.B4, N.D5, N.B4, N.A4, N.G4, N.E4,
+      N.G4, N.B4, N.D5, N.B4, N.G4, N.D4, N.G4, N.B4],
+      bass: [N.G3, N.D3, N.B3, N.D3],
+      loop: 2
     }
 
-    playing = !playing;
+  ];
 
+  // ============================================
+  // NIGHT SEGMENTS — chill, slow, ambient
+  // BPM ~76 | step = ~0.394s
+  // triangle/sine dominant, sparse
+  // ============================================
+
+  const NIGHT_STEP = 0.3947;  // 60/76/2
+  const NIGHT_LOOKAHEAD = 0.18;
+  const NIGHT_TICK = 30;
+
+  const NIGHT_SEGMENTS = [
+
+    // 0 — Moonlit Run (C maj7, floating)
+    {
+      name: 'MOONLIT RUN',
+      melody: [N.C4, N.E4, N.G4, N.B4, N.G4, N.E4, N.C4, N.E4],
+      bass: [N.C3, N.G3, N.E3, N.G3],
+      loop: 3
+    },
+
+    // 1 — Night Dino (A minor, wistful)
+    {
+      name: 'NIGHT DINO',
+      melody: [N.A4, N.G4, N.E4, N.G4, N.A4, N.C5, N.A4, N.G4],
+      bass: [N.A3, N.E3, N.A3, N.C4],
+      loop: 2
+    },
+
+    // 2 — Starfield (G major, airy)
+    {
+      name: 'STARFIELD',
+      melody: [N.G4, N.B4, N.D5, N.B4, N.D5, N.B4, N.G4, N.D4],
+      bass: [N.G3, N.D3, N.B3, N.D3],
+      loop: 2
+    },
+
+    // 3 — Dusk Wander (F major, relaxed)
+    {
+      name: 'DUSK WANDER',
+      melody: [N.F4, N.A4, N.C5, N.A4, N.F4, N.E4, N.F4, N.A4],
+      bass: [N.F3, N.C3, N.F3, N.A3],
+      loop: 3
+    },
+
+    // 4 — Pixel Dusk (E minor, melancholy)
+    {
+      name: 'PIXEL DUSK',
+      melody: [N.E4, N.G4, N.B4, N.G4, N.E4, N.D4, N.E4, N.G4],
+      bass: [N.E3, N.B3, N.G3, N.B3],
+      loop: 2
+    },
+
+    // 5 — Late Lap (C sparse, rests)
+    {
+      name: 'LATE LAP',
+      melody: [N.G4, N.R, N.E4, N.R, N.C5, N.R, N.E4, N.G4],
+      bass: [N.C3, N.R, N.G3, N.R],
+      loop: 3
+    },
+
+    // 6 — Desert Night (D major, slow ascend)
+    {
+      name: 'DESERT NIGHT',
+      melody: [N.D4, N.F4, N.A4, N.C5, N.A4, N.F4, N.D4, N.A3],
+      bass: [N.D3, N.A3, N.F3, N.A3],
+      loop: 2
+    },
+
+    // 7 — Chill Fossil (A dorian, warm minor)
+    {
+      name: 'CHILL FOSSIL',
+      melody: [N.A4, N.G4, N.E4, N.G4, N.A4, N.G4, N.E4, N.C4],
+      bass: [N.A3, N.E3, N.C4, N.E3],
+      loop: 3
+    }
+
+  ];
+
+  // ============================================
+  // PLAYBACK STATE
+  // ============================================
+
+  let playing = false;
+  let schedulerTimer = null;
+
+  let nextNoteTime = 0;
+  let melodyStep = 0;
+  let segLoopCount = 0;
+  let lastSegIdx = -1;
+  let currentSeg = null;
+  let nextSegIdx = -1;
+
+  // [active config — set on start/mode switch]
+  let STEP_SEC = DAY_STEP;
+  let LOOKAHEAD = DAY_LOOKAHEAD;
+  let SCHED_TICK = DAY_TICK;
+  let SEGMENTS = DAY_SEGMENTS;
+  let isDarkMode = false;
+
+  // ============================================
+  // SEGMENT MANAGER
+  // ============================================
+
+  function pickNextSeg(avoid) {
+    if (SEGMENTS.length === 1) return 0;
+    let idx, tries = 0;
+    do { idx = Math.floor(Math.random() * SEGMENTS.length); tries++; }
+    while (idx === avoid && tries < 10);
+    return idx;
+  }
+
+  function loadSeg(idx) {
+    currentSeg = SEGMENTS[idx];
+    lastSegIdx = idx;
+    segLoopCount = 0;
+    melodyStep = 0;
+  }
+
+  // ============================================
+  // STEP SCHEDULER
+  // ============================================
+
+  function scheduleStep() {
+    const seg = currentSeg;
+    const step = melodyStep;
+    const isBeat = (step % 4 === 0);
+    const t = nextNoteTime;
+
+    // [melody]
+    const mFreq = seg.melody[step];
+    if (mFreq) {
+      const mWave = (!isDarkMode && mFreq < 480) ? (isBeat ? 'square' : 'triangle') : 'triangle';
+      const mVol = isDarkMode
+        ? (isBeat ? 0.048 : 0.036)
+        : (isBeat ? 0.060 : 0.046);
+      scheduleNote(mFreq, t, STEP_SEC * 0.78, mVol, mWave);
+    }
+
+    // [bass — every quarter note]
+    if (step % 2 === 0) {
+      const bIdx = Math.floor(step / 2) % seg.bass.length;
+      const bFreq = seg.bass[bIdx];
+      if (bFreq) {
+        const bVol = isDarkMode ? 0.022 : 0.030;
+        scheduleNote(bFreq, t, STEP_SEC * 1.6, bVol, 'triangle');
+      }
+    }
+
+    // [pad — every 4 steps, octave below melody]
+    if (step % 4 === 0 && mFreq) {
+      const padFreq = mFreq * 0.5;
+      if (padFreq >= 90 && padFreq <= 400) {
+        const padVol = isDarkMode ? 0.014 : 0.010;
+        scheduleNote(padFreq, t + STEP_SEC * 0.02, STEP_SEC * 2.0, padVol, 'sine');
+      }
+    }
+
+    nextNoteTime += STEP_SEC;
+    melodyStep++;
+
+    if (melodyStep >= seg.melody.length) {
+      melodyStep = 0;
+      segLoopCount++;
+      if (segLoopCount >= seg.loop) {
+        const nxt = nextSegIdx >= 0 ? nextSegIdx : pickNextSeg(lastSegIdx);
+        nextSegIdx = -1;
+        loadSeg(nxt);
+      }
+    }
+  }
+
+  // ============================================
+  // LOOK-AHEAD SCHEDULER
+  // ============================================
+
+  function schedulerTick() {
+    if (!playing) return;
+    const horizon = audioCtx.currentTime + LOOKAHEAD;
+    while (nextNoteTime < horizon) scheduleStep();
+    schedulerTimer = setTimeout(schedulerTick, SCHED_TICK);
+  }
+
+  // ============================================
+  // TRANSPORT
+  // ============================================
+
+  function getMode() {
+    return document.body.classList.contains('dark-mode');
+  }
+
+  function applyMode() {
+    isDarkMode = getMode();
+    SEGMENTS = isDarkMode ? NIGHT_SEGMENTS : DAY_SEGMENTS;
+    STEP_SEC = isDarkMode ? NIGHT_STEP : DAY_STEP;
+    LOOKAHEAD = isDarkMode ? NIGHT_LOOKAHEAD : DAY_LOOKAHEAD;
+    SCHED_TICK = isDarkMode ? NIGHT_TICK : DAY_TICK;
+  }
+
+  async function startMusic() {
+    if (!audioCtx) initAudio();
+    if (audioCtx.state === 'suspended') await audioCtx.resume();
+
+    applyMode();
+    loadSeg(pickNextSeg(-1));
+    nextNoteTime = audioCtx.currentTime + 0.06;
+    playing = true;
+    schedulerTick();
+  }
+
+  function stopMusic() {
+    playing = false;
+    clearTimeout(schedulerTimer);
+    schedulerTimer = null;
+  }
+
+  // ============================================
+  // SFX
+  // ============================================
+
+  function sfxJump() {
+    if (!audioCtx) return;
+    const t = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gn = audioCtx.createGain();
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(220, t);
+    osc.frequency.exponentialRampToValueAtTime(660, t + 0.08);
+    gn.gain.setValueAtTime(0.0001, t);
+    gn.gain.linearRampToValueAtTime(0.12, t + 0.01);
+    gn.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+    osc.connect(gn); gn.connect(masterGain);
+    osc.start(t); osc.stop(t + 0.13);
+    osc.onended = () => { osc.disconnect(); gn.disconnect(); };
+  }
+
+  function sfxGameOver() {
+    if (!audioCtx) return;
+    const t = audioCtx.currentTime;
+    [[392, 0.00], [330, 0.12], [262, 0.24], [196, 0.38]].forEach(([freq, offset]) => {
+      const osc = audioCtx.createOscillator();
+      const gn = audioCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(freq, t + offset);
+      gn.gain.setValueAtTime(0.0001, t + offset);
+      gn.gain.linearRampToValueAtTime(0.09, t + offset + 0.015);
+      gn.gain.exponentialRampToValueAtTime(0.0001, t + offset + 0.10);
+      osc.connect(gn); gn.connect(masterGain);
+      osc.start(t + offset); osc.stop(t + offset + 0.11);
+      osc.onended = () => { osc.disconnect(); gn.disconnect(); };
+    });
+  }
+
+  // [expose SFX to dino game]
+  window._dinoSfx = { jump: sfxJump, gameOver: sfxGameOver };
+
+  // ============================================
+  // CONTROLS
+  // ============================================
+
+  // [music toggle]
+  btn.addEventListener('click', async () => {
+    if (!audioCtx) initAudio();
+    if (audioCtx.state === 'suspended') await audioCtx.resume();
+
+    playing = !playing;
     btn.textContent = playing ? '🔊' : '🔇';
 
     if (playing) {
-      startMusicLoop();
+      await startMusic();
     } else {
       stopMusic();
+    }
+  });
+
+  // [mode switch — restart with new character]
+  const darkBtn = document.getElementById('dark-mode-btn');
+  if (darkBtn) {
+    darkBtn.addEventListener('click', () => {
+      if (!playing) return;
+      stopMusic();
+      setTimeout(async () => { if (playing) await startMusic(); }, 200);
+    });
+  }
+
+  // [page visibility]
+  document.addEventListener('visibilitychange', () => {
+    if (!audioCtx) return;
+    if (document.hidden) {
+      audioCtx.suspend();
+    } else if (playing) {
+      audioCtx.resume().then(() => {
+        nextNoteTime = audioCtx.currentTime + 0.06;
+        schedulerTick();
+      });
     }
   });
 }
