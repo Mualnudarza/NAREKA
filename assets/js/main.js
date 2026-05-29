@@ -1330,12 +1330,27 @@ function initMusicToggle() {
 
   // [mode switch — restart with new character]
   const darkBtn = document.getElementById('dark-mode-btn');
+
   if (darkBtn) {
-    darkBtn.addEventListener('click', () => {
+
+    darkBtn.addEventListener('click', async () => {
+
       if (!playing) return;
-      stopMusic();
-      setTimeout(async () => { if (playing) await startMusic(); }, 200);
+
+      clearTimeout(schedulerTimer);
+
+      schedulerTimer = null;
+
+      applyMode();
+
+      loadSeg(pickNextSeg(lastSegIdx));
+
+      nextNoteTime = audioCtx.currentTime + 0.06;
+
+      schedulerTick();
+
     });
+
   }
 
   // [page visibility]
@@ -1386,7 +1401,7 @@ function initHoverSounds() {
     osc.start(); osc.stop(audioCtx.currentTime + dur);
   }
 
-  document.querySelectorAll('.btn-pixel, .nav-links a, .skill-tag, .filter-btn').forEach(el => {
+  document.querySelectorAll('.btn-pixel, .nav-links a, .skill-tag, .filter-btn, .stat-card, .skill-category-card, .project-card, .exp-item, .contact-item, .social-btn, .form-send-btn').forEach(el => {
     el.addEventListener('mouseenter', () => beep(600, 0.04));
   });
 }
