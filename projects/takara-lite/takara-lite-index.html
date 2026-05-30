@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AHP — Rekomendasi Kegiatan Keilmuan</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --bg: #0a0e1a;
+            --surface: #111827;
+            --surface2: #1a2235;
+            --surface3: #1f2d45;
+            --border: rgba(99, 179, 237, 0.12);
+            --border-active: rgba(99, 179, 237, 0.4);
+            --accent: #63b3ed;
+            --accent2: #76e4f7;
+            --accent3: #9f7aea;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --danger: #fc8181;
+            --text: #e2e8f0;
+            --text-muted: #718096;
+            --text-dim: #4a5568;
+            --glow: rgba(99, 179, 237, 0.15);
+            --radius: 14px;
+            --radius-sm: 8px;
+            --font: 'Sora', sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* ─── ANIMATED BG ─── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 20% 10%, rgba(99, 179, 237, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 80% 90%, rgba(159, 122, 234, 0.05) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ─── LAYOUT ─── */
+        .app {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ─── HEADER ─── */
+        header {
+            background: rgba(17, 24, 39, 0.92);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--accent), var(--accent3));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+            box-shadow: 0 0 16px rgba(99, 179, 237, 0.3);
+            flex-shrink: 0;
+        }
+
+        .logo-text {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .logo-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-top: 1px;
+        }
+
+        /* ─── STEPPER ─── */
+        .stepper {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 4px;
+            overflow: hidden;
+        }
+
+        .step-btn {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 14px;
+            border-radius: 50px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: var(--font);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .2s;
+            white-space: nowrap;
+        }
+
+        .step-btn.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: #0a0e1a;
+            font-weight: 700;
+            box-shadow: 0 0 12px rgba(99, 179, 237, 0.4);
+        }
+
+        .step-btn.done {
+            color: var(--success);
+        }
+
+        .step-btn .step-num {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: currentColor;
+            color: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            flex-shrink: 0;
+            opacity: 0.8;
+        }
+
+        .step-btn.active .step-num {
+            background: rgba(0, 0, 0, 0.25);
+            color: #0a0e1a;
+            opacity: 1;
+        }
+
+        .step-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* ─── MAIN CONTENT ─── */
+        main {
+            flex: 1;
+            padding: 32px;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn .35s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ─── PAGE HEADER ─── */
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(99, 179, 237, 0.1);
+            border: 1px solid rgba(99, 179, 237, 0.25);
+            border-radius: 50px;
+            padding: 4px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent);
+            font-family: var(--mono);
+            margin-bottom: 12px;
+            letter-spacing: 0.05em;
+        }
+
+        .page-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.2;
+        }
+
+        .page-title span {
+            color: var(--accent);
+        }
+
+        .page-desc {
+            margin-top: 8px;
+            color: var(--text-muted);
+            font-size: 14px;
+            max-width: 560px;
+            line-height: 1.6;
+        }
+
+        /* ─── CARDS ─── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .card:hover {
+            border-color: var(--border-active);
+            box-shadow: 0 0 20px var(--glow);
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .card-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* ─── GRID ─── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        /* ─── BUTTONS ─── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 600;
+            transition: all .2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: #0a0e1a;
+            box-shadow: 0 4px 14px rgba(99, 179, 237, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(99, 179, 237, 0.45);
+        }
+
+        .btn-ghost {
+            background: var(--surface2);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+
+        .btn-ghost:hover {
+            background: var(--surface3);
+            color: var(--text);
+            border-color: var(--border-active);
+        }
+
+        .btn-danger {
+            background: rgba(252, 129, 129, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(252, 129, 129, 0.2);
+        }
+
+        .btn-danger:hover {
+            background: rgba(252, 129, 129, 0.2);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #38a169);
+            color: #fff;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* ─── INPUTS ─── */
+        .input {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 9px 14px;
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 13px;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+            width: 100%;
+        }
+
+        .input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.1);
+        }
+
+        /* ─── STATUS BADGES ─── */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: var(--mono);
+        }
+
+        .badge-ok {
+            background: rgba(72, 187, 120, 0.12);
+            color: var(--success);
+            border: 1px solid rgba(72, 187, 120, 0.25);
+        }
+
+        .badge-warn {
+            background: rgba(237, 137, 54, 0.12);
+            color: var(--warning);
+            border: 1px solid rgba(237, 137, 54, 0.25);
+        }
+
+        .badge-info {
+            background: rgba(99, 179, 237, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(99, 179, 237, 0.2);
+        }
+
+        /* ─── SEPARATOR ─── */
+        .sep {
+            height: 1px;
+            background: var(--border);
+            margin: 24px 0;
+        }
+
+        /* ─── NAV ACTIONS ─── */
+        .nav-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 36px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ─── PAGE 1: KRITERIA ─── */
+        .kriteria-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .kriteria-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            transition: all .2s;
+        }
+
+        .kriteria-item:hover {
+            border-color: var(--border-active);
+        }
+
+        .kriteria-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent3));
+            color: #0a0e1a;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .kriteria-name {
+            flex: 1;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .kriteria-edit {
+            display: none;
+            flex: 1;
+        }
+
+        .add-kriteria {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        /* ─── RADAR CHART CANVAS ─── */
+        .radar-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .radar-canvas-container {
+            position: relative;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .radar-canvas {
+            display: block;
+            cursor: crosshair;
+        }
+
+        .radar-canvas.dragging {
+            cursor: grabbing;
+        }
+
+        /* ─── CONSISTENCY BOX ─── */
+        .consistency-box {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .cons-stat {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            text-align: center;
+        }
+
+        .cons-stat .label {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: var(--mono);
+        }
+
+        .cons-stat .val {
+            font-size: 20px;
+            font-weight: 800;
+            margin-top: 4px;
+            font-family: var(--mono);
+        }
+
+        .val-ok {
+            color: var(--success);
+        }
+
+        .val-warn {
+            color: var(--warning);
+        }
+
+        .val-neutral {
+            color: var(--accent);
+        }
+
+        /* ─── PRIORITY TABLE ─── */
+        .priority-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+            font-size: 12px;
+        }
+
+        .priority-table th {
+            text-align: left;
+            padding: 8px 12px;
+            background: var(--surface3);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .priority-table td {
+            padding: 9px 12px;
+            border-bottom: 1px solid rgba(99, 179, 237, 0.05);
+        }
+
+        .priority-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .priority-table tr:hover td {
+            background: rgba(99, 179, 237, 0.03);
+        }
+
+        .priority-bar {
+            height: 6px;
+            border-radius: 3px;
+            background: var(--surface3);
+            overflow: hidden;
+        }
+
+        .priority-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width .6s ease;
+        }
+
+        /* ─── PAGE 3: ALTERNATIVES ─── */
+        .alt-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+        }
+
+        .alt-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: all .25s;
+            cursor: default;
+        }
+
+        .alt-card:hover {
+            border-color: var(--border-active);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--glow);
+        }
+
+        .alt-code {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent);
+            background: rgba(99, 179, 237, 0.1);
+            border-radius: 4px;
+            padding: 2px 7px;
+            display: inline-block;
+            width: fit-content;
+        }
+
+        .alt-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.3;
+        }
+
+        .alt-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .feedback-badge {
+            margin-top: auto;
+            font-size: 10px;
+            color: var(--text-muted);
+            font-family: var(--mono);
+            padding-top: 8px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ─── PAGE 4: ALT COMPARISON ─── */
+        .criteria-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .tab-btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--text-muted);
+            font-family: var(--font);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--border-active);
+            color: var(--text);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, rgba(99, 179, 237, 0.2), rgba(118, 228, 247, 0.1));
+            border-color: var(--accent);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .tab-btn.done {
+            color: var(--success);
+            border-color: rgba(72, 187, 120, 0.3);
+            background: rgba(72, 187, 120, 0.07);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn .3s ease;
+        }
+
+        /* ─── PAGE 5: RESULTS ─── */
+        .result-rank-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            transition: all .25s;
+        }
+
+        .result-item.rank-1 {
+            border-color: rgba(255, 215, 0, 0.3);
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        .result-item.rank-2 {
+            border-color: rgba(192, 192, 192, 0.25);
+        }
+
+        .result-item.rank-3 {
+            border-color: rgba(205, 127, 50, 0.25);
+        }
+
+        .result-rank {
+            font-size: 22px;
+            font-weight: 800;
+            font-family: var(--mono);
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .rank-1 .result-rank {
+            color: gold;
+        }
+
+        .rank-2 .result-rank {
+            color: silver;
+        }
+
+        .rank-3 .result-rank {
+            color: #cd7f32;
+        }
+
+        .result-info {
+            flex: 1;
+        }
+
+        .result-name {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .result-score-bar {
+            height: 5px;
+            border-radius: 3px;
+            background: var(--surface3);
+            margin-top: 7px;
+            overflow: hidden;
+        }
+
+        .result-score-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease .2s;
+        }
+
+        .result-score-val {
+            font-family: var(--mono);
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .chart-wrap {
+            position: relative;
+            height: 280px;
+            margin-top: 20px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        /* ─── INFO BOX ─── */
+        .info-box {
+            background: rgba(99, 179, 237, 0.05);
+            border: 1px solid rgba(99, 179, 237, 0.15);
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+            font-size: 13px;
+            color: var(--text-muted);
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .info-box .icon {
+            font-size: 16px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* ─── FORMULA BOX ─── */
+        .formula-box {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent3);
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--accent2);
+            margin: 16px 0;
+            line-height: 2;
+        }
+
+        /* ─── MATRIX TABLE ─── */
+        .matrix-wrap {
+            overflow-x: auto;
+            margin-top: 12px;
+        }
+
+        .matrix-table {
+            border-collapse: collapse;
+            font-size: 11px;
+            font-family: var(--mono);
+        }
+
+        .matrix-table th,
+        .matrix-table td {
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .matrix-table th {
+            background: var(--surface3);
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .matrix-table .diag {
+            background: rgba(99, 179, 237, 0.07);
+            color: var(--accent);
+        }
+
+        .matrix-table td {
+            color: var(--text);
+        }
+
+        /* ─── RESET NOTICE ─── */
+        .reset-notice {
+            background: rgba(237, 137, 54, 0.08);
+            border: 1px solid rgba(237, 137, 54, 0.2);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            font-size: 12px;
+            color: var(--warning);
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        /* ─── SCROLLBAR ─── */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--surface);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--surface3);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-dim);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-wrap: wrap;
+                padding: 12px 16px;
+            }
+
+            .stepper {
+                overflow-x: auto;
+            }
+
+            main {
+                padding: 20px 16px;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .step-btn span.step-label {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+
+        <!-- ═══ HEADER ═══ -->
+        <header>
+            <div class="logo">
+                <div class="logo-icon">A</div>
+                <div>
+                    <div class="logo-text">AHP Decision Engine</div>
+                    <div class="logo-sub">Rekomendasi Kegiatan Keilmuan — Prototype Penelitian</div>
+                </div>
+            </div>
+            <div class="stepper" id="stepper">
+                <button class="step-btn active" onclick="goTo(0)" id="step-0">
+                    <span class="step-num">1</span><span class="step-label">Kriteria</span>
+                </button>
+                <button class="step-btn" onclick="goTo(1)" id="step-1" disabled>
+                    <span class="step-num">2</span><span class="step-label">Bobot Kriteria</span>
+                </button>
+                <button class="step-btn" onclick="goTo(2)" id="step-2" disabled>
+                    <span class="step-num">3</span><span class="step-label">Alternatif</span>
+                </button>
+                <button class="step-btn" onclick="goTo(3)" id="step-3" disabled>
+                    <span class="step-num">4</span><span class="step-label">Penilaian</span>
+                </button>
+                <button class="step-btn" onclick="goTo(4)" id="step-4" disabled>
+                    <span class="step-num">5</span><span class="step-label">Hasil</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- ═══ MAIN ═══ -->
+        <main>
+
+            <!-- ══════════════════ PAGE 1: KRITERIA ══════════════════ -->
+            <div class="page active" id="page-0">
+                <div class="page-header">
+                    <div class="page-badge">
+                        <div class="dot"></div> LANGKAH 01 — SETUP
+                    </div>
+                    <h1 class="page-title">Pengaturan <span>Kriteria</span></h1>
+                    <p class="page-desc">Definisikan kriteria yang digunakan untuk mengevaluasi tema kegiatan keilmuan.
+                        Anda dapat menambah, menghapus, atau mengganti nama kriteria sesuai kebutuhan.</p>
+                </div>
+
+                <div class="grid-2" style="gap:24px;">
+                    <div>
+                        <div class="card" style="margin-bottom:16px;">
+                            <div class="card-title">📋 Daftar Kriteria</div>
+                            <div class="card-sub" style="margin-bottom:16px;">Kriteria penilaian aktif untuk metode AHP
+                            </div>
+                            <div class="kriteria-list" id="kriteria-list"></div>
+                            <div class="add-kriteria" style="margin-top:16px;">
+                                <input class="input" id="new-kriteria-input" placeholder="Nama kriteria baru..."
+                                    onkeydown="if(event.key==='Enter') addKriteria()">
+                                <button class="btn btn-primary btn-sm" onclick="addKriteria()">＋ Tambah</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="card" style="margin-bottom:16px;">
+                            <div class="card-title">ℹ️ Tentang Kriteria AHP</div>
+                            <div class="card-sub" style="margin-bottom:12px;">Panduan untuk pemilihan kriteria</div>
+                            <div class="info-box" style="margin-bottom:10px;">
+                                <span class="icon">🎯</span>
+                                <span><strong style="color:var(--text)">Usulan Terbanyak</strong> — Mengacu pada
+                                    frekuensi tema yang paling banyak diusulkan peserta dalam data feedback.</span>
+                            </div>
+                            <div class="info-box" style="margin-bottom:10px;">
+                                <span class="icon">📚</span>
+                                <span><strong style="color:var(--text)">Relevansi Kurikulum</strong> — Seberapa jauh
+                                    tema kegiatan mendukung capaian pembelajaran dalam kurikulum aktif.</span>
+                            </div>
+                            <div class="info-box">
+                                <span class="icon">🎓</span>
+                                <span><strong style="color:var(--text)">Relevansi Profil Lulusan</strong> — Kesesuaian
+                                    tema dengan kompetensi yang diharapkan dari profil lulusan program studi.</span>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-title">⚡ Asal Data Alternatif</div>
+                            <div class="card-sub" style="margin-bottom:12px;">Proses sebelum AHP</div>
+                            <div class="info-box">
+                                <span class="icon">🔄</span>
+                                <span>Alternatif tema diperoleh dari proses <strong
+                                        style="color:var(--accent)">klasifikasi otomatis</strong> pada data saran tema
+                                    di kuesioner feedback peserta kegiatan. Top-5 tema terpopuler digunakan sebagai
+                                    alternatif AHP.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-actions">
+                    <div style="font-size:12px;color:var(--text-muted);" id="kriteria-count-label"></div>
+                    <button class="btn btn-primary" onclick="goTo(1)">Lanjut ke Bobot Kriteria →</button>
+                </div>
+            </div>
+
+            <!-- ══════════════════ PAGE 2: BOBOT KRITERIA ══════════════════ -->
+            <div class="page" id="page-1">
+                <div class="page-header">
+                    <div class="page-badge">
+                        <div class="dot"></div> LANGKAH 02 — PERBANDINGAN
+                    </div>
+                    <h1 class="page-title">Pembobotan <span>Kriteria</span></h1>
+                    <p class="page-desc">Geser titik merah pada diagram radar untuk menentukan tingkat kepentingan
+                        relatif setiap kriteria. Posisi titik menentukan nilai perbandingan berpasangan AHP secara
+                        otomatis.</p>
+                </div>
+
+                <div class="grid-2" style="gap:24px; align-items:start;">
+                    <div>
+                        <div class="card">
+                            <div class="card-title" style="margin-bottom:16px;">🕸️ Radar Interaktif — Drag Titik Merah
+                            </div>
+                            <div class="radar-wrap">
+                                <div class="radar-canvas-container">
+                                    <canvas class="radar-canvas" id="canvas-kriteria" width="460" height="460"></canvas>
+                                </div>
+                                <button class="btn btn-ghost btn-sm" onclick="resetKriteriaPoint()">↺ Reset ke
+                                    Tengah</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex;flex-direction:column;gap:16px;">
+                        <div class="card">
+                            <div class="card-title" style="margin-bottom:12px;">📊 Nilai Skala Saaty per Kriteria</div>
+                            <div id="saaty-kriteria-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-title" style="margin-bottom:12px;">📐 Matriks Perbandingan Berpasangan
+                            </div>
+                            <div class="matrix-wrap" id="kriteria-matrix-wrap"></div>
+                            <div class="formula-box" style="margin-top:12px;font-size:11px;">
+                                A[i][j] = Saaty_i / Saaty_j<br>
+                                Priority Vector = Rata-rata baris matriks ternormalisasi<br>
+                                CR = CI / RI &nbsp;|&nbsp; CI = (λmax − n) / (n − 1)
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-title" style="margin-bottom:12px;">✅ Hasil Konsistensi & Bobot</div>
+                            <div class="consistency-box" id="konsistensi-kriteria">
+                                <div class="cons-stat">
+                                    <div class="label">λmax</div>
+                                    <div class="val val-neutral" id="k-lambda">—</div>
+                                </div>
+                                <div class="cons-stat">
+                                    <div class="label">CI</div>
+                                    <div class="val val-neutral" id="k-ci">—</div>
+                                </div>
+                                <div class="cons-stat">
+                                    <div class="label">CR</div>
+                                    <div class="val" id="k-cr">—</div>
+                                </div>
+                            </div>
+                            <div id="k-cr-status" style="margin-top:12px;"></div>
+                            <table class="priority-table" id="kriteria-priority-table" style="margin-top:16px;"></table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-actions">
+                    <button class="btn btn-ghost" onclick="goTo(0)">← Kembali</button>
+                    <button class="btn btn-primary" onclick="goTo(2)">Lanjut ke Data Alternatif →</button>
+                </div>
+            </div>
+
+            <!-- ══════════════════ PAGE 3: ALTERNATIF ══════════════════ -->
+            <div class="page" id="page-2">
+                <div class="page-header">
+                    <div class="page-badge">
+                        <div class="dot"></div> LANGKAH 03 — DATA
+                    </div>
+                    <h1 class="page-title">Data <span>Alternatif</span></h1>
+                    <p class="page-desc">Alternatif tema kegiatan berikut diperoleh dari hasil klasifikasi otomatis data
+                        saran tema mahasiswa pada kuesioner feedback pasca-kegiatan (Top-5 tema terpopuler).</p>
+                </div>
+
+                <div class="info-box" style="margin-bottom:24px;">
+                    <span class="icon">🤖</span>
+                    <span>Data ini merepresentasikan output dari proses text mining & klasifikasi pada <strong
+                            style="color:var(--accent)">797 saran tema valid</strong> yang terkumpul dari 1.566 respons
+                        feedback peserta kegiatan keilmuan UBHINUS 2022–2024. Setiap tema merupakan agregasi dari
+                        kluster topik serupa setelah normalisasi sinonim.</span>
+                </div>
+
+                <div class="alt-grid" id="alt-grid"></div>
+
+                <div class="sep"></div>
+
+                <div class="card">
+                    <div class="card-title" style="margin-bottom:12px;">📈 Distribusi Frekuensi Usulan Tema</div>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;"
+                        id="freq-bars"></div>
+                </div>
+
+                <div class="nav-actions">
+                    <button class="btn btn-ghost" onclick="goTo(1)">← Kembali</button>
+                    <button class="btn btn-primary" onclick="goTo(3)">Lanjut ke Penilaian Alternatif →</button>
+                </div>
+            </div>
+
+            <!-- ══════════════════ PAGE 4: PENILAIAN ALTERNATIF ══════════════════ -->
+            <div class="page" id="page-3">
+                <div class="page-header">
+                    <div class="page-badge">
+                        <div class="dot"></div> LANGKAH 04 — EVALUASI
+                    </div>
+                    <h1 class="page-title">Penilaian <span>Alternatif</span></h1>
+                    <p class="page-desc">Untuk setiap kriteria, geser titik merah pada diagram radar untuk menentukan
+                        seberapa baik masing-masing alternatif memenuhi kriteria tersebut.</p>
+                </div>
+
+                <div class="criteria-tabs" id="alt-tabs"></div>
+
+                <div id="alt-tab-contents"></div>
+
+                <div class="nav-actions">
+                    <button class="btn btn-ghost" onclick="goTo(2)">← Kembali</button>
+                    <button class="btn btn-primary" id="btn-to-result" onclick="computeAndShowResults(); goTo(4)">Hitung
+                        & Lihat Hasil →</button>
+                </div>
+            </div>
+
+            <!-- ══════════════════ PAGE 5: HASIL ══════════════════ -->
+            <div class="page" id="page-4">
+                <div class="page-header">
+                    <div class="page-badge">
+                        <div class="dot"></div> LANGKAH 05 — OUTPUT
+                    </div>
+                    <h1 class="page-title">Hasil <span>Rekomendasi AHP</span></h1>
+                    <p class="page-desc">Sintesis akhir berdasarkan bobot kriteria dan bobot alternatif per kriteria
+                        menghasilkan ranking rekomendasi tema kegiatan keilmuan berikut.</p>
+                </div>
+
+                <div class="grid-2" style="gap:24px; align-items:start;">
+                    <div>
+                        <div class="card" style="margin-bottom:16px;">
+                            <div class="card-title" style="margin-bottom:16px;">🏆 Ranking Rekomendasi</div>
+                            <div class="result-rank-list" id="result-rank-list"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card" style="margin-bottom:16px;">
+                            <div class="card-title" style="margin-bottom:4px;">📊 Grafik Skor Akhir</div>
+                            <div class="card-sub" style="margin-bottom:4px;">Final Score = Σ (Bobot Kriteria × Bobot
+                                Alternatif per Kriteria)</div>
+                            <div class="chart-wrap"><canvas id="result-chart"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom:16px;">
+                    <div class="card-title" style="margin-bottom:16px;">🧮 Rincian Bobot Kriteria yang Digunakan</div>
+                    <div id="criteria-weights-detail"
+                        style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;"></div>
+                </div>
+
+                <div class="card" style="margin-bottom:16px;">
+                    <div class="card-title" style="margin-bottom:16px;">📋 Matriks Kontribusi (Skor Alternatif × Bobot
+                        Kriteria)</div>
+                    <div class="matrix-wrap" id="contribution-matrix"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title" style="margin-bottom:12px;">💡 Penjelasan Proses Perhitungan</div>
+                    <div class="formula-box">
+                        Final_Score[Ai] = Σ (w_k × v[Ai][Ck]) &nbsp; untuk setiap kriteria k<br><br>
+                        w_k = bobot prioritas kriteria k (dari Perbandingan Kriteria)<br>
+                        v[Ai][Ck] = bobot prioritas alternatif Ai terhadap kriteria Ck
+                    </div>
+                    <div id="result-explanation" style="font-size:13px;color:var(--text-muted);line-height:1.8;"></div>
+                </div>
+
+                <div class="nav-actions">
+                    <button class="btn btn-ghost" onclick="goTo(3)">← Kembali ke Penilaian</button>
+                    <button class="btn btn-primary" onclick="resetAll()">🔄 Mulai Ulang</button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        /* ═══════════════════════════════════════════════════════
+           STATE
+        ═══════════════════════════════════════════════════════ */
+        const STATE = {
+            kriterias: [
+                { id: 1, name: 'Usulan Terbanyak' },
+                { id: 2, name: 'Relevansi Kurikulum' },
+                { id: 3, name: 'Relevansi Profil Lulusan' }
+            ],
+            alternatives: [
+                { code: 'A1', name: 'Workshop Artificial Intelligence', icon: '🤖', freq: 16 },
+                { code: 'A2', name: 'Seminar Data Science', icon: '📊', freq: 22 },
+                { code: 'A3', name: 'Kuliah Tamu Software Engineering', icon: '💻', freq: 9 },
+                { code: 'A4', name: 'Workshop UI/UX Design', icon: '🎨', freq: 14 },
+                { code: 'A5', name: 'Seminar Cyber Security', icon: '🔐', freq: 18 }
+            ],
+            currentPage: 0,
+            kriteriaPoint: { x: 230, y: 230 },
+            altPoints: {},        // { kriteriaId: {x, y} }
+            kriteriaWeights: {},  // { id: priority }
+            altWeights: {},       // { kriteriaId: { altCode: priority } }
+            kriteriaCanvasState: {},
+            altCanvasStates: {},
+            resultChart: null,
+        };
+
+        const RI = { 1: 0, 2: 0, 3: 0.58, 4: 0.90, 5: 1.12, 6: 1.24, 7: 1.32, 8: 1.41, 9: 1.45, 10: 1.49 };
+        const SAATY_SET = [1 / 9, 1 / 8, 1 / 7, 1 / 6, 1 / 5, 1 / 4, 1 / 3, 1 / 2, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        const COLORS = ['#63b3ed', '#76e4f7', '#9f7aea', '#68d391', '#f6ad55', '#fc8181', '#b794f4'];
+
+        /* ═══════════════════════════════════════════════════════
+           NAVIGATION
+        ═══════════════════════════════════════════════════════ */
+        function goTo(n) {
+            document.querySelectorAll('.page').forEach((p, i) => p.classList.toggle('active', i === n));
+            document.querySelectorAll('.step-btn').forEach((b, i) => {
+                b.classList.remove('active');
+                if (i === n) b.classList.add('active');
+                if (i < n) b.classList.add('done');
+            });
+            STATE.currentPage = n;
+            if (n === 1) { buildKriteriaCanvas(); }
+            if (n === 3) { buildAltTabs(); }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function unlockStep(n) {
+            const btn = document.getElementById('step-' + n);
+            if (btn) btn.disabled = false;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           PAGE 1 — KRITERIA
+        ═══════════════════════════════════════════════════════ */
+        function renderKriteriaList() {
+            const list = document.getElementById('kriteria-list');
+            list.innerHTML = STATE.kriterias.map((k, i) => `
+    <div class="kriteria-item" id="ki-${k.id}">
+      <div class="kriteria-num">${i + 1}</div>
+      <div class="kriteria-name" id="kn-${k.id}">${k.name}</div>
+      <input class="input kriteria-edit" id="ke-${k.id}" value="${k.name}"
+             onkeydown="if(event.key==='Enter')saveKriteria(${k.id})"
+             onblur="saveKriteria(${k.id})" style="display:none;">
+      <button class="btn btn-ghost btn-sm" onclick="editKriteria(${k.id})">✏️</button>
+      ${STATE.kriterias.length > 2 ? `<button class="btn btn-danger btn-sm" onclick="removeKriteria(${k.id})">✕</button>` : ''}
+    </div>
+  `).join('');
+            document.getElementById('kriteria-count-label').textContent = `${STATE.kriterias.length} kriteria aktif (minimum 2)`;
+            unlockStep(1);
+        }
+
+        function addKriteria() {
+            const inp = document.getElementById('new-kriteria-input');
+            const name = inp.value.trim();
+            if (!name) return;
+            const id = Date.now();
+            STATE.kriterias.push({ id, name });
+            inp.value = '';
+            // Reset alt weights when criteria change
+            STATE.altWeights = {};
+            STATE.altPoints = {};
+            renderKriteriaList();
+        }
+
+        function removeKriteria(id) {
+            if (STATE.kriterias.length <= 2) return;
+            STATE.kriterias = STATE.kriterias.filter(k => k.id !== id);
+            delete STATE.kriteriaWeights[id];
+            delete STATE.altWeights[id];
+            delete STATE.altPoints[id];
+            renderKriteriaList();
+        }
+
+        function editKriteria(id) {
+            document.getElementById('kn-' + id).style.display = 'none';
+            document.getElementById('ke-' + id).style.display = 'block';
+            document.getElementById('ke-' + id).focus();
+        }
+
+        function saveKriteria(id) {
+            const val = document.getElementById('ke-' + id).value.trim();
+            if (val) {
+                const k = STATE.kriterias.find(c => c.id === id);
+                if (k) k.name = val;
+            }
+            document.getElementById('ke-' + id).style.display = 'none';
+            renderKriteriaList();
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           AHP MATH
+        ═══════════════════════════════════════════════════════ */
+        function nearestSaaty(val) {
+            let best = 1, diff = Infinity;
+            for (const s of SAATY_SET) { const d = Math.abs(s - val); if (d < diff) { diff = d; best = s; } }
+            return best;
+        }
+
+        function fmtSaaty(val) {
+            if (val >= 1) return String(Math.round(val));
+            return '1/' + Math.round(1 / val);
+        }
+
+        function computeSaaty(point, items, canvasSize = 460) {
+            const center = canvasSize / 2;
+            const radius = center * 0.7;
+            const n = items.length;
+            const saatyVals = [];
+            const px = point.x - center, py = point.y - center;
+            for (let i = 0; i < n; i++) {
+                const ang = (i * 2 * Math.PI / n) - Math.PI / 2;
+                const ax = Math.cos(ang), ay = Math.sin(ang);
+                const proj = px * ax + py * ay;
+                const norm = proj / radius;
+                const mag = 1 + Math.min(1, Math.abs(norm)) * 8;
+                const val = norm >= 0 ? mag : 1 / mag;
+                saatyVals.push(nearestSaaty(val));
+            }
+            return saatyVals;
+        }
+
+        function buildAHPFromSaaty(saatyVals) {
+            const n = saatyVals.length;
+            const mat = Array.from({ length: n }, (_, i) =>
+                Array.from({ length: n }, (_, j) => {
+                    if (i === j) return 1;
+                    const s2 = saatyVals[j];
+                    return s2 !== 0 ? saatyVals[i] / s2 : 100;
+                })
+            );
+            // Col sums
+            const colSums = Array(n).fill(0);
+            for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) colSums[j] += mat[i][j];
+            // Normalized
+            const norm = mat.map((row, i) => row.map((v, j) => colSums[j] !== 0 ? v / colSums[j] : 0));
+            // Priority vector
+            const pv = norm.map(row => row.reduce((a, b) => a + b, 0) / n);
+            // Lambda max
+            let lmax = 0;
+            for (let i = 0; i < n; i++) {
+                let ws = 0;
+                for (let j = 0; j < n; j++) ws += mat[i][j] * pv[j];
+                if (pv[i] !== 0) lmax += ws / pv[i];
+            }
+            lmax /= n;
+            const ci = n > 1 ? (lmax - n) / (n - 1) : 0;
+            const ri = RI[n] || 1;
+            const cr = ri !== 0 ? ci / ri : 0;
+            return { mat, norm, pv, lmax, ci, cr };
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           RADAR CANVAS ENGINE
+        ═══════════════════════════════════════════════════════ */
+        function makeRadarCanvas(canvasId, items, point, onUpdate, size = 460) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            canvas.width = size; canvas.height = size;
+            const center = size / 2;
+            const radius = center * 0.7;
+            let dragging = false;
+            let pt = { ...point };
+
+            function getVertices(r) {
+                const n = items.length;
+                return Array.from({ length: n }, (_, i) => {
+                    const ang = (i * 2 * Math.PI / n) - Math.PI / 2;
+                    return { x: center + r * Math.cos(ang), y: center + r * Math.sin(ang) };
+                });
+            }
+
+            function pointInPoly(p, verts) {
+                let inside = false;
+                for (let i = 0, j = verts.length - 1; i < verts.length; j = i++) {
+                    const xi = verts[i].x, yi = verts[i].y, xj = verts[j].x, yj = verts[j].y;
+                    const inter = ((yi > p.y) !== (yj > p.y)) && p.x < (xj - xi) * (p.y - yi) / (yj - yi) + xi;
+                    if (inter) inside = !inside;
+                }
+                return inside;
+            }
+
+            function clampToPolygon(p, verts) {
+                let best = null, bestD = Infinity;
+                for (let i = 0; i < verts.length; i++) {
+                    const a = verts[i], b = verts[(i + 1) % verts.length];
+                    const apx = p.x - a.x, apy = p.y - a.y;
+                    const abx = b.x - a.x, aby = b.y - a.y;
+                    const ab2 = abx * abx + aby * aby;
+                    let t = (apx * abx + apy * aby) / ab2;
+                    t = Math.max(0, Math.min(1, t));
+                    const cx = a.x + abx * t, cy = a.y + aby * t;
+                    const dx = cx - p.x, dy = cy - p.y;
+                    const d2 = dx * dx + dy * dy;
+                    if (d2 < bestD) { bestD = d2; best = { x: cx, y: cy }; }
+                }
+                return best;
+            }
+
+            function draw() {
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, size, size);
+                const n = items.length;
+                const verts = getVertices(radius);
+
+                // Grid rings
+                for (let s = 1; s <= 5; s++) {
+                    const r = (s / 5) * radius;
+                    const gv = getVertices(r);
+                    ctx.beginPath();
+                    gv.forEach((v, i) => i === 0 ? ctx.moveTo(v.x, v.y) : ctx.lineTo(v.x, v.y));
+                    ctx.closePath();
+                    ctx.strokeStyle = 'rgba(99,179,237,0.08)';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+
+                // Outer polygon
+                ctx.beginPath();
+                verts.forEach((v, i) => i === 0 ? ctx.moveTo(v.x, v.y) : ctx.lineTo(v.x, v.y));
+                ctx.closePath();
+                ctx.strokeStyle = 'rgba(99,179,237,0.2)';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                // Axes
+                verts.forEach(v => {
+                    ctx.beginPath(); ctx.moveTo(center, center); ctx.lineTo(v.x, v.y);
+                    ctx.strokeStyle = 'rgba(99,179,237,0.1)'; ctx.lineWidth = 1; ctx.stroke();
+                });
+
+                // Saaty values
+                const saatyVals = computeSaaty(pt, items, size);
+
+                // Labels
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                for (let i = 0; i < n; i++) {
+                    const ang = (i * 2 * Math.PI / n) - Math.PI / 2;
+                    const off = 48;
+                    const lx = center + (radius + off) * Math.cos(ang);
+                    const ly = center + (radius + off) * Math.sin(ang);
+                    // Item name
+                    const shortName = items[i].length > 14 ? items[i].substring(0, 13) + '…' : items[i];
+                    ctx.font = '11px Sora, sans-serif';
+                    ctx.fillStyle = '#e2e8f0';
+                    ctx.fillText(shortName, lx, ly - 7);
+                    // Saaty value
+                    ctx.font = '600 12px JetBrains Mono, monospace';
+                    ctx.fillStyle = '#63b3ed';
+                    ctx.fillText(fmtSaaty(saatyVals[i]), lx, ly + 9);
+                }
+
+                // Center
+                ctx.beginPath(); ctx.arc(center, center, 3, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(99,179,237,0.4)'; ctx.fill();
+
+                // Highlight polygon
+                ctx.beginPath();
+                verts.forEach((v, i) => i === 0 ? ctx.moveTo(v.x, v.y) : ctx.lineTo(v.x, v.y));
+                ctx.closePath();
+                ctx.fillStyle = 'rgba(99,179,237,0.04)'; ctx.fill();
+
+                // Drag point
+                ctx.save();
+                ctx.beginPath(); ctx.arc(pt.x, pt.y, 10, 0, Math.PI * 2);
+                const grd = ctx.createRadialGradient(pt.x, pt.y, 2, pt.x, pt.y, 10);
+                grd.addColorStop(0, '#fc8181'); grd.addColorStop(1, '#e53e3e');
+                ctx.fillStyle = grd;
+                ctx.shadowColor = 'rgba(252,129,129,0.6)'; ctx.shadowBlur = 14;
+                ctx.fill();
+                ctx.shadowColor = 'transparent';
+                ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+                ctx.restore();
+
+                onUpdate(pt, saatyVals);
+            }
+
+            function getPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = size / rect.width, scaleY = size / rect.height;
+                if (e.touches) {
+                    return { x: (e.touches[0].clientX - rect.left) * scaleX, y: (e.touches[0].clientY - rect.top) * scaleY };
+                }
+                return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
+            }
+
+            function startDrag(e) {
+                const pos = getPos(e);
+                const dx = pos.x - pt.x, dy = pos.y - pt.y;
+                if (Math.hypot(dx, dy) <= 14) { dragging = true; canvas.classList.add('dragging'); }
+            }
+            function stopDrag() { dragging = false; canvas.classList.remove('dragging'); }
+            function moveDrag(e) {
+                if (!dragging) return;
+                e.preventDefault();
+                let { x, y } = getPos(e);
+                const verts = getVertices(radius);
+                if (!pointInPoly({ x, y }, verts)) {
+                    const clamped = clampToPolygon({ x, y }, verts);
+                    if (clamped) { x = clamped.x; y = clamped.y; }
+                }
+                pt = { x, y };
+                draw();
+            }
+
+            canvas.addEventListener('mousedown', startDrag);
+            canvas.addEventListener('mouseup', stopDrag);
+            canvas.addEventListener('mouseleave', stopDrag);
+            canvas.addEventListener('mousemove', moveDrag);
+            canvas.addEventListener('touchstart', startDrag, { passive: true });
+            canvas.addEventListener('touchend', stopDrag);
+            canvas.addEventListener('touchmove', moveDrag, { passive: false });
+
+            draw();
+
+            return {
+                reset() { pt = { x: center, y: center }; draw(); },
+                getPoint() { return { ...pt }; }
+            };
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           PAGE 2 — BOBOT KRITERIA
+        ═══════════════════════════════════════════════════════ */
+        let kriteriaCanvasCtrl = null;
+
+        function buildKriteriaCanvas() {
+            const items = STATE.kriterias.map(k => k.name);
+            const pt = STATE.kriteriaPoint;
+            kriteriaCanvasCtrl = makeRadarCanvas('canvas-kriteria', items, pt, onKriteriaUpdate);
+        }
+
+        function onKriteriaUpdate(pt, saatyVals) {
+            STATE.kriteriaPoint = { ...pt };
+            const ahp = buildAHPFromSaaty(saatyVals);
+            const n = STATE.kriterias.length;
+
+            // Store weights
+            STATE.kriterias.forEach((k, i) => { STATE.kriteriaWeights[k.id] = ahp.pv[i]; });
+
+            // Saaty list
+            const saatyEl = document.getElementById('saaty-kriteria-list');
+            if (saatyEl) {
+                saatyEl.innerHTML = STATE.kriterias.map((k, i) => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;">
+        <span style="font-size:12px;color:var(--text-muted);">${k.name}</span>
+        <span style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent2);">${fmtSaaty(saatyVals[i])}</span>
+      </div>
+    `).join('');
+            }
+
+            // Matrix
+            const mwrap = document.getElementById('kriteria-matrix-wrap');
+            if (mwrap) {
+                const names = STATE.kriterias.map(k => k.name.split(' ')[0]);
+                mwrap.innerHTML = `<table class="matrix-table">
+      <tr><th></th>${names.map(n => `<th>${n}</th>`).join('')}</tr>
+      ${ahp.mat.map((row, i) => `<tr>
+        <th>${names[i]}</th>
+        ${row.map((v, j) => `<td class="${i === j ? 'diag' : ''}">${formatNum(v)}</td>`).join('')}
+      </tr>`).join('')}
+    </table>`;
+            }
+
+            // Stats
+            const crEl = document.getElementById('k-cr');
+            const ok = ahp.cr <= 0.1;
+            document.getElementById('k-lambda').textContent = formatNum(ahp.lmax);
+            document.getElementById('k-ci').textContent = formatNum(ahp.ci);
+            if (crEl) {
+                crEl.textContent = formatNum(ahp.cr);
+                crEl.className = 'val ' + (ok ? 'val-ok' : 'val-warn');
+            }
+            const statusEl = document.getElementById('k-cr-status');
+            if (statusEl) {
+                statusEl.innerHTML = ok
+                    ? `<span class="badge badge-ok">✓ Perbandingan konsisten (CR = ${formatNum(ahp.cr)} ≤ 0.1)</span>`
+                    : `<span class="badge badge-warn">⚠ Perlu disesuaikan (CR = ${formatNum(ahp.cr)} > 0.1)</span>`;
+            }
+
+            // Priority table
+            const tbl = document.getElementById('kriteria-priority-table');
+            if (tbl) {
+                const sorted = [...STATE.kriterias.map((k, i) => ({ name: k.name, pv: ahp.pv[i] }))].sort((a, b) => b.pv - a.pv);
+                const maxPv = Math.max(...ahp.pv);
+                tbl.innerHTML = `<thead><tr><th>Kriteria</th><th>Bobot Prioritas</th><th>Distribusi</th></tr></thead>
+      <tbody>${sorted.map((item, idx) => `
+        <tr>
+          <td>${item.name}</td>
+          <td style="font-family:var(--mono);color:var(--accent);font-weight:700;">${(item.pv * 100).toFixed(1)}%</td>
+          <td style="width:120px;">
+            <div class="priority-bar">
+              <div class="priority-bar-fill" style="width:${(item.pv / maxPv * 100).toFixed(1)}%;background:${COLORS[idx % COLORS.length]};"></div>
+            </div>
+          </td>
+        </tr>`).join('')}</tbody>`;
+            }
+        }
+
+        function resetKriteriaPoint() {
+            if (kriteriaCanvasCtrl) kriteriaCanvasCtrl.reset();
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           PAGE 3 — ALTERNATIF
+        ═══════════════════════════════════════════════════════ */
+        function renderAlternatives() {
+            const grid = document.getElementById('alt-grid');
+            if (!grid) return;
+            grid.innerHTML = STATE.alternatives.map((a, i) => `
+    <div class="alt-card" style="animation-delay:${i * 0.06}s;">
+      <div class="alt-icon">${a.icon}</div>
+      <div class="alt-code">${a.code}</div>
+      <div class="alt-name">${a.name}</div>
+      <div class="feedback-badge">💬 ~${a.freq} usulan mahasiswa</div>
+    </div>
+  `).join('');
+
+            const freqs = document.getElementById('freq-bars');
+            if (freqs) {
+                const maxFreq = Math.max(...STATE.alternatives.map(a => a.freq));
+                freqs.innerHTML = STATE.alternatives.map((a, i) => `
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;">
+        <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">${a.code} · ${a.name.split(' ').slice(0, 3).join(' ')}</div>
+        <div style="height:6px;background:var(--surface3);border-radius:3px;overflow:hidden;">
+          <div style="height:100%;width:${(a.freq / maxFreq * 100).toFixed(0)}%;background:${COLORS[i]};border-radius:3px;transition:width .8s ease ${i * 0.1}s;"></div>
+        </div>
+        <div style="margin-top:6px;font-family:var(--mono);font-size:11px;color:${COLORS[i]};font-weight:700;">${a.freq} usulan</div>
+      </div>
+    `).join('');
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           PAGE 4 — PENILAIAN ALTERNATIF
+        ═══════════════════════════════════════════════════════ */
+        const altCanvasCtrls = {};
+
+        function buildAltTabs() {
+            const tabs = document.getElementById('alt-tabs');
+            const contents = document.getElementById('alt-tab-contents');
+            if (!tabs || !contents) return;
+
+            tabs.innerHTML = STATE.kriterias.map((k, i) => `
+    <button class="tab-btn ${i === 0 ? 'active' : ''}" id="aTab-${k.id}" onclick="switchAltTab(${k.id})">${k.name}</button>
+  `).join('');
+
+            contents.innerHTML = STATE.kriterias.map((k, idx) => `
+    <div class="tab-content ${idx === 0 ? 'active' : ''}" id="altContent-${k.id}">
+      <div class="grid-2" style="gap:24px;align-items:start;">
+        <div class="card">
+          <div class="card-title" style="margin-bottom:6px;">🕸️ Radar — Kriteria: <span style="color:var(--accent);">${k.name}</span></div>
+          <div class="card-sub" style="margin-bottom:16px;">Semakin jauh titik dari pusat ke arah suatu alternatif, semakin tinggi prioritasnya.</div>
+          <div class="radar-wrap">
+            <div class="radar-canvas-container">
+              <canvas class="radar-canvas" id="canvas-alt-${k.id}" width="400" height="400"></canvas>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="resetAltPoint(${k.id})">↺ Reset ke Tengah</button>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:12px;">📊 Bobot Alternatif</div>
+            <table class="priority-table" id="altPriority-${k.id}"></table>
+          </div>
+          <div class="card">
+            <div class="card-title" style="margin-bottom:12px;">✅ Konsistensi</div>
+            <div class="consistency-box">
+              <div class="cons-stat"><div class="label">λmax</div><div class="val val-neutral" id="al-${k.id}-lmax">—</div></div>
+              <div class="cons-stat"><div class="label">CI</div><div class="val val-neutral" id="al-${k.id}-ci">—</div></div>
+              <div class="cons-stat"><div class="label">CR</div><div class="val" id="al-${k.id}-cr">—</div></div>
+            </div>
+            <div id="al-${k.id}-status" style="margin-top:10px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+            // Init canvases after DOM ready
+            setTimeout(() => {
+                STATE.kriterias.forEach((k, kIdx) => {
+                    const altNames = STATE.alternatives.map(a => a.name);
+                    const pt = STATE.altPoints[k.id] || { x: 200, y: 200 };
+                    altCanvasCtrls[k.id] = makeRadarCanvas(
+                        `canvas-alt-${k.id}`,
+                        altNames,
+                        pt,
+                        (p, sv) => onAltUpdate(k.id, p, sv),
+                        400
+                    );
+                });
+            }, 50);
+        }
+
+        function switchAltTab(kId) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById('aTab-' + kId).classList.add('active');
+            document.getElementById('altContent-' + kId).classList.add('active');
+        }
+
+        function onAltUpdate(kId, pt, saatyVals) {
+            STATE.altPoints[kId] = { ...pt };
+            const ahp = buildAHPFromSaaty(saatyVals);
+            const n = STATE.alternatives.length;
+
+            // Store
+            STATE.altWeights[kId] = {};
+            STATE.alternatives.forEach((a, i) => { STATE.altWeights[kId][a.code] = ahp.pv[i]; });
+
+            // Priority table
+            const tbl = document.getElementById('altPriority-' + kId);
+            if (tbl) {
+                const sorted = [...STATE.alternatives.map((a, i) => ({ code: a.code, name: a.name, pv: ahp.pv[i] }))].sort((a, b) => b.pv - a.pv);
+                const maxPv = Math.max(...ahp.pv);
+                tbl.innerHTML = `<thead><tr><th>Alternatif</th><th>Bobot</th><th>Bar</th></tr></thead>
+      <tbody>${sorted.map((item, idx) => `
+        <tr>
+          <td><span class="alt-code" style="font-size:10px;padding:1px 5px;">${item.code}</span> ${item.name.split(' ').slice(0, 3).join(' ')}</td>
+          <td style="font-family:var(--mono);color:var(--accent);font-weight:700;">${(item.pv * 100).toFixed(1)}%</td>
+          <td style="width:80px;">
+            <div class="priority-bar">
+              <div class="priority-bar-fill" style="width:${(item.pv / maxPv * 100).toFixed(1)}%;background:${COLORS[idx % COLORS.length]};"></div>
+            </div>
+          </td>
+        </tr>`).join('')}</tbody>`;
+            }
+
+            // Stats
+            const crEl = document.getElementById(`al-${kId}-cr`);
+            const ok = ahp.cr <= 0.1;
+            const lmaxEl = document.getElementById(`al-${kId}-lmax`);
+            const ciEl = document.getElementById(`al-${kId}-ci`);
+            if (lmaxEl) lmaxEl.textContent = formatNum(ahp.lmax);
+            if (ciEl) ciEl.textContent = formatNum(ahp.ci);
+            if (crEl) { crEl.textContent = formatNum(ahp.cr); crEl.className = 'val ' + (ok ? 'val-ok' : 'val-warn'); }
+            const statusEl = document.getElementById(`al-${kId}-status`);
+            if (statusEl) {
+                statusEl.innerHTML = ok
+                    ? `<span class="badge badge-ok">✓ Konsisten (CR=${formatNum(ahp.cr)})</span>`
+                    : `<span class="badge badge-warn">⚠ Perlu disesuaikan (CR=${formatNum(ahp.cr)})</span>`;
+                // Mark tab as done
+                const tabBtn = document.getElementById('aTab-' + kId);
+                if (tabBtn) tabBtn.classList.add('done');
+            }
+        }
+
+        function resetAltPoint(kId) {
+            if (altCanvasCtrls[kId]) altCanvasCtrls[kId].reset();
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           PAGE 5 — RESULTS
+        ═══════════════════════════════════════════════════════ */
+        function computeAndShowResults() {
+            // Ensure we have all weights
+            const criteriaWeights = STATE.kriteriaWeights;
+            const altWeights = STATE.altWeights;
+
+            // Final scores
+            const scores = {};
+            STATE.alternatives.forEach(a => { scores[a.code] = 0; });
+
+            STATE.kriterias.forEach(k => {
+                const kw = criteriaWeights[k.id] || (1 / STATE.kriterias.length);
+                STATE.alternatives.forEach(a => {
+                    const aw = (altWeights[k.id] && altWeights[k.id][a.code]) || (1 / STATE.alternatives.length);
+                    scores[a.code] += kw * aw;
+                });
+            });
+
+            // Sort
+            const ranked = STATE.alternatives.map(a => ({ ...a, score: scores[a.code] })).sort((a, b) => b.score - a.score);
+            const maxScore = Math.max(...ranked.map(r => r.score));
+            const rankColors = ['gold', 'silver', '#cd7f32', '#63b3ed', '#9f7aea'];
+            const fillColors = ['linear-gradient(90deg,#f6e05e,#d69e2e)', 'linear-gradient(90deg,#cbd5e0,#a0aec0)', 'linear-gradient(90deg,#e08e4a,#b7651a)', 'linear-gradient(90deg,#63b3ed,#3182ce)', 'linear-gradient(90deg,#9f7aea,#6b46c1)'];
+
+            // Rank list
+            const rankList = document.getElementById('result-rank-list');
+            if (rankList) {
+                rankList.innerHTML = ranked.map((item, i) => `
+      <div class="result-item rank-${i + 1}" style="animation-delay:${i * 0.08}s;">
+        <div class="result-rank">${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}</div>
+        <div class="result-info">
+          <div class="result-name">${item.icon} ${item.name}</div>
+          <div class="result-score-bar" style="margin-top:8px;">
+            <div class="result-score-fill" style="width:${(item.score / maxScore * 100).toFixed(1)}%;background:${rankColors[i]};"></div>
+          </div>
+          <div style="margin-top:5px;font-size:11px;color:var(--text-muted);font-family:var(--mono);">Final Score: <strong style="color:${rankColors[i]}">${(item.score * 100).toFixed(2)}%</strong></div>
+        </div>
+        <div class="result-score-val">${(item.score).toFixed(4)}</div>
+      </div>
+    `).join('');
+            }
+
+            // Chart
+            const chartEl = document.getElementById('result-chart');
+            if (chartEl) {
+                if (STATE.resultChart) STATE.resultChart.destroy();
+                STATE.resultChart = new Chart(chartEl, {
+                    type: 'bar',
+                    data: {
+                        labels: ranked.map(r => r.name.split(' ').slice(0, 3).join(' ')),
+                        datasets: [{
+                            label: 'Final Score',
+                            data: ranked.map(r => parseFloat((r.score * 100).toFixed(3))),
+                            backgroundColor: ranked.map((_, i) => ['rgba(246,224,94,0.8)', 'rgba(203,213,224,0.8)', 'rgba(224,142,74,0.8)', 'rgba(99,179,237,0.8)', 'rgba(159,122,234,0.8)'][i]),
+                            borderColor: ranked.map((_, i) => ['#d69e2e', '#718096', '#b7651a', '#3182ce', '#6b46c1'][i]),
+                            borderWidth: 2, borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: '#1a2235',
+                                borderColor: 'rgba(99,179,237,0.3)', borderWidth: 1,
+                                titleColor: '#e2e8f0', bodyColor: '#63b3ed',
+                                callbacks: { label: ctx => ` ${ctx.parsed.y.toFixed(3)}%` }
+                            }
+                        },
+                        scales: {
+                            x: { ticks: { color: '#718096', font: { family: 'Sora', size: 11 } }, grid: { color: 'rgba(99,179,237,0.05)' } },
+                            y: { ticks: { color: '#718096', font: { family: 'JetBrains Mono', size: 11 } }, grid: { color: 'rgba(99,179,237,0.07)' } }
+                        }
+                    }
+                });
+            }
+
+            // Criteria weights detail
+            const cwDetail = document.getElementById('criteria-weights-detail');
+            if (cwDetail) {
+                cwDetail.innerHTML = STATE.kriterias.map((k, i) => {
+                    const w = criteriaWeights[k.id] || 0;
+                    return `
+        <div class="cons-stat">
+          <div class="label">${k.name}</div>
+          <div class="val val-neutral">${(w * 100).toFixed(1)}%</div>
+          <div class="priority-bar" style="margin-top:8px;">
+            <div class="priority-bar-fill" style="width:${(w * 100).toFixed(1)}%;background:${COLORS[i]};"></div>
+          </div>
+        </div>
+      `;
+                }).join('');
+            }
+
+            // Contribution matrix
+            const contribEl = document.getElementById('contribution-matrix');
+            if (contribEl) {
+                const critNames = STATE.kriterias.map(k => k.name.split(' ')[0]);
+                contribEl.innerHTML = `<table class="matrix-table">
+      <thead>
+        <tr>
+          <th>Alternatif</th>
+          ${STATE.kriterias.map(k => `<th>${k.name.split(' ')[0]}<br><small style="color:var(--accent);font-size:9px;">${((criteriaWeights[k.id] || 0) * 100).toFixed(1)}%</small></th>`).join('')}
+          <th style="color:gold;">Skor Akhir</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${ranked.map(item => `
+          <tr>
+            <td style="text-align:left;font-weight:600;white-space:nowrap;">${item.icon} ${item.code}</td>
+            ${STATE.kriterias.map(k => {
+                    const kw = criteriaWeights[k.id] || 0;
+                    const aw = (altWeights[k.id] && altWeights[k.id][item.code]) || 0;
+                    const contrib = kw * aw;
+                    return `<td style="font-size:10px;">${formatNum(aw)}<br><small style="color:var(--accent);font-size:9px;">×${formatNum(kw)}=${formatNum(contrib)}</small></td>`;
+                }).join('')}
+            <td style="font-weight:800;color:gold;font-family:var(--mono);">${item.score.toFixed(4)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>`;
+            }
+
+            // Explanation
+            const expEl = document.getElementById('result-explanation');
+            if (expEl) {
+                const best = ranked[0];
+                const bestKw = STATE.kriterias.map(k => {
+                    const w = criteriaWeights[k.id] || 0;
+                    const aw = (altWeights[k.id] && altWeights[k.id][best.code]) || 0;
+                    return `${k.name} (${(w * 100).toFixed(1)}% × ${(aw * 100).toFixed(1)}% = ${(w * aw * 100).toFixed(2)}%)`;
+                }).join(', ');
+                expEl.innerHTML = `
+      <p style="margin-bottom:8px;">Berdasarkan sintesis AHP dengan <strong style="color:var(--text)">${STATE.kriterias.length} kriteria</strong> dan <strong style="color:var(--text)">${STATE.alternatives.length} alternatif</strong>,
+      rekomendasi teratas adalah <strong style="color:var(--accent)">"${best.name}"</strong> dengan skor akhir <strong style="color:gold">${best.score.toFixed(4)}</strong>.</p>
+      <p style="margin-bottom:8px;">Kontribusi per kriteria: ${bestKw}.</p>
+      <p>Metode AHP memastikan konsistensi penilaian melalui Consistency Ratio (CR ≤ 0.10).
+      Bobot final diperoleh dari rata-rata baris matriks ternormalisasi (eigenvector approximation), kemudian dikalikan dengan bobot kriteria yang bersesuaian.</p>
+    `;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           UTILS
+        ═══════════════════════════════════════════════════════ */
+        function formatNum(n) {
+            if (n === undefined || n === null || isNaN(n)) return '—';
+            return parseFloat(n).toFixed(3);
+        }
+
+        function resetAll() {
+            STATE.kriteriaPoint = { x: 230, y: 230 };
+            STATE.altPoints = {};
+            STATE.kriteriaWeights = {};
+            STATE.altWeights = {};
+            if (STATE.resultChart) { STATE.resultChart.destroy(); STATE.resultChart = null; }
+            document.querySelectorAll('.step-btn').forEach((b, i) => {
+                b.classList.remove('active', 'done');
+                b.disabled = i > 0;
+            });
+            goTo(0);
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           INIT
+        ═══════════════════════════════════════════════════════ */
+        document.addEventListener('DOMContentLoaded', () => {
+            renderKriteriaList();
+            renderAlternatives();
+            unlockStep(1);
+            unlockStep(2);
+            unlockStep(3);
+            unlockStep(4);
+        });
+    </script>
+</body>
+
+</html>
