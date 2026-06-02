@@ -1,0 +1,2571 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AHP — Rekomendasi Tema Kegiatan Keilmuan</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <style>
+        /* ====================================================
+   RESET & BASE
+==================================================== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --blue: #2563EB;
+            --blue-dark: #1D4ED8;
+            --blue-light: #DBEAFE;
+            --blue-mid: #93C5FD;
+            --blue-pale: #EFF6FF;
+            --bg: #F8FAFC;
+            --card: #FFFFFF;
+            --text: #1E293B;
+            --text-2: #475569;
+            --text-3: #94A3B8;
+            --border: #E2E8F0;
+            --border-2: #CBD5E1;
+            --success: #16A34A;
+            --success-bg: #DCFCE7;
+            --warn: #D97706;
+            --warn-bg: #FEF3C7;
+            --danger: #DC2626;
+            --danger-bg: #FEE2E2;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 1px 3px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .04);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, .08), 0 2px 4px rgba(0, 0, 0, .04);
+            --font: 'DM Sans', system-ui, sans-serif;
+            --mono: 'DM Mono', 'Courier New', monospace;
+        }
+
+        html {
+            font-size: 15px;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap');
+
+        /* ====================================================
+   LAYOUT
+==================================================== */
+        .app {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ====================================================
+   TOP NAV
+==================================================== */
+        .topnav {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 200;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .nav-logo {
+            width: 32px;
+            height: 32px;
+            background: var(--blue);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: -0.5px;
+            flex-shrink: 0;
+        }
+
+        .nav-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .nav-sub {
+            font-size: 11px;
+            color: var(--text-3);
+            line-height: 1;
+        }
+
+        .nav-steps {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .nav-step {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-3);
+            cursor: default;
+            transition: all .15s;
+            white-space: nowrap;
+        }
+
+        .nav-step.clickable {
+            cursor: pointer;
+        }
+
+        .nav-step.clickable:hover {
+            background: var(--blue-pale);
+            color: var(--blue);
+        }
+
+        .nav-step.active {
+            background: var(--blue-pale);
+            color: var(--blue);
+            font-weight: 600;
+        }
+
+        .nav-step.done {
+            color: var(--success);
+            cursor: pointer;
+        }
+
+        .nav-step.done:hover {
+            background: var(--success-bg);
+        }
+
+        .step-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1.5px solid currentColor;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .nav-step.active .step-circle {
+            background: var(--blue);
+            border-color: var(--blue);
+            color: #fff;
+        }
+
+        .nav-step.done .step-circle {
+            background: var(--success);
+            border-color: var(--success);
+            color: #fff;
+        }
+
+        .nav-divider {
+            width: 1px;
+            height: 16px;
+            background: var(--border);
+            margin: 0 2px;
+        }
+
+        /* ====================================================
+   MAIN
+==================================================== */
+        main {
+            flex: 1;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeUp .25s ease;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 36px 24px;
+        }
+
+        .container-wide {
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 36px 24px;
+        }
+
+        /* ====================================================
+   PAGE HEADER
+==================================================== */
+        .pg-header {
+            margin-bottom: 28px;
+        }
+
+        .pg-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--blue);
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .pg-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.2;
+        }
+
+        .pg-desc {
+            margin-top: 6px;
+            font-size: 13.5px;
+            color: var(--text-2);
+            line-height: 1.6;
+            max-width: 580px;
+        }
+
+        /* ====================================================
+   CARD
+==================================================== */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .card-body {
+            padding: 20px 24px;
+        }
+
+        .card-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .card-title {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: var(--text-3);
+            margin-top: 2px;
+        }
+
+        /* ====================================================
+   GRID
+==================================================== */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 14px;
+        }
+
+        /* ====================================================
+   TYPOGRAPHY
+==================================================== */
+        h3 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .label-sm {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            color: var(--text-3);
+        }
+
+        .mono {
+            font-family: var(--mono);
+        }
+
+        /* ====================================================
+   BUTTON
+==================================================== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid transparent;
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .15s;
+            text-decoration: none;
+            line-height: 1;
+        }
+
+        .btn:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .btn-primary {
+            background: var(--blue);
+            color: #fff;
+            border-color: var(--blue);
+        }
+
+        .btn-primary:hover {
+            background: var(--blue-dark);
+            border-color: var(--blue-dark);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--blue);
+            border-color: var(--blue);
+        }
+
+        .btn-outline:hover {
+            background: var(--blue-pale);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-2);
+            border-color: var(--border);
+        }
+
+        .btn-ghost:hover {
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .btn-danger-ghost {
+            background: transparent;
+            color: var(--danger);
+            border-color: transparent;
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .btn-danger-ghost:hover {
+            background: var(--danger-bg);
+        }
+
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 12px;
+        }
+
+        .btn-icon {
+            padding: 6px;
+            min-width: 32px;
+            justify-content: center;
+        }
+
+        /* ====================================================
+   INPUT
+==================================================== */
+        .input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-2);
+            border-radius: var(--radius-sm);
+            font-family: var(--font);
+            font-size: 13px;
+            color: var(--text);
+            background: var(--card);
+            outline: none;
+            transition: border-color .15s, box-shadow .15s;
+        }
+
+        .input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .1);
+        }
+
+        .input::placeholder {
+            color: var(--text-3);
+        }
+
+        /* ====================================================
+   BADGE
+==================================================== */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: .01em;
+        }
+
+        .badge-blue {
+            background: var(--blue-light);
+            color: var(--blue);
+        }
+
+        .badge-green {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        .badge-orange {
+            background: var(--warn-bg);
+            color: var(--warn);
+        }
+
+        .badge-red {
+            background: var(--danger-bg);
+            color: var(--danger);
+        }
+
+        /* ====================================================
+   DIVIDER
+==================================================== */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 20px 0;
+        }
+
+        /* ====================================================
+   NAV FOOTER
+==================================================== */
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ====================================================
+   STAT CARDS
+==================================================== */
+        .stat-card {
+            padding: 16px 20px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            color: var(--text-3);
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1;
+        }
+
+        .stat-sub {
+            font-size: 12px;
+            color: var(--text-3);
+            margin-top: 4px;
+        }
+
+        /* ====================================================
+   KRITERIA LIST
+==================================================== */
+        .kriteria-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--card);
+            transition: border-color .15s;
+        }
+
+        .kriteria-item:hover {
+            border-color: var(--blue-mid);
+        }
+
+        .kriteria-item+.kriteria-item {
+            margin-top: 8px;
+        }
+
+        .kriteria-num {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .kriteria-label {
+            flex: 1;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .kriteria-input {
+            flex: 1;
+        }
+
+        .add-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        /* ====================================================
+   PENTAGON / RADAR CANVAS
+==================================================== */
+        .radar-section {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        .radar-canvas-wrap {
+            flex-shrink: 0;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .radar-canvas {
+            display: block;
+            cursor: crosshair;
+        }
+
+        .radar-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Saaty pill */
+        .saaty-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+        }
+
+        .saaty-name {
+            font-size: 12.5px;
+            font-weight: 500;
+            color: var(--text-2);
+        }
+
+        .saaty-val {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--blue);
+            background: var(--blue-pale);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        /* Consistency box */
+        .cr-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .cr-cell {
+            padding: 10px 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            text-align: center;
+        }
+
+        .cr-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: var(--text-3);
+            font-weight: 600;
+        }
+
+        .cr-value {
+            font-size: 17px;
+            font-weight: 700;
+            font-family: var(--mono);
+            margin-top: 3px;
+        }
+
+        .cr-ok {
+            color: var(--success);
+        }
+
+        .cr-warn {
+            color: var(--warn);
+        }
+
+        .cr-neutral {
+            color: var(--blue);
+        }
+
+        /* Priority bar row */
+        .prio-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+        }
+
+        .prio-name {
+            font-size: 12px;
+            width: 150px;
+            flex-shrink: 0;
+            color: var(--text-2);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .prio-bar-wrap {
+            flex: 1;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .prio-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width .6s ease;
+        }
+
+        .prio-pct {
+            font-size: 11px;
+            font-family: var(--mono);
+            color: var(--text-2);
+            width: 40px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        /* ====================================================
+   PAGE 0 — DASHBOARD
+==================================================== */
+        .dash-hero {
+            background: linear-gradient(135deg, var(--blue) 0%, #1D4ED8 100%);
+            border-radius: var(--radius);
+            padding: 36px 40px;
+            color: #fff;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dash-hero::after {
+            content: 'AHP';
+            position: absolute;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 96px;
+            font-weight: 800;
+            opacity: .08;
+            letter-spacing: -4px;
+            pointer-events: none;
+        }
+
+        .dash-hero h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .dash-hero p {
+            font-size: 13.5px;
+            opacity: .85;
+            line-height: 1.6;
+            max-width: 480px;
+        }
+
+        .dash-hero .btn {
+            margin-top: 20px;
+            background: #fff;
+            color: var(--blue);
+            border-color: #fff;
+            font-weight: 600;
+        }
+
+        .dash-hero .btn:hover {
+            background: var(--blue-light);
+        }
+
+        .step-card {
+            padding: 18px 20px;
+            border-left: 3px solid var(--blue-light);
+            transition: border-color .15s;
+            cursor: pointer;
+        }
+
+        .step-card:hover {
+            border-left-color: var(--blue);
+        }
+
+        .step-card-num {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--blue);
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .step-card-title {
+            font-size: 13.5px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .step-card-desc {
+            font-size: 12px;
+            color: var(--text-3);
+            line-height: 1.5;
+        }
+
+        /* ====================================================
+   PAGE 3 — DATA KEGIATAN
+==================================================== */
+        .event-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .event-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--blue-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .event-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .event-meta {
+            font-size: 12px;
+            color: var(--text-3);
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .event-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .theme-pill {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--card);
+            transition: background .15s;
+        }
+
+        .theme-pill:hover {
+            background: var(--blue-pale);
+        }
+
+        .theme-pill+.theme-pill {
+            margin-top: 6px;
+        }
+
+        .theme-rank {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--blue);
+            width: 20px;
+        }
+
+        .theme-name {
+            font-size: 13px;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .theme-count {
+            font-size: 12px;
+            font-family: var(--mono);
+            color: var(--text-3);
+        }
+
+        /* categorization table */
+        .cat-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .cat-table th {
+            padding: 8px 10px;
+            text-align: left;
+            background: var(--bg);
+            color: var(--text-3);
+            font-weight: 600;
+            font-size: 10.5px;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cat-table td {
+            padding: 7px 10px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-2);
+            vertical-align: top;
+        }
+
+        .cat-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .cat-table tr:hover td {
+            background: var(--blue-pale);
+        }
+
+        /* ====================================================
+   PAGE 4 — CRITERIA TABS
+==================================================== */
+        .tab-row {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 7px 14px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            font-family: var(--font);
+            font-size: 12.5px;
+            font-weight: 500;
+            color: var(--text-2);
+            cursor: pointer;
+            transition: all .15s;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--blue-mid);
+            color: var(--text);
+        }
+
+        .tab-btn.active {
+            background: var(--blue);
+            border-color: var(--blue);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .tab-btn.saved {
+            border-color: var(--success);
+            color: var(--success);
+            background: var(--success-bg);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeUp .2s ease;
+        }
+
+        /* progress tracker */
+        .prog-track {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 20px;
+        }
+
+        .prog-step {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-3);
+        }
+
+        .prog-step.done {
+            color: var(--success);
+        }
+
+        .prog-step.curr {
+            color: var(--blue);
+            font-weight: 600;
+        }
+
+        .prog-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            flex-shrink: 0;
+        }
+
+        .prog-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+            min-width: 20px;
+        }
+
+        .prog-step.done+.prog-line {
+            background: var(--success);
+        }
+
+        /* ====================================================
+   PAGE 5 — RESULTS
+==================================================== */
+        .result-hero {
+            background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+            border: 1px solid #BFDBFE;
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .result-trophy {
+            font-size: 48px;
+        }
+
+        .result-hero-text h2 {
+            font-size: 15px;
+            color: var(--text-2);
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .result-hero-text h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--blue);
+            margin-bottom: 6px;
+        }
+
+        .result-hero-text p {
+            font-size: 12.5px;
+            color: var(--text-2);
+            line-height: 1.5;
+            max-width: 460px;
+        }
+
+        .rank-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--card);
+            transition: all .15s;
+        }
+
+        .rank-row+.rank-row {
+            margin-top: 8px;
+        }
+
+        .rank-row:hover {
+            border-color: var(--blue-mid);
+            box-shadow: var(--shadow);
+        }
+
+        .rank-row.rank-1 {
+            border-color: #FCD34D;
+            background: #FFFBEB;
+        }
+
+        .rank-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .rank-1 .rank-num {
+            background: #FCD34D;
+            color: #92400E;
+        }
+
+        .rank-2 .rank-num {
+            background: #E2E8F0;
+            color: #475569;
+        }
+
+        .rank-3 .rank-num {
+            background: #FED7AA;
+            color: #92400E;
+        }
+
+        .rank-name {
+            flex: 1;
+            font-size: 13.5px;
+            font-weight: 600;
+        }
+
+        .rank-score {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--blue);
+        }
+
+        .score-bar-wrap {
+            width: 120px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            background: var(--blue);
+            border-radius: 3px;
+            transition: width 1s ease .3s;
+        }
+
+        .rank-1 .score-bar-fill {
+            background: #D97706;
+        }
+
+        .chart-box {
+            height: 240px;
+            position: relative;
+        }
+
+        .chart-box-r {
+            height: 260px;
+            position: relative;
+        }
+
+        /* info note */
+        .info-note {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 12px 14px;
+            background: var(--blue-pale);
+            border: 1px solid var(--blue-light);
+            border-radius: var(--radius-sm);
+            font-size: 12.5px;
+            color: var(--text-2);
+            line-height: 1.5;
+        }
+
+        .info-note .icon {
+            font-size: 15px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* matrix display */
+        .matrix-scroll {
+            overflow-x: auto;
+        }
+
+        .matrix-tbl {
+            border-collapse: collapse;
+            font-size: 11.5px;
+            font-family: var(--mono);
+            white-space: nowrap;
+        }
+
+        .matrix-tbl th {
+            padding: 6px 10px;
+            background: var(--bg);
+            color: var(--text-3);
+            font-weight: 600;
+            border: 1px solid var(--border);
+            font-size: 10.5px;
+            text-transform: uppercase;
+        }
+
+        .matrix-tbl td {
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            color: var(--text);
+            text-align: center;
+        }
+
+        .matrix-tbl .diag {
+            background: var(--blue-pale);
+            color: var(--blue);
+            font-weight: 600;
+        }
+
+        /* ====================================================
+   UTILITY
+==================================================== */
+        .mt-8 {
+            margin-top: 8px;
+        }
+
+        .mt-12 {
+            margin-top: 12px;
+        }
+
+        .mt-16 {
+            margin-top: 16px;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+
+        .mt-24 {
+            margin-top: 24px;
+        }
+
+        .mb-12 {
+            margin-bottom: 12px;
+        }
+
+        .mb-16 {
+            margin-bottom: 16px;
+        }
+
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+
+        .text-muted {
+            color: var(--text-3);
+        }
+
+        .text-blue {
+            color: var(--blue);
+        }
+
+        .text-sm {
+            font-size: 12px;
+        }
+
+        .text-xs {
+            font-size: 11px;
+        }
+
+        .fw-600 {
+            font-weight: 600;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .gap-8 {
+            gap: 8px;
+        }
+
+        .gap-12 {
+            gap: 12px;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        /* scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-2);
+            border-radius: 4px;
+        }
+
+        /* responsive */
+        @media (max-width: 700px) {
+
+            .container,
+            .container-wide {
+                padding: 20px 14px;
+            }
+
+            .grid-2,
+            .grid-3,
+            .grid-5 {
+                grid-template-columns: 1fr;
+            }
+
+            .radar-section {
+                flex-direction: column;
+            }
+
+            .topnav {
+                padding: 0 14px;
+            }
+
+            .nav-steps {
+                display: none;
+            }
+
+            .result-hero {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+
+        .back-home-btn {
+            position: fixed;
+            left: 24px;
+            bottom: 24px;
+            z-index: 9999;
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            padding: 12px 18px;
+
+            background: var(--surface);
+            border: var(--pixel-border);
+            box-shadow: var(--pixel-shadow);
+
+            text-decoration: none;
+
+            transition: all var(--transition-fast);
+        }
+
+        .back-home-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 var(--orange-dark);
+        }
+
+        .back-home-btn .back-arrow {
+            color: var(--orange);
+            font-size: 14px;
+        }
+
+        .back-home-btn .back-brand {
+            font-family: var(--font-pixel);
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: var(--text-primary);
+        }
+
+        .back-home-btn .back-brand span {
+            color: var(--orange);
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="app">
+
+        <!-- ══ TOP NAV ══ -->
+        <nav class="topnav">
+            <div class="nav-brand" onclick="goTo(0)" style="cursor:pointer;">
+                <div class="nav-logo">AHP</div>
+                <div>
+                    <div class="nav-title">Decision Support System - Analitical Hierarchical Process</div>
+                    <div class="nav-sub">Rekomendasi Kegiatan Keilmuan</div>
+                </div>
+            </div>
+            <div class="nav-steps" id="nav-steps">
+                <!-- built by JS -->
+            </div>
+        </nav>
+
+        <!-- ══ PAGES ══ -->
+        <main>
+
+            <!-- ══════════ PAGE 0 — DASHBOARD ══════════ -->
+            <div class="page active" id="page-0">
+                <div class="container">
+
+                    <div class="dash-hero">
+                        <div class="label-sm" style="color:rgba(255,255,255,.7);margin-bottom:8px;">PROTOTYPE PENELITIAN
+                            SKRIPSI</div>
+                        <h1>Model AHP untuk Rekomendasi<br>Tema Kegiatan Keilmuan</h1>
+                        <p>Demonstrasi penerapan metode Analytical Hierarchy Process (AHP) untuk menghasilkan
+                            rekomendasi tema workshop/seminar berdasarkan hasil klasifikasi feedback mahasiswa.</p>
+                        <button class="btn" onclick="goTo(1)">Mulai Demo →</button>
+                    </div>
+
+                    <div class="grid-2 mb-20">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="label-sm mb-12">Tentang Prototype</div>
+                                <p style="font-size:13px;color:var(--text-2);line-height:1.7;">
+                                    Prototype ini mendemonstrasikan alur kerja metode AHP secara visual dan interaktif
+                                    menggunakan data kegiatan <strong>"Laravel Filament Mastery"</strong> sebagai studi
+                                    kasus. Semua data telah tertanam langsung dalam aplikasi.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="label-sm mb-12">Dataset yang Digunakan</div>
+                                <div class="flex gap-12" style="flex-wrap:wrap;">
+                                    <div>
+                                        <div class="stat-value" style="font-size:20px;">49</div>
+                                        <div class="stat-sub">Responden Feedback</div>
+                                    </div>
+                                    <div>
+                                        <div class="stat-value" style="font-size:20px;">34</div>
+                                        <div class="stat-sub">Saran Dikategorikan</div>
+                                    </div>
+                                    <div>
+                                        <div class="stat-value" style="font-size:20px;">5</div>
+                                        <div class="stat-sub">Alternatif Tema</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="label-sm mb-12">Alur Wizard 5 Langkah</div>
+                    <div class="grid-2" style="gap:12px;">
+                        <div class="card step-card" onclick="goTo(1)">
+                            <div class="step-card-num">Langkah 01</div>
+                            <div class="step-card-title">Pengaturan Kriteria</div>
+                            <div class="step-card-desc">Tentukan kriteria penilaian yang akan digunakan dalam AHP.
+                                Default: Usulan Terbanyak, Relevansi Kurikulum, Relevansi Profil Lulusan.</div>
+                        </div>
+                        <div class="card step-card" onclick="goTo(2)">
+                            <div class="step-card-num">Langkah 02</div>
+                            <div class="step-card-title">Perbandingan Kriteria</div>
+                            <div class="step-card-desc">Tentukan tingkat kepentingan setiap kriteria menggunakan
+                                visualisasi pentagon interaktif. Posisi label kriteria dapat diatur ulang.</div>
+                        </div>
+                        <div class="card step-card" onclick="goTo(3)">
+                            <div class="step-card-num">Langkah 03</div>
+                            <div class="step-card-title">Data Kegiatan</div>
+                            <div class="step-card-desc">Tampilan data kegiatan "Laravel Filament Mastery" beserta hasil
+                                klasifikasi Top 5 tema dari feedback mahasiswa.</div>
+                        </div>
+                        <div class="card step-card" onclick="goTo(4)">
+                            <div class="step-card-num">Langkah 04</div>
+                            <div class="step-card-title">Penilaian Alternatif</div>
+                            <div class="step-card-desc">Evaluasi setiap alternatif tema terhadap masing-masing kriteria
+                                menggunakan pentagon interaktif yang sama.</div>
+                        </div>
+                    </div>
+                    <div class="card step-card mt-12" onclick="goTo(5)" style="border-left-color: var(--blue);">
+                        <div class="step-card-num">Langkah 05 — Output</div>
+                        <div class="step-card-title">Hasil Rekomendasi AHP</div>
+                        <div class="step-card-desc">Dashboard hasil: ranking alternatif, bobot kriteria, grafik
+                            perbandingan, dan matriks kontribusi final.</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ══════════ PAGE 1 — KRITERIA ══════════ -->
+            <div class="page" id="page-1">
+                <div class="container">
+
+                    <div class="pg-header">
+                        <div class="pg-label">Langkah 01 — Setup</div>
+                        <h2 class="pg-title">Pengaturan Kriteria</h2>
+                        <p class="pg-desc">Definisikan kriteria yang digunakan untuk mengevaluasi alternatif tema
+                            kegiatan. Tambah, hapus, atau ubah nama kriteria sesuai kebutuhan penelitian.</p>
+                    </div>
+
+                    <div class="grid-2" style="gap:20px;align-items:start;">
+                        <div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <div>
+                                        <div class="card-title">Daftar Kriteria</div>
+                                        <div class="card-subtitle">Minimum 2 kriteria diperlukan</div>
+                                    </div>
+                                    <span class="badge badge-blue" id="k-count-badge">3 kriteria</span>
+                                </div>
+                                <div class="card-body">
+                                    <div id="kriteria-list"></div>
+                                    <div class="divider"></div>
+                                    <div class="add-row">
+                                        <input class="input" id="k-new-input" placeholder="Nama kriteria baru..."
+                                            onkeydown="if(event.key==='Enter') addKriteria()">
+                                        <button class="btn btn-primary btn-sm" onclick="addKriteria()"
+                                            style="white-space:nowrap;">+ Tambah</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex;flex-direction:column;gap:16px;">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="label-sm mb-12">Kriteria Default Penelitian</div>
+                                    <div class="info-note mb-12">
+                                        <span class="icon">ℹ️</span>
+                                        <span>Tiga kriteria default ini dipilih berdasarkan relevansi dengan konteks
+                                            perencanaan kegiatan keilmuan dan telah divalidasi dalam penelitian.</span>
+                                    </div>
+                                    <div style="display:flex;flex-direction:column;gap:8px;">
+                                        <div
+                                            style="padding:9px 13px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border);">
+                                            <div style="font-size:13px;font-weight:600;">C1 — Usulan Terbanyak</div>
+                                            <div style="font-size:11.5px;color:var(--text-3);margin-top:3px;">Frekuensi
+                                                tema yang diusulkan mahasiswa dalam data feedback</div>
+                                        </div>
+                                        <div
+                                            style="padding:9px 13px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border);">
+                                            <div style="font-size:13px;font-weight:600;">C2 — Relevansi Kurikulum</div>
+                                            <div style="font-size:11.5px;color:var(--text-3);margin-top:3px;">Kesesuaian
+                                                tema dengan capaian pembelajaran mata kuliah aktif</div>
+                                        </div>
+                                        <div
+                                            style="padding:9px 13px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border);">
+                                            <div style="font-size:13px;font-weight:600;">C3 — Relevansi Profil Lulusan
+                                            </div>
+                                            <div style="font-size:11.5px;color:var(--text-3);margin-top:3px;">Kesesuaian
+                                                tema dengan kompetensi yang diharapkan dari lulusan</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="nav-footer">
+                        <button class="btn btn-ghost" onclick="goTo(0)">← Kembali</button>
+                        <button class="btn btn-primary" onclick="goTo(2)">Lanjut: Perbandingan Kriteria →</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ══════════ PAGE 2 — PERBANDINGAN KRITERIA ══════════ -->
+            <div class="page" id="page-2">
+                <div class="container-wide">
+
+                    <div class="pg-header">
+                        <div class="pg-label">Langkah 02 — Pembobotan</div>
+                        <h2 class="pg-title">Perbandingan Kriteria</h2>
+                        <p class="pg-desc">Geser titik biru pada diagram pentagon untuk menentukan tingkat kepentingan
+                            relatif setiap kriteria. Semakin jauh titik ke arah suatu kriteria, semakin tinggi bobotnya.
+                        </p>
+                    </div>
+
+                    <div class="info-note mb-20">
+                        <span class="icon">💡</span>
+                        <span><strong>Cara menggunakan:</strong> Klik dan seret (drag) titik biru ke arah kriteria yang
+                            ingin diprioritaskan. Sistem akan otomatis menghitung nilai perbandingan berpasangan AHP,
+                            bobot prioritas, dan Consistency Ratio (CR).</span>
+                    </div>
+
+                    <div class="radar-section" id="kr-radar-section">
+                        <div>
+                            <div class="radar-canvas-wrap">
+                                <canvas class="radar-canvas" id="canvas-kr" width="400" height="400"></canvas>
+                            </div>
+                            <div style="display:flex;justify-content:center;gap:8px;margin-top:12px;">
+                                <button class="btn btn-ghost btn-sm" onclick="resetKr()">↺ Reset ke Tengah</button>
+                            </div>
+                        </div>
+
+                        <div class="radar-info">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">Nilai Skala Saaty per Kriteria</div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="kr-saaty-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">Hasil Konsistensi</div>
+                                    <div id="kr-cr-badge"></div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="cr-grid">
+                                        <div class="cr-cell">
+                                            <div class="cr-label">λmax</div>
+                                            <div class="cr-value cr-neutral" id="kr-lmax">—</div>
+                                        </div>
+                                        <div class="cr-cell">
+                                            <div class="cr-label">CI</div>
+                                            <div class="cr-value cr-neutral" id="kr-ci">—</div>
+                                        </div>
+                                        <div class="cr-cell">
+                                            <div class="cr-label">CR</div>
+                                            <div class="cr-value" id="kr-cr">—</div>
+                                        </div>
+                                    </div>
+                                    <div id="kr-prio-list" style="margin-top:14px;"></div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">Matriks Perbandingan Berpasangan</div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="matrix-scroll" id="kr-matrix"></div>
+                                    <div
+                                        style="margin-top:10px;font-size:11px;color:var(--text-3);font-family:var(--mono);">
+                                        A[i,j] = Saaty_i / Saaty_j &nbsp;|&nbsp; Priority = rata-rata baris
+                                        ternormalisasi
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="nav-footer">
+                        <button class="btn btn-ghost" onclick="goTo(1)">← Kembali</button>
+                        <button class="btn btn-primary" onclick="goTo(3)">Lanjut: Data Kegiatan →</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ══════════ PAGE 3 — DATA KEGIATAN ══════════ -->
+            <div class="page" id="page-3">
+                <div class="container">
+
+                    <div class="pg-header">
+                        <div class="pg-label">Langkah 03 — Data</div>
+                        <h2 class="pg-title">Data Kegiatan & Alternatif</h2>
+                        <p class="pg-desc">Berikut data kegiatan yang menjadi sumber feedback, beserta hasil klasifikasi
+                            saran tema mahasiswa sebagai alternatif AHP.</p>
+                    </div>
+
+                    <!-- Event card -->
+                    <div class="card mb-20">
+                        <div class="card-header">
+                            <div class="card-title">Informasi Kegiatan</div>
+                            <span class="badge badge-blue">Workshop</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="event-header mb-16">
+                                <div class="event-icon">🎓</div>
+                                <div>
+                                    <div class="event-title">Laravel Filament Mastery: Creating Dynamic CRUD Interface
+                                    </div>
+                                    <div class="event-meta mt-8">
+                                        <span>📅 20 Juni 2025</span>
+                                        <span>📍 Ruang STIKIVERSE UBHINUS</span>
+                                        <span>👨‍🏫 Sugeng Widodo, S.Kom., M.Kom</span>
+                                        <span>🏢 Prodi S1 Sistem Informasi</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid-3">
+                                <div class="stat-card"
+                                    style="background:var(--blue-pale);border-radius:var(--radius-sm);">
+                                    <div class="stat-label">Total Feedback</div>
+                                    <div class="stat-value">49</div>
+                                    <div class="stat-sub">Responden</div>
+                                </div>
+                                <div class="stat-card" style="background:#F0FDF4;border-radius:var(--radius-sm);">
+                                    <div class="stat-label">Saran Dikategorikan</div>
+                                    <div class="stat-value">34</div>
+                                    <div class="stat-sub">Dari 49 responden</div>
+                                </div>
+                                <div class="stat-card" style="background:#FFF7ED;border-radius:var(--radius-sm);">
+                                    <div class="stat-label">Skor Rata-rata</div>
+                                    <div class="stat-value">4.19</div>
+                                    <div class="stat-sub">Dari skala 1–5</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2" style="gap:20px;align-items:start;">
+                        <!-- Top 5 alternatives -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">Top 5 Tema Usulan Mahasiswa</div>
+                                    <div class="card-subtitle">Hasil klasifikasi saran feedback — digunakan sebagai
+                                        alternatif AHP</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="top5-themes"></div>
+                            </div>
+                        </div>
+
+                        <!-- Categorization table -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Detail Kategorisasi Saran</div>
+                            </div>
+                            <div class="card-body" style="max-height:340px;overflow-y:auto;padding:0;">
+                                <table class="cat-table" id="cat-table"></table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="nav-footer">
+                        <button class="btn btn-ghost" onclick="goTo(2)">← Kembali</button>
+                        <button class="btn btn-primary" onclick="buildAltTabs(); goTo(4)">Lanjut: Penilaian Alternatif
+                            →</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ══════════ PAGE 4 — PERBANDINGAN ALTERNATIF ══════════ -->
+            <div class="page" id="page-4">
+                <div class="container-wide">
+
+                    <div class="pg-header">
+                        <div class="pg-label">Langkah 04 — Evaluasi</div>
+                        <h2 class="pg-title">Penilaian Alternatif per Kriteria</h2>
+                        <p class="pg-desc">Untuk setiap kriteria, geser titik biru pada pentagon untuk menentukan
+                            seberapa baik masing-masing alternatif tema memenuhi kriteria tersebut. Urutan alternatif
+                            bersifat tetap.</p>
+                    </div>
+
+                    <div class="info-note mb-20">
+                        <span class="icon">📌</span>
+                        <span>Urutan dan posisi label alternatif pada pentagon <strong>tidak dapat diubah</strong>
+                            karena mewakili hasil klasifikasi feedback mahasiswa yang bersifat objektif. Yang dapat
+                            diubah hanya posisi titik biru.</span>
+                    </div>
+
+                    <!-- Progress tracker -->
+                    <div id="alt-progress" class="mb-20"></div>
+
+                    <!-- Tabs -->
+                    <div class="tab-row" id="alt-tabs"></div>
+                    <div id="alt-tab-contents"></div>
+
+                    <div class="nav-footer">
+                        <button class="btn btn-ghost" onclick="goTo(3)">← Kembali</button>
+                        <button class="btn btn-primary" id="btn-compute" onclick="computeResults(); goTo(5)">Hitung &
+                            Lihat Hasil →</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ══════════ PAGE 5 — HASIL ══════════ -->
+            <div class="page" id="page-5">
+                <div class="container-wide">
+
+                    <div class="pg-header">
+                        <div class="pg-label">Langkah 05 — Hasil</div>
+                        <h2 class="pg-title">Hasil Rekomendasi AHP</h2>
+                        <p class="pg-desc">Sintesis AHP: bobot kriteria × bobot alternatif per kriteria → skor akhir dan
+                            ranking rekomendasi.</p>
+                    </div>
+
+                    <!-- Hero result -->
+                    <div class="result-hero" id="result-hero">
+                        <div class="result-trophy">🏆</div>
+                        <div class="result-hero-text">
+                            <h2>Tema Workshop yang Direkomendasikan</h2>
+                            <h1 id="res-top-name">—</h1>
+                            <p>Alternatif ini memperoleh nilai prioritas tertinggi berdasarkan bobot kriteria dan hasil
+                                evaluasi alternatif menggunakan metode Analytical Hierarchy Process (AHP).</p>
+                        </div>
+                    </div>
+
+                    <div class="grid-2" style="gap:20px;margin-bottom:20px;align-items:start;">
+                        <!-- Ranking -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Ranking Prioritas Akhir</div>
+                            </div>
+                            <div class="card-body">
+                                <div id="result-ranking"></div>
+                            </div>
+                        </div>
+                        <!-- Bar chart -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Grafik Skor Akhir</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-box"><canvas id="chart-bar"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2" style="gap:20px;margin-bottom:20px;align-items:start;">
+                        <!-- Criteria weights -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Bobot Kriteria (Dari Langkah 02)</div>
+                            </div>
+                            <div class="card-body">
+                                <div id="result-crit-weights"></div>
+                                <div class="chart-box-r mt-16"><canvas id="chart-radar"></canvas></div>
+                            </div>
+                        </div>
+                        <!-- Alt weights summary -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Ringkasan Bobot Alternatif per Kriteria</div>
+                            </div>
+                            <div class="card-body" style="padding:0;">
+                                <div class="matrix-scroll" style="padding:16px;">
+                                    <table class="matrix-tbl" id="result-alt-matrix"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Explanation -->
+                    <div class="card mb-20">
+                        <div class="card-header">
+                            <div class="card-title">Penjelasan Proses Perhitungan</div>
+                        </div>
+                        <div class="card-body">
+                            <div
+                                style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-family:var(--mono);font-size:11.5px;color:var(--text-2);line-height:2;margin-bottom:14px;">
+                                Final_Score[Ai] = Σ (w_k × v[Ai][Ck]) — untuk setiap kriteria k<br>
+                                w_k = bobot prioritas kriteria k &nbsp;|&nbsp; v[Ai][Ck] = bobot alternatif Ai terhadap
+                                kriteria Ck
+                            </div>
+                            <div id="result-explanation" style="font-size:13px;color:var(--text-2);line-height:1.8;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="nav-footer">
+                        <button class="btn btn-ghost" onclick="goTo(4)">← Kembali ke Penilaian</button>
+                        <button class="btn btn-outline" onclick="resetAll()">↺ Mulai Ulang</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ======================================================
+     JAVASCRIPT
+====================================================== -->
+    <script>
+        /* ─────────────────────────────────────────
+           CONSTANTS & DATA
+        ───────────────────────────────────────── */
+        const SAATY_SET = [1 / 9, 1 / 8, 1 / 7, 1 / 6, 1 / 5, 1 / 4, 1 / 3, 1 / 2, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        const RI = { 1: 0, 2: 0, 3: .58, 4: .90, 5: 1.12, 6: 1.24, 7: 1.32, 8: 1.41, 9: 1.45, 10: 1.49 };
+        const COLORS = ['#2563EB', '#7C3AED', '#059669', '#D97706', '#DC2626'];
+
+        const ALTERNATIVES = [
+            { code: 'A1', name: 'Artificial Intelligence (AI)', count: 6 },
+            { code: 'A2', name: 'General IT/TI', count: 3 },
+            { code: 'A3', name: 'Pemrograman Web', count: 3 },
+            { code: 'A4', name: 'Desain UI/UX', count: 2 },
+            { code: 'A5', name: 'Data Analyst', count: 1 },
+        ];
+
+        const CATEGORIZATION = [
+            { orig: 'Bahasa pemrograman dan framework...', cat: 'Pemrograman Web', conf: 1 },
+            { orig: "It's none of my business", cat: 'General IT/TI', conf: 1 },
+            { orig: 'Per Figma an', cat: 'Desain UI/UX', conf: 1 },
+            { orig: 'how to be rich', cat: 'Uncategorized', conf: 0.5 },
+            { orig: 'Workshop html css', cat: 'Machine Learning (ML)', conf: 1 },
+            { orig: 'Blockchain', cat: 'Finance Technology', conf: 1 },
+            { orig: 'Pembuatan game Dari 0', cat: 'Uncategorized', conf: 0.5 },
+            { orig: 'Belum ada', cat: 'Uncategorized', conf: 0 },
+            { orig: 'Cybersecurity', cat: 'General IT/TI', conf: 1 },
+            { orig: 'Bisnis luar negri', cat: 'E-Bisnis & E-Commerce', conf: 1 },
+            { orig: 'Data analisis', cat: 'Data Analyst', conf: 1 },
+            { orig: 'React js', cat: 'Pemrograman Web', conf: 1 },
+            { orig: 'tdk ada', cat: 'Uncategorized', conf: 0.5 },
+            { orig: 'Gamers all in indo', cat: 'Uncategorized', conf: 0.5 },
+            { orig: 'Seruu dan asyikk', cat: 'Uncategorized', conf: 0.5 },
+            { orig: 'UI/UX', cat: 'Desain UI/UX', conf: 1 },
+            { orig: 'Game development', cat: 'Pengembangan Game', conf: 1 },
+            { orig: 'sudah sangat baik', cat: 'Artificial Intelligence (AI)', conf: 1 },
+            { orig: 'Tingkatkan model pembelajaran...', cat: 'Artificial Intelligence (AI)', conf: 1 },
+            { orig: 'Bingung', cat: 'Uncategorized', conf: 0.5 },
+            { orig: 'sudah cukup baikk', cat: 'Artificial Intelligence (AI)', conf: 1 },
+            { orig: 'Sangat menarik', cat: 'Uncategorized', conf: 0.5 },
+            { orig: 'Quality Assurance', cat: 'General IT/TI', conf: 1 },
+            { orig: 'Terkait dengan mobile programming', cat: 'Artificial Intelligence (AI)', conf: 1 },
+            { orig: 'perkembangan teknologi di negara lain', cat: 'Artificial Intelligence (AI)', conf: 1 },
+            { orig: 'Belum ada', cat: 'Uncategorized', conf: 0 },
+            { orig: 'Web application testing in laravel', cat: 'Pemrograman Web', conf: 1 },
+            { orig: 'Pengembangan Aplikasi Web Modern', cat: 'Uncategorized', conf: 0.5 },
+            { orig: 'Filament lebih detail dan praktiknya', cat: 'Artificial Intelligence (AI)', conf: 1 },
+            { orig: 'Mobile', cat: 'Mobile Development', conf: 1 },
+            { orig: 'Devops', cat: 'Uncategorized', conf: 0.5 },
+            { orig: 'db', cat: 'Uncategorized', conf: 0 },
+            { orig: 'Tidak ada', cat: 'Uncategorized', conf: 0 },
+            { orig: 'Tips & best practice pengoptimalan...', cat: 'Pemrograman Web', conf: 1 },
+        ];
+
+        /* ─────────────────────────────────────────
+           STATE
+        ───────────────────────────────────────── */
+        const S = {
+            kriterias: [
+                { id: 1, name: 'Usulan Terbanyak' },
+                { id: 2, name: 'Relevansi Kurikulum' },
+                { id: 3, name: 'Relevansi Profil Lulusan' },
+            ],
+            currentPage: 0,
+            krPoint: { x: 200, y: 200 },
+            altPoints: {},   // { kId: {x,y} }
+            krWeights: {},   // { kId: float }
+            altWeights: {},  // { kId: { altCode: float } }
+            barChart: null,
+            radarChart: null,
+        };
+
+        /* ─────────────────────────────────────────
+           NAV
+        ───────────────────────────────────────── */
+        const STEP_LABELS = ['Dashboard', 'Kriteria', 'Bobot Kriteria', 'Data Kegiatan', 'Penilaian Alternatif', 'Hasil'];
+        const PAGE_COUNT = 6;
+
+        function buildNav() {
+            const el = document.getElementById('nav-steps');
+            let html = '';
+            for (let i = 0; i < PAGE_COUNT; i++) {
+                if (i > 0) html += '<div class="nav-divider"></div>';
+                const cls = i === S.currentPage ? 'active' : (i < S.currentPage ? 'done clickable' : 'clickable');
+                const icon = i < S.currentPage ? '✓' : i;
+                if (i === 0) {
+                    html += `<button class="nav-step ${cls}" onclick="goTo(${i})"><span class="step-circle">${icon}</span></button>`;
+                } else {
+                    html += `<button class="nav-step ${cls}" onclick="goTo(${i})"><span class="step-circle">${i < S.currentPage ? '✓' : i}</span>${STEP_LABELS[i]}</button>`;
+                }
+            }
+            el.innerHTML = html;
+        }
+
+        function goTo(n) {
+            document.querySelectorAll('.page').forEach((p, i) => p.classList.toggle('active', i === n));
+            S.currentPage = n;
+            buildNav();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (n === 2) initKrCanvas();
+            if (n === 3) renderPage3();
+        }
+
+        /* ─────────────────────────────────────────
+           AHP MATH
+        ───────────────────────────────────────── */
+        function nearest(val) {
+            let best = 1, d = Infinity;
+            for (const s of SAATY_SET) { const dd = Math.abs(s - val); if (dd < d) { d = dd; best = s; } }
+            return best;
+        }
+        function fmtS(v) { return v >= 1 ? String(Math.round(v)) : '1/' + Math.round(1 / v); }
+        function fmtN(v, dp = 3) { return isNaN(v) || v == null ? '—' : v.toFixed(dp); }
+
+        function saatyFromPoint(pt, n, size = 400) {
+            const c = size / 2, r = c * 0.72;
+            const px = pt.x - c, py = pt.y - c;
+            return Array.from({ length: n }, (_, i) => {
+                const a = (i * 2 * Math.PI / n) - Math.PI / 2;
+                const proj = px * Math.cos(a) + py * Math.sin(a);
+                const norm = proj / r;
+                const mag = 1 + Math.min(1, Math.abs(norm)) * 8;
+                return nearest(norm >= 0 ? mag : 1 / mag);
+            });
+        }
+
+        function ahp(sv) {
+            const n = sv.length;
+            const mat = Array.from({ length: n }, (_, i) =>
+                Array.from({ length: n }, (_, j) => i === j ? 1 : (sv[j] !== 0 ? sv[i] / sv[j] : 100))
+            );
+            const col = Array(n).fill(0);
+            for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) col[j] += mat[i][j];
+            const norm = mat.map((row, i) => row.map((v, j) => col[j] ? v / col[j] : 0));
+            const pv = norm.map(row => row.reduce((a, b) => a + b, 0) / n);
+            let lmax = 0;
+            for (let i = 0; i < n; i++) {
+                let ws = 0; for (let j = 0; j < n; j++) ws += mat[i][j] * pv[j];
+                if (pv[i]) lmax += ws / pv[i];
+            }
+            lmax /= n;
+            const ci = n > 1 ? (lmax - n) / (n - 1) : 0;
+            const ri = RI[n] || 1;
+            const cr = ri ? ci / ri : 0;
+            return { mat, norm, pv, lmax, ci, cr };
+        }
+
+        /* ─────────────────────────────────────────
+           RADAR CANVAS ENGINE
+        ───────────────────────────────────────── */
+        function makeCanvas(id, labels, pt, onUpdate, size = 400, fixedLabels = false) {
+            const canvas = document.getElementById(id);
+            if (!canvas) return null;
+            canvas.width = canvas.height = size;
+            const c = size / 2, r = c * 0.72;
+            let drag = false, point = { ...pt };
+
+            function verts(rad) {
+                const n = labels.length;
+                return Array.from({ length: n }, (_, i) => {
+                    const a = (i * 2 * Math.PI / n) - Math.PI / 2;
+                    return { x: c + rad * Math.cos(a), y: c + rad * Math.sin(a) };
+                });
+            }
+            function inPoly(p, v) {
+                let inside = false;
+                for (let i = 0, j = v.length - 1; i < v.length; j = i++) {
+                    if (((v[i].y > p.y) !== (v[j].y > p.y)) && p.x < (v[j].x - v[i].x) * (p.y - v[i].y) / (v[j].y - v[i].y) + v[i].x) inside = !inside;
+                } return inside;
+            }
+            function clamp(p, v) {
+                let best = null, bd = Infinity;
+                for (let i = 0; i < v.length; i++) {
+                    const a = v[i], b = v[(i + 1) % v.length];
+                    const apx = p.x - a.x, apy = p.y - a.y, abx = b.x - a.x, aby = b.y - a.y;
+                    const ab2 = abx * abx + aby * aby;
+                    let t = (apx * abx + apy * aby) / ab2; t = Math.max(0, Math.min(1, t));
+                    const cx = a.x + abx * t, cy = a.y + aby * t, dx = cx - p.x, dy = cy - p.y, d2 = dx * dx + dy * dy;
+                    if (d2 < bd) { bd = d2; best = { x: cx, y: cy }; }
+                } return best;
+            }
+            function getPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                const sx = size / rect.width, sy = size / rect.height;
+                const src = e.touches ? e.touches[0] : e;
+                return { x: (src.clientX - rect.left) * sx, y: (src.clientY - rect.top) * sy };
+            }
+
+            function draw() {
+                const ctx = canvas.getContext('2d');
+                const n = labels.length;
+                ctx.clearRect(0, 0, size, size);
+
+                // rings
+                for (let s = 1; s <= 5; s++) {
+                    const rv = verts(r * s / 5);
+                    ctx.beginPath(); rv.forEach((v, i) => i ? ctx.lineTo(v.x, v.y) : ctx.moveTo(v.x, v.y));
+                    ctx.closePath(); ctx.strokeStyle = '#E2E8F0'; ctx.lineWidth = 1; ctx.stroke();
+                }
+                // outer polygon
+                const ov = verts(r);
+                ctx.beginPath(); ov.forEach((v, i) => i ? ctx.lineTo(v.x, v.y) : ctx.moveTo(v.x, v.y));
+                ctx.closePath(); ctx.strokeStyle = '#CBD5E1'; ctx.lineWidth = 1.5; ctx.stroke();
+
+                // fill polygon slightly
+                ctx.beginPath(); ov.forEach((v, i) => i ? ctx.lineTo(v.x, v.y) : ctx.moveTo(v.x, v.y));
+                ctx.closePath(); ctx.fillStyle = 'rgba(37,99,235,.03)'; ctx.fill();
+
+                // axes
+                ov.forEach(v => {
+                    ctx.beginPath(); ctx.moveTo(c, c); ctx.lineTo(v.x, v.y);
+                    ctx.strokeStyle = '#E2E8F0'; ctx.lineWidth = 1; ctx.stroke();
+                });
+
+                // center dot
+                ctx.beginPath(); ctx.arc(c, c, 3, 0, Math.PI * 2);
+                ctx.fillStyle = '#94A3B8'; ctx.fill();
+
+                // saaty values & labels
+                const sv = saatyFromPoint(point, n, size);
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                for (let i = 0; i < n; i++) {
+                    const a = (i * 2 * Math.PI / n) - Math.PI / 2;
+                    const lx = c + (r + 44) * Math.cos(a), ly = c + (r + 44) * Math.sin(a);
+                    // label
+                    ctx.font = '500 11px DM Sans,system-ui';
+                    ctx.fillStyle = '#475569';
+                    const words = labels[i].split(' ');
+                    if (words.length > 2 && size >= 400) {
+                        ctx.fillText(words.slice(0, 2).join(' '), lx, ly - 7);
+                        ctx.fillText(words.slice(2).join(' '), lx, ly + 7);
+                    } else {
+                        ctx.fillText(labels[i], lx, ly);
+                    }
+                    // saaty badge
+                    const sy2 = ctx.measureText(labels[i]).width > 0 ? ly + 20 : ly + 14;
+                    ctx.font = '600 11px DM Mono,monospace';
+                    ctx.fillStyle = '#2563EB';
+                    ctx.fillText(fmtS(sv[i]), lx, (words.length > 2 && size >= 400) ? ly + 21 : ly + 16);
+                }
+
+                // draggable dot
+                ctx.save();
+                ctx.beginPath(); ctx.arc(point.x, point.y, 8, 0, Math.PI * 2);
+                ctx.fillStyle = '#2563EB'; ctx.shadowColor = 'rgba(37,99,235,.3)'; ctx.shadowBlur = 8;
+                ctx.fill(); ctx.shadowColor = 'transparent';
+                ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+                ctx.restore();
+
+                onUpdate(point, sv);
+            }
+
+            canvas.addEventListener('mousedown', e => { const p = getPos(e); if (Math.hypot(p.x - point.x, p.y - point.y) <= 12) drag = true; });
+            canvas.addEventListener('mouseup', () => drag = false);
+            canvas.addEventListener('mouseleave', () => drag = false);
+            canvas.addEventListener('mousemove', e => {
+                if (!drag) return;
+                let p = getPos(e);
+                const v = verts(r);
+                if (!inPoly(p, v)) { const cl = clamp(p, v); if (cl) p = cl; }
+                point = p; draw();
+            });
+            canvas.addEventListener('touchstart', e => { const p = getPos(e); if (Math.hypot(p.x - point.x, p.y - point.y) <= 14) drag = true; }, { passive: true });
+            canvas.addEventListener('touchend', () => drag = false);
+            canvas.addEventListener('touchmove', e => {
+                if (!drag) return; e.preventDefault();
+                let p = getPos(e);
+                const v = verts(r);
+                if (!inPoly(p, v)) { const cl = clamp(p, v); if (cl) p = cl; }
+                point = p; draw();
+            }, { passive: false });
+
+            draw();
+            return { reset() { point = { x: c, y: c }; draw(); }, getPoint() { return { ...point }; } };
+        }
+
+        /* ─────────────────────────────────────────
+           PAGE 1 — KRITERIA
+        ───────────────────────────────────────── */
+        function renderKriteriaList() {
+            const list = document.getElementById('kriteria-list');
+            const badge = document.getElementById('k-count-badge');
+            if (!list) return;
+            badge.textContent = `${S.kriterias.length} kriteria`;
+            list.innerHTML = S.kriterias.map((k, i) => `
+    <div class="kriteria-item" id="ki-${k.id}">
+      <div class="kriteria-num">${i + 1}</div>
+      <span class="kriteria-label" id="kn-${k.id}">${k.name}</span>
+      <input class="input kriteria-input" id="ke-${k.id}" value="${k.name}" style="display:none;"
+        onkeydown="if(event.key==='Enter')saveK(${k.id})" onblur="saveK(${k.id})">
+      <button class="btn btn-ghost btn-sm btn-icon" onclick="editK(${k.id})" title="Edit">✏️</button>
+      ${S.kriterias.length > 2 ? `<button class="btn btn-danger-ghost" onclick="delK(${k.id})" title="Hapus">✕</button>` : ''}
+    </div>
+  `).join('');
+        }
+        function addKriteria() {
+            const inp = document.getElementById('k-new-input');
+            const name = inp.value.trim(); if (!name) return;
+            S.kriterias.push({ id: Date.now(), name });
+            inp.value = '';
+            S.altWeights = {}; S.altPoints = {};
+            renderKriteriaList();
+        }
+        function delK(id) {
+            if (S.kriterias.length <= 2) return;
+            S.kriterias = S.kriterias.filter(k => k.id !== id);
+            delete S.krWeights[id]; delete S.altWeights[id]; delete S.altPoints[id];
+            renderKriteriaList();
+        }
+        function editK(id) {
+            document.getElementById('kn-' + id).style.display = 'none';
+            const inp = document.getElementById('ke-' + id);
+            inp.style.display = 'block'; inp.focus(); inp.select();
+        }
+        function saveK(id) {
+            const inp = document.getElementById('ke-' + id);
+            const v = inp.value.trim();
+            if (v) { const k = S.kriterias.find(c => c.id === id); if (k) k.name = v; }
+            inp.style.display = 'none';
+            renderKriteriaList();
+        }
+
+        /* ─────────────────────────────────────────
+           PAGE 2 — BOBOT KRITERIA
+        ───────────────────────────────────────── */
+        let krCtrl = null;
+
+        function initKrCanvas() {
+            const labels = S.kriterias.map(k => k.name);
+            krCtrl = makeCanvas('canvas-kr', labels, S.krPoint, onKrUpdate);
+        }
+
+        function onKrUpdate(pt, sv) {
+            S.krPoint = { ...pt };
+            const res = ahp(sv);
+            S.kriterias.forEach((k, i) => { S.krWeights[k.id] = res.pv[i]; });
+
+            // Saaty list
+            const el = document.getElementById('kr-saaty-list');
+            if (el) el.innerHTML = S.kriterias.map((k, i) => `
+    <div class="saaty-row">
+      <span class="saaty-name">${k.name}</span>
+      <span class="saaty-val">${fmtS(sv[i])}</span>
+    </div>
+  `).join('');
+
+            // CR display
+            const ok = res.cr <= 0.1;
+            document.getElementById('kr-lmax').textContent = fmtN(res.lmax);
+            document.getElementById('kr-ci').textContent = fmtN(res.ci);
+            const crEl = document.getElementById('kr-cr');
+            if (crEl) { crEl.textContent = fmtN(res.cr); crEl.className = `cr-value ${ok ? 'cr-ok' : 'cr-warn'}`; }
+            const crBadge = document.getElementById('kr-cr-badge');
+            if (crBadge) crBadge.innerHTML = ok
+                ? `<span class="badge badge-green">✓ Konsisten</span>`
+                : `<span class="badge badge-orange">⚠ Perlu Disesuaikan</span>`;
+
+            // Priority list
+            const pl = document.getElementById('kr-prio-list');
+            if (pl) {
+                const sorted = S.kriterias.map((k, i) => ({ name: k.name, pv: res.pv[i] })).sort((a, b) => b.pv - a.pv);
+                const mx = Math.max(...res.pv);
+                pl.innerHTML = sorted.map((item, i) => `
+      <div class="prio-row">
+        <div class="prio-name">${item.name}</div>
+        <div class="prio-bar-wrap"><div class="prio-bar-fill" style="width:${(item.pv / mx * 100).toFixed(1)}%;background:${COLORS[i % COLORS.length]};"></div></div>
+        <div class="prio-pct">${(item.pv * 100).toFixed(1)}%</div>
+      </div>
+    `).join('');
+            }
+
+            // Matrix
+            const mx2 = document.getElementById('kr-matrix');
+            if (mx2) {
+                const names = S.kriterias.map(k => k.name.split(' ')[0]);
+                const n = S.kriterias.length;
+                let html = `<table class="matrix-tbl"><tr><th></th>${names.map(n => `<th>${n}</th>`).join('')}</tr>`;
+                res.mat.forEach((row, i) => {
+                    html += `<tr><th style="text-align:left;">${names[i]}</th>${row.map((v, j) => `<td class="${i === j ? 'diag' : ''}">${fmtN(v)}</td>`).join('')}</tr>`;
+                });
+                html += '</table>';
+                mx2.innerHTML = html;
+            }
+        }
+
+        function resetKr() { if (krCtrl) krCtrl.reset(); }
+
+        /* ─────────────────────────────────────────
+           PAGE 3 — DATA KEGIATAN
+        ───────────────────────────────────────── */
+        function renderPage3() {
+            // Top 5
+            const t5 = document.getElementById('top5-themes');
+            if (t5) {
+                t5.innerHTML = ALTERNATIVES.map((a, i) => `
+      <div class="theme-pill">
+        <div class="theme-rank">${i + 1}</div>
+        <div class="theme-name">${a.name}</div>
+        <span class="badge badge-blue">${a.count} saran</span>
+      </div>
+    `).join('');
+            }
+            // Categorization table
+            const ct = document.getElementById('cat-table');
+            if (ct) {
+                let rows = CATEGORIZATION.map(r => {
+                    const confBadge = r.conf === 1
+                        ? `<span class="badge badge-green">Tinggi</span>`
+                        : r.conf === 0.5
+                            ? `<span class="badge badge-orange">Sedang</span>`
+                            : `<span class="badge badge-red" style="font-size:10px;">Dibuang</span>`;
+                    const isTop5 = ALTERNATIVES.some(a => a.name === r.cat);
+                    const catStyle = isTop5 ? `style="color:var(--blue);font-weight:600;"` : '';
+                    return `<tr>
+        <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${r.orig}">${r.orig}</td>
+        <td ${catStyle}>${r.cat}</td>
+        <td>${confBadge}</td>
+      </tr>`;
+                }).join('');
+                ct.innerHTML = `<thead><tr><th>Saran Asli</th><th>Kategori</th><th>Conf.</th></tr></thead><tbody>${rows}</tbody>`;
+            }
+        }
+
+        /* ─────────────────────────────────────────
+           PAGE 4 — PENILAIAN ALTERNATIF
+        ───────────────────────────────────────── */
+        const altCtrl = {};
+
+        function buildAltTabs() {
+            const tabs = document.getElementById('alt-tabs');
+            const conts = document.getElementById('alt-tab-contents');
+            const prog = document.getElementById('alt-progress');
+            if (!tabs || !conts) return;
+
+            // Progress
+            const n = S.kriterias.length;
+            let pHtml = '<div class="prog-track">';
+            S.kriterias.forEach((k, i) => {
+                const done = !!S.altWeights[k.id];
+                const cls = done ? 'done' : (i === 0 ? 'curr' : '');
+                pHtml += `<div class="prog-step ${cls}"><div class="prog-dot"></div><span style="margin-left:4px;">${k.name}</span></div>`;
+                if (i < n - 1) pHtml += `<div class="prog-line"></div>`;
+            });
+            pHtml += '</div>';
+            prog.innerHTML = pHtml;
+
+            // Tabs
+            tabs.innerHTML = S.kriterias.map((k, i) => `
+    <button class="tab-btn ${i === 0 ? 'active' : ''} ${S.altWeights[k.id] ? 'saved' : ''}"
+      id="atab-${k.id}" onclick="switchAltTab(${k.id})">${k.name}</button>
+  `).join('');
+
+            // Contents
+            const altLabels = ALTERNATIVES.map(a => a.name);
+            conts.innerHTML = S.kriterias.map((k, idx) => `
+    <div class="tab-content ${idx === 0 ? 'active' : ''}" id="acont-${k.id}">
+      <div class="radar-section">
+        <div>
+          <div class="radar-canvas-wrap">
+            <canvas class="radar-canvas" id="canvas-alt-${k.id}" width="400" height="400"></canvas>
+          </div>
+          <div style="display:flex;justify-content:center;gap:8px;margin-top:12px;">
+            <button class="btn btn-ghost btn-sm" onclick="resetAlt(${k.id})">↺ Reset</button>
+          </div>
+        </div>
+        <div class="radar-info">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Bobot Alternatif — ${k.name}</div>
+              <div id="acr-badge-${k.id}"></div>
+            </div>
+            <div class="card-body">
+              <div id="alt-prio-${k.id}" style="display:flex;flex-direction:column;gap:6px;"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Konsistensi</div></div>
+            <div class="card-body">
+              <div class="cr-grid">
+                <div class="cr-cell"><div class="cr-label">λmax</div><div class="cr-value cr-neutral" id="al-lmax-${k.id}">—</div></div>
+                <div class="cr-cell"><div class="cr-label">CI</div><div class="cr-value cr-neutral" id="al-ci-${k.id}">—</div></div>
+                <div class="cr-cell"><div class="cr-label">CR</div><div class="cr-value" id="al-cr-${k.id}">—</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+            // Init canvases
+            setTimeout(() => {
+                S.kriterias.forEach((k, idx) => {
+                    const pt = S.altPoints[k.id] || { x: 200, y: 200 };
+                    altCtrl[k.id] = makeCanvas(`canvas-alt-${k.id}`, altLabels, pt,
+                        (p, sv) => onAltUpdate(k.id, p, sv), 400, true);
+                });
+            }, 60);
+        }
+
+        function switchAltTab(kId) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById('atab-' + kId).classList.add('active');
+            document.getElementById('acont-' + kId).classList.add('active');
+        }
+
+        function onAltUpdate(kId, pt, sv) {
+            S.altPoints[kId] = { ...pt };
+            const res = ahp(sv);
+            S.altWeights[kId] = {};
+            ALTERNATIVES.forEach((a, i) => { S.altWeights[kId][a.code] = res.pv[i]; });
+
+            // Mark tab saved
+            const tabBtn = document.getElementById('atab-' + kId);
+            if (tabBtn) tabBtn.classList.add('saved');
+
+            // Priority list
+            const pl = document.getElementById(`alt-prio-${kId}`);
+            if (pl) {
+                const sorted = ALTERNATIVES.map((a, i) => ({ ...a, pv: res.pv[i] })).sort((x, y) => y.pv - x.pv);
+                const mx = Math.max(...res.pv);
+                pl.innerHTML = sorted.map((item, i) => `
+      <div class="prio-row">
+        <div class="prio-name">${item.name}</div>
+        <div class="prio-bar-wrap"><div class="prio-bar-fill" style="width:${(item.pv / mx * 100).toFixed(1)}%;background:${COLORS[i % COLORS.length]};"></div></div>
+        <div class="prio-pct">${(item.pv * 100).toFixed(1)}%</div>
+      </div>
+    `).join('');
+            }
+
+            // CR
+            const ok = res.cr <= 0.1;
+            document.getElementById(`al-lmax-${kId}`).textContent = fmtN(res.lmax);
+            document.getElementById(`al-ci-${kId}`).textContent = fmtN(res.ci);
+            const crEl = document.getElementById(`al-cr-${kId}`);
+            if (crEl) { crEl.textContent = fmtN(res.cr); crEl.className = `cr-value ${ok ? 'cr-ok' : 'cr-warn'}`; }
+            const badge = document.getElementById(`acr-badge-${kId}`);
+            if (badge) badge.innerHTML = ok
+                ? `<span class="badge badge-green">✓ Konsisten</span>`
+                : `<span class="badge badge-orange">⚠ Perlu Disesuaikan</span>`;
+        }
+
+        function resetAlt(kId) { if (altCtrl[kId]) altCtrl[kId].reset(); }
+
+        /* ─────────────────────────────────────────
+           PAGE 5 — HASIL
+        ───────────────────────────────────────── */
+        function computeResults() {
+            // Build final scores
+            const scores = {};
+            ALTERNATIVES.forEach(a => { scores[a.code] = 0; });
+            S.kriterias.forEach(k => {
+                const kw = S.krWeights[k.id] || (1 / S.kriterias.length);
+                ALTERNATIVES.forEach(a => {
+                    const aw = (S.altWeights[k.id] && S.altWeights[k.id][a.code]) || (1 / ALTERNATIVES.length);
+                    scores[a.code] += kw * aw;
+                });
+            });
+
+            const ranked = ALTERNATIVES.map(a => ({ ...a, score: scores[a.code] })).sort((a, b) => b.score - a.score);
+            const maxSc = ranked[0].score;
+
+            // Hero
+            document.getElementById('res-top-name').textContent = ranked[0].name;
+
+            // Ranking
+            const rankEl = document.getElementById('result-ranking');
+            rankEl.innerHTML = ranked.map((item, i) => `
+    <div class="rank-row rank-${i + 1}">
+      <div class="rank-num">${i + 1}</div>
+      <div style="flex:1;">
+        <div class="rank-name">${item.name}</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:2px;">${item.code}</div>
+      </div>
+      <div class="score-bar-wrap"><div class="score-bar-fill" style="width:${(item.score / maxSc * 100).toFixed(1)}%;"></div></div>
+      <div class="rank-score">${item.score.toFixed(4)}</div>
+    </div>
+  `).join('');
+
+            // Bar chart
+            if (S.barChart) S.barChart.destroy();
+            const bCtx = document.getElementById('chart-bar').getContext('2d');
+            S.barChart = new Chart(bCtx, {
+                type: 'bar',
+                data: {
+                    labels: ranked.map(r => r.name.split(' ').slice(0, 3).join(' ')),
+                    datasets: [{
+                        label: 'Skor Akhir',
+                        data: ranked.map(r => parseFloat((r.score * 100).toFixed(3))),
+                        backgroundColor: ranked.map((_, i) => [
+                            'rgba(37,99,235,.85)', 'rgba(124,58,237,.75)', 'rgba(5,150,105,.75)', 'rgba(217,119,6,.75)', 'rgba(220,38,38,.7)'
+                        ][i]),
+                        borderRadius: 6, borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1E293B', padding: 10, cornerRadius: 8,
+                            callbacks: { label: ctx => ` ${ctx.parsed.y.toFixed(3)}%` }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#94A3B8', font: { family: 'DM Sans', size: 11 } }, grid: { color: '#F1F5F9' } },
+                        y: { ticks: { color: '#94A3B8', font: { family: 'DM Mono', size: 11 } }, grid: { color: '#F1F5F9' } }
+                    }
+                }
+            });
+
+            // Criteria weights display
+            const cwEl = document.getElementById('result-crit-weights');
+            const maxW = Math.max(...S.kriterias.map(k => S.krWeights[k.id] || 0));
+            cwEl.innerHTML = S.kriterias.map((k, i) => {
+                const w = S.krWeights[k.id] || 0;
+                return `<div class="prio-row">
+      <div class="prio-name fw-600">${k.name}</div>
+      <div class="prio-bar-wrap"><div class="prio-bar-fill" style="width:${(w / maxW * 100).toFixed(1)}%;background:${COLORS[i % COLORS.length]};"></div></div>
+      <div class="prio-pct">${(w * 100).toFixed(1)}%</div>
+    </div>`;
+            }).join('');
+
+            // Radar chart for criteria weights
+            if (S.radarChart) S.radarChart.destroy();
+            const rCtx = document.getElementById('chart-radar').getContext('2d');
+            S.radarChart = new Chart(rCtx, {
+                type: 'radar',
+                data: {
+                    labels: S.kriterias.map(k => k.name),
+                    datasets: [{
+                        label: 'Bobot Kriteria',
+                        data: S.kriterias.map(k => parseFloat(((S.krWeights[k.id] || 0) * 100).toFixed(2))),
+                        backgroundColor: 'rgba(37,99,235,.1)',
+                        borderColor: 'rgba(37,99,235,.8)',
+                        borderWidth: 2, pointBackgroundColor: '#2563EB', pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { backgroundColor: '#1E293B', padding: 10, cornerRadius: 8 }
+                    },
+                    scales: {
+                        r: {
+                            ticks: { backdropColor: 'transparent', color: '#94A3B8', font: { size: 10 } },
+                            grid: { color: '#E2E8F0' },
+                            pointLabels: { font: { family: 'DM Sans', size: 11 }, color: '#475569' }
+                        }
+                    }
+                }
+            });
+
+            // Alt weight matrix
+            const matEl = document.getElementById('result-alt-matrix');
+            const kNames = S.kriterias.map(k => k.name.split(' ')[0]);
+            let mHtml = `<thead><tr><th style="text-align:left;">Alternatif</th>${kNames.map(n => `<th>${n}</th>`).join('')}<th style="color:#2563EB;">Skor Akhir</th></tr></thead><tbody>`;
+            ranked.forEach(item => {
+                mHtml += `<tr><td style="text-align:left;font-weight:600;white-space:nowrap;">${item.name}</td>`;
+                S.kriterias.forEach(k => {
+                    const aw = (S.altWeights[k.id] && S.altWeights[k.id][item.code]) || 0;
+                    mHtml += `<td>${(aw * 100).toFixed(1)}%</td>`;
+                });
+                mHtml += `<td style="font-weight:700;color:#2563EB;">${item.score.toFixed(4)}</td></tr>`;
+            });
+            mHtml += '</tbody>';
+            matEl.innerHTML = mHtml;
+
+            // Explanation
+            const top = ranked[0];
+            const topKContribs = S.kriterias.map(k => {
+                const kw = S.krWeights[k.id] || 0;
+                const aw = (S.altWeights[k.id] && S.altWeights[k.id][top.code]) || 0;
+                return `${k.name} (${(kw * 100).toFixed(1)}% × ${(aw * 100).toFixed(1)}% = ${(kw * aw * 100).toFixed(2)}%)`;
+            }).join(', ');
+            document.getElementById('result-explanation').innerHTML = `
+    <p style="margin-bottom:8px;">Berdasarkan sintesis AHP menggunakan <strong>${S.kriterias.length} kriteria</strong> dan <strong>${ALTERNATIVES.length} alternatif</strong>, rekomendasi teratas adalah <strong>"${top.name}"</strong> dengan skor akhir <strong>${top.score.toFixed(4)}</strong>.</p>
+    <p style="margin-bottom:8px;">Kontribusi per kriteria untuk alternatif ini: ${topKContribs}.</p>
+    <p style="color:var(--text-3);">Catatan: Skor akhir dihitung sebagai jumlah perkalian bobot kriteria dengan bobot alternatif per kriteria (Σ wk × vAi,Ck). Bobot diperoleh dari eigenvector approximation matriks AHP yang dinormalkan. Penilaian valid jika Consistency Ratio ≤ 0.10.</p>
+  `;
+        }
+
+        /* ─────────────────────────────────────────
+           RESET
+        ───────────────────────────────────────── */
+        function resetAll() {
+            S.krPoint = { x: 200, y: 200 };
+            S.altPoints = {}; S.krWeights = {}; S.altWeights = {};
+            if (S.barChart) { S.barChart.destroy(); S.barChart = null; }
+            if (S.radarChart) { S.radarChart.destroy(); S.radarChart = null; }
+            goTo(0);
+        }
+
+        /* ─────────────────────────────────────────
+           INIT
+        ───────────────────────────────────────── */
+        document.addEventListener('DOMContentLoaded', () => {
+            buildNav();
+            renderKriteriaList();
+            renderPage3();
+        });
+    </script>
+    <a href="../../index.html" class="back-home-btn">
+        <span class="back-arrow">◀</span>
+        <span class="back-brand">NAR<span>EKA</span></span>
+    </a>
+</body>
+
+</html>

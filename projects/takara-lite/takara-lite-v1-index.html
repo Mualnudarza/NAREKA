@@ -1,0 +1,3284 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AHP — Rekomendasi Tema Kegiatan Keilmuan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <style>
+        /* ====================================================
+   RESET & CSS VARIABLES
+==================================================== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --blue: #2563EB;
+            --blue-dark: #1D4ED8;
+            --blue-light: #DBEAFE;
+            --blue-mid: #93C5FD;
+            --blue-pale: #EFF6FF;
+            --bg: #F8FAFC;
+            --card: #FFFFFF;
+            --text: #1E293B;
+            --text-2: #475569;
+            --text-3: #94A3B8;
+            --border: #E2E8F0;
+            --border-2: #CBD5E1;
+            --success: #16A34A;
+            --success-bg: #DCFCE7;
+            --warn: #D97706;
+            --warn-bg: #FEF3C7;
+            --danger: #DC2626;
+            --danger-bg: #FEE2E2;
+            --purple: #7C3AED;
+            --purple-bg: #EDE9FE;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 1px 3px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .04);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, .08), 0 2px 4px rgba(0, 0, 0, .04);
+            --font: 'DM Sans', system-ui, sans-serif;
+            --mono: 'DM Mono', 'Courier New', monospace;
+        }
+
+        html {
+            font-size: 15px;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ====================================================
+   LAYOUT
+==================================================== */
+        .app {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        /* ====================================================
+   TOP NAVIGATION
+==================================================== */
+        .topnav {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 200;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .nav-logo {
+            width: 32px;
+            height: 32px;
+            background: var(--blue);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 11px;
+            letter-spacing: -0.3px;
+            flex-shrink: 0;
+        }
+
+        .nav-title {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .nav-sub {
+            font-size: 11px;
+            color: var(--text-3);
+            line-height: 1;
+        }
+
+        .nav-steps {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            overflow-x: auto;
+            padding: 0 8px;
+        }
+
+        .nav-step {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            font-weight: 500;
+            color: var(--text-3);
+            cursor: default;
+            transition: all .15s;
+            white-space: nowrap;
+        }
+
+        .nav-step.clickable {
+            cursor: pointer;
+        }
+
+        .nav-step.clickable:hover {
+            background: var(--blue-pale);
+            color: var(--blue);
+        }
+
+        .nav-step.active {
+            background: var(--blue-pale);
+            color: var(--blue);
+            font-weight: 600;
+        }
+
+        .nav-step.done {
+            color: var(--success);
+            cursor: pointer;
+        }
+
+        .nav-step.done:hover {
+            background: var(--success-bg);
+        }
+
+        .step-circle {
+            width: 19px;
+            height: 19px;
+            border-radius: 50%;
+            border: 1.5px solid currentColor;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .nav-step.active .step-circle {
+            background: var(--blue);
+            border-color: var(--blue);
+            color: #fff;
+        }
+
+        .nav-step.done .step-circle {
+            background: var(--success);
+            border-color: var(--success);
+            color: #fff;
+        }
+
+        .nav-divider {
+            width: 1px;
+            height: 14px;
+            background: var(--border);
+            margin: 0 2px;
+            flex-shrink: 0;
+        }
+
+        /* ====================================================
+   PAGE SYSTEM
+==================================================== */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeUp .25s ease;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 36px 24px;
+        }
+
+        .container-wide {
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 36px 24px;
+        }
+
+        /* ====================================================
+   PAGE HEADER
+==================================================== */
+        .pg-header {
+            margin-bottom: 28px;
+        }
+
+        .pg-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--blue);
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .pg-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.2;
+        }
+
+        .pg-desc {
+            margin-top: 6px;
+            font-size: 13.5px;
+            color: var(--text-2);
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        /* ====================================================
+   CARD SYSTEM
+==================================================== */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .card-body {
+            padding: 20px 24px;
+        }
+
+        .card-header {
+            padding: 14px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .card-title {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: var(--text-3);
+            margin-top: 2px;
+        }
+
+        /* ====================================================
+   GRID SYSTEM
+==================================================== */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        /* ====================================================
+   TYPOGRAPHY UTILITIES
+==================================================== */
+        h3 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .label-sm {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            color: var(--text-3);
+        }
+
+        .mono {
+            font-family: var(--mono);
+        }
+
+        .fw-600 {
+            font-weight: 600;
+        }
+
+        .text-muted {
+            color: var(--text-3);
+        }
+
+        .text-blue {
+            color: var(--blue);
+        }
+
+        .text-sm {
+            font-size: 12px;
+        }
+
+        .text-xs {
+            font-size: 11px;
+        }
+
+        /* ====================================================
+   BUTTON SYSTEM
+==================================================== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid transparent;
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .15s;
+            text-decoration: none;
+            line-height: 1;
+        }
+
+        .btn:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .btn-primary {
+            background: var(--blue);
+            color: #fff;
+            border-color: var(--blue);
+        }
+
+        .btn-primary:hover {
+            background: var(--blue-dark);
+            border-color: var(--blue-dark);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--blue);
+            border-color: var(--blue);
+        }
+
+        .btn-outline:hover {
+            background: var(--blue-pale);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-2);
+            border-color: var(--border);
+        }
+
+        .btn-ghost:hover {
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .btn-danger-ghost {
+            background: transparent;
+            color: var(--danger);
+            border-color: transparent;
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .btn-danger-ghost:hover {
+            background: var(--danger-bg);
+        }
+
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 12px;
+        }
+
+        .btn-lg {
+            padding: 11px 22px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* ====================================================
+   INPUT & SELECT
+==================================================== */
+        .input,
+        .select-saaty {
+            width: 100%;
+            padding: 7px 10px;
+            border: 1px solid var(--border-2);
+            border-radius: var(--radius-sm);
+            font-family: var(--font);
+            font-size: 12px;
+            color: var(--text);
+            background: var(--card);
+            outline: none;
+            transition: border-color .15s, box-shadow .15s;
+            cursor: pointer;
+        }
+
+        .input:focus,
+        .select-saaty:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .1);
+        }
+
+        /* ====================================================
+   BADGE SYSTEM
+==================================================== */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: .01em;
+        }
+
+        .badge-blue {
+            background: var(--blue-light);
+            color: var(--blue);
+        }
+
+        .badge-green {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        .badge-orange {
+            background: var(--warn-bg);
+            color: var(--warn);
+        }
+
+        .badge-red {
+            background: var(--danger-bg);
+            color: var(--danger);
+        }
+
+        .badge-purple {
+            background: var(--purple-bg);
+            color: var(--purple);
+        }
+
+        /* ====================================================
+   DIVIDER & SPACING UTILITIES
+==================================================== */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 20px 0;
+        }
+
+        .mt-8 {
+            margin-top: 8px;
+        }
+
+        .mt-12 {
+            margin-top: 12px;
+        }
+
+        .mt-16 {
+            margin-top: 16px;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+
+        .mt-24 {
+            margin-top: 24px;
+        }
+
+        .mb-12 {
+            margin-bottom: 12px;
+        }
+
+        .mb-16 {
+            margin-bottom: 16px;
+        }
+
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+
+        .mb-24 {
+            margin-bottom: 24px;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .gap-8 {
+            gap: 8px;
+        }
+
+        .gap-12 {
+            gap: 12px;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        /* ====================================================
+   NAV FOOTER (BOTTOM BUTTONS)
+==================================================== */
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ====================================================
+   STAT CARDS
+==================================================== */
+        .stat-card {
+            padding: 16px 20px;
+        }
+
+        .stat-label {
+            font-size: 10.5px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            color: var(--text-3);
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1;
+        }
+
+        .stat-sub {
+            font-size: 11.5px;
+            color: var(--text-3);
+            margin-top: 4px;
+        }
+
+        .stat-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        /* ====================================================
+   CONSISTENCY RATIO DISPLAY
+==================================================== */
+        .cr-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .cr-cell {
+            padding: 10px 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            text-align: center;
+        }
+
+        .cr-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: var(--text-3);
+            font-weight: 600;
+        }
+
+        .cr-value {
+            font-size: 18px;
+            font-weight: 700;
+            font-family: var(--mono);
+            margin-top: 3px;
+        }
+
+        .cr-ok {
+            color: var(--success);
+        }
+
+        .cr-warn {
+            color: var(--warn);
+        }
+
+        .cr-neutral {
+            color: var(--blue);
+        }
+
+        /* ====================================================
+   PRIORITY BAR ROWS
+==================================================== */
+        .prio-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+        }
+
+        .prio-name {
+            font-size: 12px;
+            width: 140px;
+            flex-shrink: 0;
+            color: var(--text-2);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .prio-bar-wrap {
+            flex: 1;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .prio-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width .6s ease;
+        }
+
+        .prio-pct {
+            font-size: 11px;
+            font-family: var(--mono);
+            color: var(--text-2);
+            width: 44px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        /* ====================================================
+   INFO NOTE
+==================================================== */
+        .info-note {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 12px 14px;
+            background: var(--blue-pale);
+            border: 1px solid var(--blue-light);
+            border-radius: var(--radius-sm);
+            font-size: 12.5px;
+            color: var(--text-2);
+            line-height: 1.5;
+        }
+
+        .info-note .icon {
+            font-size: 15px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .warn-note {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 12px 14px;
+            background: var(--warn-bg);
+            border: 1px solid #FDE68A;
+            border-radius: var(--radius-sm);
+            font-size: 12.5px;
+            color: var(--text-2);
+            line-height: 1.5;
+        }
+
+        /* ====================================================
+   MATRIX TABLE MODERN
+==================================================== */
+        .matrix-scroll {
+            overflow-x: auto;
+        }
+
+        .matrix-tbl {
+            border-collapse: collapse;
+            font-size: 11.5px;
+            font-family: var(--mono);
+            white-space: nowrap;
+            width: 100%;
+        }
+
+        .matrix-tbl th {
+            padding: 7px 10px;
+            background: var(--bg);
+            color: var(--text-3);
+            font-weight: 600;
+            border: 1px solid var(--border);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+
+        .matrix-tbl td {
+            padding: 5px 8px;
+            border: 1px solid var(--border);
+            color: var(--text);
+            text-align: center;
+        }
+
+        .matrix-tbl .diag {
+            background: var(--blue-pale);
+            color: var(--blue);
+            font-weight: 600;
+        }
+
+        .matrix-tbl .recip {
+            color: var(--text-3);
+            font-style: italic;
+        }
+
+        /* ====================================================
+   SAATY SCALE ROW
+==================================================== */
+        .saaty-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 7px 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+        }
+
+        .saaty-name {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-2);
+        }
+
+        .saaty-val {
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--blue);
+            background: var(--blue-pale);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        /* ====================================================
+   TAB SYSTEM
+==================================================== */
+        .tab-row {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 7px 14px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            font-family: var(--font);
+            font-size: 12.5px;
+            font-weight: 500;
+            color: var(--text-2);
+            cursor: pointer;
+            transition: all .15s;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--blue-mid);
+            color: var(--text);
+        }
+
+        .tab-btn.active {
+            background: var(--blue);
+            border-color: var(--blue);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .tab-btn.saved {
+            border-color: var(--success);
+            color: var(--success);
+            background: var(--success-bg);
+        }
+
+        .tab-btn.saved.active {
+            background: var(--success);
+            color: #fff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeUp .2s ease;
+        }
+
+        /* ====================================================
+   PAGE 0 — DASHBOARD
+==================================================== */
+        .dash-hero {
+            background: linear-gradient(135deg, var(--blue) 0%, #1D4ED8 100%);
+            border-radius: var(--radius);
+            padding: 38px 44px;
+            color: #fff;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dash-hero::after {
+            content: 'AHP';
+            position: absolute;
+            right: 36px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 100px;
+            font-weight: 800;
+            opacity: .07;
+            letter-spacing: -4px;
+            pointer-events: none;
+        }
+
+        .dash-hero::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: -40px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .04);
+            pointer-events: none;
+        }
+
+        .dash-hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, .18);
+            border: 1px solid rgba(255, 255, 255, .25);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .dash-hero h1 {
+            font-size: 23px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .dash-hero p {
+            font-size: 13.5px;
+            opacity: .88;
+            line-height: 1.65;
+            max-width: 500px;
+        }
+
+        .dash-hero .btn {
+            margin-top: 22px;
+            background: #fff;
+            color: var(--blue);
+            border-color: #fff;
+            font-weight: 600;
+            font-size: 13.5px;
+            padding: 9px 20px;
+        }
+
+        .dash-hero .btn:hover {
+            background: var(--blue-light);
+        }
+
+        .step-card {
+            padding: 18px 20px;
+            border-left: 3px solid var(--blue-light);
+            transition: border-color .15s, transform .15s;
+            cursor: pointer;
+        }
+
+        .step-card:hover {
+            border-left-color: var(--blue);
+            transform: translateX(2px);
+        }
+
+        .step-card-num {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--blue);
+            letter-spacing: .07em;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .step-card-title {
+            font-size: 13.5px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .step-card-desc {
+            font-size: 12px;
+            color: var(--text-3);
+            line-height: 1.5;
+        }
+
+        /* ====================================================
+   PAGE 1 — DATASET & FEEDBACK
+==================================================== */
+        .event-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+        }
+
+        .event-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--blue-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .event-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .event-meta {
+            font-size: 12px;
+            color: var(--text-3);
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .event-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .feedback-pill {
+            padding: 11px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--card);
+            transition: background .15s;
+            margin-bottom: 6px;
+        }
+
+        .feedback-pill:hover {
+            background: var(--blue-pale);
+        }
+
+        .feedback-author {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--blue);
+            margin-bottom: 4px;
+        }
+
+        .feedback-text {
+            font-size: 12.5px;
+            color: var(--text-2);
+            line-height: 1.55;
+        }
+
+        .feedback-theme {
+            margin-top: 6px;
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .theme-pill {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--card);
+            transition: background .15s;
+        }
+
+        .theme-pill:hover {
+            background: var(--blue-pale);
+        }
+
+        .theme-pill+.theme-pill {
+            margin-top: 6px;
+        }
+
+        .theme-rank {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--blue);
+            width: 22px;
+        }
+
+        .theme-name {
+            font-size: 13px;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .theme-count {
+            font-size: 12px;
+            font-family: var(--mono);
+            color: var(--text-3);
+        }
+
+        .cat-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .cat-table th {
+            padding: 8px 12px;
+            text-align: left;
+            background: var(--bg);
+            color: var(--text-3);
+            font-weight: 600;
+            font-size: 10.5px;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cat-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-2);
+            vertical-align: top;
+        }
+
+        .cat-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .cat-table tr:hover td {
+            background: var(--blue-pale);
+        }
+
+        /* ====================================================
+   PAGE 2 — KRITERIA AHP
+==================================================== */
+        .criteria-card {
+            padding: 16px 20px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--card);
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            transition: border-color .15s;
+        }
+
+        .criteria-card:hover {
+            border-color: var(--blue-mid);
+        }
+
+        .criteria-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        /* Pairwise matrix input */
+        .pw-matrix-wrap {
+            overflow-x: auto;
+        }
+
+        .pw-matrix-tbl {
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .pw-matrix-tbl th {
+            padding: 8px 10px;
+            background: var(--bg);
+            color: var(--text-3);
+            font-weight: 600;
+            border: 1px solid var(--border);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            white-space: nowrap;
+        }
+
+        .pw-matrix-tbl td {
+            padding: 5px;
+            border: 1px solid var(--border);
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .pw-matrix-tbl .diag-cell {
+            background: var(--blue-pale);
+            color: var(--blue);
+            font-weight: 700;
+            font-family: var(--mono);
+            font-size: 14px;
+            min-width: 58px;
+        }
+
+        .pw-matrix-tbl .recip-cell {
+            background: #FAFAFA;
+            color: var(--text-3);
+            font-family: var(--mono);
+            font-size: 11px;
+            min-width: 58px;
+        }
+
+        .pw-matrix-tbl .input-cell {
+            min-width: 80px;
+        }
+
+        /* ====================================================
+   PAGE 3 — ALTERNATIF
+==================================================== */
+        .alt-card {
+            padding: 16px 18px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--card);
+            transition: all .15s;
+        }
+
+        .alt-card:hover {
+            border-color: var(--blue-mid);
+            box-shadow: var(--shadow);
+        }
+
+        .alt-rank-badge {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .alt-freq-bar {
+            height: 5px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .alt-freq-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        /* ====================================================
+   PAGE 4 — PENILAIAN ALTERNATIF
+==================================================== */
+        .prog-track {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 20px;
+        }
+
+        .prog-step {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-3);
+        }
+
+        .prog-step.done {
+            color: var(--success);
+        }
+
+        .prog-step.curr {
+            color: var(--blue);
+            font-weight: 600;
+        }
+
+        .prog-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            flex-shrink: 0;
+        }
+
+        .prog-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+            min-width: 20px;
+        }
+
+        .prog-step.done+.prog-line {
+            background: var(--success);
+        }
+
+        /* ====================================================
+   PAGE 5 — HASIL AKHIR
+==================================================== */
+        .result-hero {
+            background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+            border: 1px solid #BFDBFE;
+            border-radius: var(--radius);
+            padding: 26px 32px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .result-trophy {
+            font-size: 52px;
+        }
+
+        .result-hero-text h2 {
+            font-size: 13px;
+            color: var(--text-3);
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .result-hero-text h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--blue);
+            margin-bottom: 6px;
+        }
+
+        .result-hero-text p {
+            font-size: 12.5px;
+            color: var(--text-2);
+            line-height: 1.55;
+            max-width: 480px;
+        }
+
+        .rank-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--card);
+            transition: all .15s;
+        }
+
+        .rank-row+.rank-row {
+            margin-top: 8px;
+        }
+
+        .rank-row:hover {
+            border-color: var(--blue-mid);
+            box-shadow: var(--shadow);
+        }
+
+        .rank-row.rank-1 {
+            border-color: #FCD34D;
+            background: #FFFBEB;
+        }
+
+        .rank-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .rank-1 .rank-num {
+            background: #FCD34D;
+            color: #92400E;
+        }
+
+        .rank-2 .rank-num {
+            background: #E2E8F0;
+            color: #475569;
+        }
+
+        .rank-3 .rank-num {
+            background: #FED7AA;
+            color: #92400E;
+        }
+
+        .rank-name {
+            flex: 1;
+            font-size: 13.5px;
+            font-weight: 600;
+        }
+
+        .rank-score {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--blue);
+        }
+
+        .score-bar-wrap {
+            width: 110px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            background: var(--blue);
+            border-radius: 3px;
+            transition: width 1s ease .3s;
+        }
+
+        .rank-1 .score-bar-fill {
+            background: #D97706;
+        }
+
+        .chart-box {
+            height: 240px;
+            position: relative;
+        }
+
+        .chart-box-sm {
+            height: 200px;
+            position: relative;
+        }
+
+        /* contribution matrix */
+        .contrib-tbl {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .contrib-tbl th {
+            padding: 8px 12px;
+            text-align: center;
+            background: var(--bg);
+            color: var(--text-3);
+            font-weight: 600;
+            font-size: 10.5px;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            border: 1px solid var(--border);
+        }
+
+        .contrib-tbl th:first-child {
+            text-align: left;
+        }
+
+        .contrib-tbl td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            color: var(--text-2);
+            text-align: center;
+            font-family: var(--mono);
+        }
+
+        .contrib-tbl td:first-child {
+            text-align: left;
+            font-family: var(--font);
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .contrib-tbl tr:hover td {
+            background: var(--blue-pale);
+        }
+
+        .contrib-tbl .total-col {
+            font-weight: 700;
+            color: var(--blue);
+            background: var(--blue-pale);
+        }
+
+        /* insight panel */
+        .insight-panel {
+            padding: 18px 20px;
+            background: var(--blue-pale);
+            border: 1px solid var(--blue-light);
+            border-radius: var(--radius);
+        }
+
+        .insight-panel h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--blue);
+            margin-bottom: 10px;
+        }
+
+        .insight-item {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: var(--text-2);
+            line-height: 1.5;
+        }
+
+        .insight-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .insight-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--blue);
+            margin-top: 7px;
+            flex-shrink: 0;
+        }
+
+        /* ====================================================
+   SCROLLBAR
+==================================================== */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-2);
+            border-radius: 4px;
+        }
+
+        /* ====================================================
+   RESPONSIVE
+==================================================== */
+        @media (max-width: 700px) {
+            .topnav {
+                padding: 0 16px;
+            }
+
+            .nav-steps {
+                display: none;
+            }
+
+            .container,
+            .container-wide {
+                padding: 24px 16px;
+            }
+
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .dash-hero {
+                padding: 26px 24px;
+            }
+
+            .dash-hero::after {
+                display: none;
+            }
+
+            .result-hero {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .cr-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+
+        <!-- ====================================================
+     TOP NAVIGATION
+==================================================== -->
+        <nav class="topnav">
+            <a class="nav-brand" href="#">
+                <div class="nav-logo">AHP</div>
+                <div>
+                    <div class="nav-title">AHP Rekomendasi Tema</div>
+                    <div class="nav-sub">Prototype Penelitian · Laravel Filament Mastery</div>
+                </div>
+            </a>
+
+            <div class="nav-steps" id="navSteps"></div>
+        </nav>
+
+        <!-- ====================================================
+     MAIN CONTENT
+==================================================== -->
+        <main>
+
+            <!-- ==================== PAGE 0: DASHBOARD ==================== -->
+            <div class="page active" id="page-0">
+                <div class="container-wide">
+
+                    <div class="dash-hero">
+                        <div class="dash-hero-badge">🎓 Prototype Penelitian Skripsi</div>
+                        <h1>Model AHP untuk Menentukan Prioritas<br>Tema Kegiatan Keilmuan</h1>
+                        <p>Berdasarkan preferensi mahasiswa dari hasil analisis feedback, sistem ini menerapkan metode
+                            <strong>Analytical Hierarchy Process (AHP)</strong> untuk menghasilkan rekomendasi tema
+                            workshop yang optimal dan terukur.</p>
+                        <button class="btn" onclick="goTo(1)">Mulai Demo Simulasi →</button>
+                    </div>
+
+                    <!-- Dataset Stats -->
+                    <div class="grid-4 mb-24">
+                        <div class="card stat-card" style="display:flex;align-items:center;gap:14px;">
+                            <div class="stat-icon" style="background:#EFF6FF;color:#2563EB;">📊</div>
+                            <div>
+                                <div class="stat-label">Total Feedback</div>
+                                <div class="stat-value">1.551</div>
+                                <div class="stat-sub">23 kegiatan workshop</div>
+                            </div>
+                        </div>
+                        <div class="card stat-card" style="display:flex;align-items:center;gap:14px;">
+                            <div class="stat-icon" style="background:#DCFCE7;color:#16A34A;">✅</div>
+                            <div>
+                                <div class="stat-label">Feedback Valid</div>
+                                <div class="stat-value">1.109</div>
+                                <div class="stat-sub">71.5% dari total</div>
+                            </div>
+                        </div>
+                        <div class="card stat-card" style="display:flex;align-items:center;gap:14px;">
+                            <div class="stat-icon" style="background:#EDE9FE;color:#7C3AED;">🏷️</div>
+                            <div>
+                                <div class="stat-label">Tema Diekstrak</div>
+                                <div class="stat-value">1.142</div>
+                                <div class="stat-sub">Multi-tema per feedback</div>
+                            </div>
+                        </div>
+                        <div class="card stat-card" style="display:flex;align-items:center;gap:14px;">
+                            <div class="stat-icon" style="background:#FEF3C7;color:#D97706;">🎯</div>
+                            <div>
+                                <div class="stat-label">Alternatif Tema</div>
+                                <div class="stat-value">5</div>
+                                <div class="stat-sub">Kategori final AHP</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2 mb-24">
+                        <!-- Studi Kasus -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">Studi Kasus Workshop</div>
+                                    <div class="card-subtitle">Data primer untuk simulasi AHP</div>
+                                </div>
+                                <span class="badge badge-blue">Aktif</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="event-header">
+                                    <div class="event-icon">⚡</div>
+                                    <div>
+                                        <div class="event-title">Laravel Filament Mastery</div>
+                                        <div style="font-size:12.5px;color:var(--text-2);margin-top:2px;">Creating
+                                            Dynamic CRUD Interfaces</div>
+                                        <div class="event-meta mt-8">
+                                            <span>📋 49 feedback</span>
+                                            <span>✅ 34 valid</span>
+                                            <span>🏷️ 34 tema</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="divider"></div>
+                                <div class="grid-3">
+                                    <div style="text-align:center;padding:8px 0;">
+                                        <div class="stat-label">Feedback</div>
+                                        <div style="font-size:20px;font-weight:700;color:var(--text);">49</div>
+                                        <div class="stat-sub">Total masuk</div>
+                                    </div>
+                                    <div
+                                        style="text-align:center;padding:8px 0;border-left:1px solid var(--border);border-right:1px solid var(--border);">
+                                        <div class="stat-label">Valid</div>
+                                        <div style="font-size:20px;font-weight:700;color:var(--success);">34</div>
+                                        <div class="stat-sub">69.4% valid</div>
+                                    </div>
+                                    <div style="text-align:center;padding:8px 0;">
+                                        <div class="stat-label">Tema</div>
+                                        <div style="font-size:20px;font-weight:700;color:var(--blue);">34</div>
+                                        <div class="stat-sub">Berhasil ekstrak</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Metodologi -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">Alur Metodologi AHP</div>
+                                    <div class="card-subtitle">6 tahapan proses analitik</div>
+                                </div>
+                            </div>
+                            <div class="card-body" style="padding:16px 24px;">
+                                <div style="display:flex;flex-direction:column;gap:8px;">
+                                    <div onclick="goTo(1)"
+                                        style="display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;transition:all .15s;"
+                                        onmouseover="this.style.background='var(--blue-pale)'"
+                                        onmouseout="this.style.background='transparent'">
+                                        <div
+                                            style="width:22px;height:22px;border-radius:50%;background:var(--blue-light);color:var(--blue);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                            1</div>
+                                        <div style="font-size:12.5px;font-weight:500;">Dataset &amp; Analisis Feedback
+                                        </div>
+                                        <div style="margin-left:auto;font-size:11px;color:var(--text-3);">→</div>
+                                    </div>
+                                    <div onclick="goTo(2)"
+                                        style="display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;transition:all .15s;"
+                                        onmouseover="this.style.background='var(--blue-pale)'"
+                                        onmouseout="this.style.background='transparent'">
+                                        <div
+                                            style="width:22px;height:22px;border-radius:50%;background:var(--blue-light);color:var(--blue);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                            2</div>
+                                        <div style="font-size:12.5px;font-weight:500;">Pembobotan Kriteria AHP</div>
+                                        <div style="margin-left:auto;font-size:11px;color:var(--text-3);">→</div>
+                                    </div>
+                                    <div onclick="goTo(3)"
+                                        style="display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;transition:all .15s;"
+                                        onmouseover="this.style.background='var(--blue-pale)'"
+                                        onmouseout="this.style.background='transparent'">
+                                        <div
+                                            style="width:22px;height:22px;border-radius:50%;background:var(--blue-light);color:var(--blue);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                            3</div>
+                                        <div style="font-size:12.5px;font-weight:500;">Data Alternatif Tema</div>
+                                        <div style="margin-left:auto;font-size:11px;color:var(--text-3);">→</div>
+                                    </div>
+                                    <div onclick="goTo(4)"
+                                        style="display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;transition:all .15s;"
+                                        onmouseover="this.style.background='var(--blue-pale)'"
+                                        onmouseout="this.style.background='transparent'">
+                                        <div
+                                            style="width:22px;height:22px;border-radius:50%;background:var(--blue-light);color:var(--blue);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                            4</div>
+                                        <div style="font-size:12.5px;font-weight:500;">Penilaian Alternatif per Kriteria
+                                        </div>
+                                        <div style="margin-left:auto;font-size:11px;color:var(--text-3);">→</div>
+                                    </div>
+                                    <div onclick="goTo(5)"
+                                        style="display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;transition:all .15s;"
+                                        onmouseover="this.style.background='var(--blue-pale)'"
+                                        onmouseout="this.style.background='transparent'">
+                                        <div
+                                            style="width:22px;height:22px;border-radius:50%;background:var(--blue-light);color:var(--blue);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                            5</div>
+                                        <div style="font-size:12.5px;font-weight:500;">Sintesis &amp; Hasil Akhir</div>
+                                        <div style="margin-left:auto;font-size:11px;color:var(--text-3);">→</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step Cards -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Panduan Penggunaan Aplikasi</div>
+                            <span class="badge badge-purple">Prototype Demo</span>
+                        </div>
+                        <div class="grid-3" style="gap:0;">
+                            <div class="step-card" onclick="goTo(1)"
+                                style="border-left:3px solid var(--blue-light);border-bottom:1px solid var(--border);">
+                                <div class="step-card-num">Step 01</div>
+                                <div class="step-card-title">Dataset &amp; Feedback</div>
+                                <div class="step-card-desc">Eksplorasi data feedback mahasiswa, hasil ekstraksi tema,
+                                    dan kategorisasi menggunakan NLP sederhana.</div>
+                            </div>
+                            <div class="step-card" onclick="goTo(2)"
+                                style="border-left:3px solid var(--blue-light);border-bottom:1px solid var(--border);border-left-width:0;border-right:1px solid var(--border);">
+                                <div class="step-card-num">Step 02</div>
+                                <div class="step-card-title">Kriteria &amp; Pairwise</div>
+                                <div class="step-card-desc">Input pairwise comparison matrix 3×3 untuk 3 kriteria utama.
+                                    Sistem menghitung CR secara otomatis.</div>
+                            </div>
+                            <div class="step-card" onclick="goTo(3)"
+                                style="border-left:3px solid var(--blue-light);border-bottom:1px solid var(--border);border-left-width:0;">
+                                <div class="step-card-num">Step 03</div>
+                                <div class="step-card-title">Alternatif Tema</div>
+                                <div class="step-card-desc">5 kategori tema yang menjadi alternatif keputusan AHP
+                                    berdasarkan hasil clustering feedback.</div>
+                            </div>
+                            <div class="step-card" onclick="goTo(4)"
+                                style="border-left:3px solid var(--blue-light);border-bottom:none;">
+                                <div class="step-card-num">Step 04</div>
+                                <div class="step-card-title">Penilaian Alternatif</div>
+                                <div class="step-card-desc">Matrix pairwise 5×5 untuk setiap kriteria. Tab per kriteria
+                                    dengan perhitungan CR independen.</div>
+                            </div>
+                            <div class="step-card" onclick="goTo(5)"
+                                style="border-left:3px solid var(--blue-light);border-bottom:none;border-left-width:0;border-right:1px solid var(--border);">
+                                <div class="step-card-num">Step 05</div>
+                                <div class="step-card-title">Sintesis Hasil</div>
+                                <div class="step-card-desc">Skor akhir AHP dari sintesis bobot kriteria dan alternatif.
+                                    Ranking rekomendasi tema terbaik.</div>
+                            </div>
+                            <div class="step-card"
+                                style="border-left:3px solid var(--blue-light);border-bottom:none;border-left-width:0;cursor:default;">
+                                <div class="step-card-num">Metode</div>
+                                <div class="step-card-title">AHP · Saaty Scale</div>
+                                <div class="step-card-desc">Implementasi lengkap: normalisasi, priority vector,
+                                    λ<sub>max</sub>, CI/RI/CR dengan validasi konsistensi.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ==================== PAGE 1: DATASET & FEEDBACK ==================== -->
+            <div class="page" id="page-1">
+                <div class="container-wide">
+                    <div class="pg-header">
+                        <div class="pg-label">Step 01 / Dataset</div>
+                        <div class="pg-title">Dataset &amp; Analisis Feedback</div>
+                        <div class="pg-desc">Data primer dari workshop "Laravel Filament Mastery: Creating Dynamic CRUD
+                            Interfaces" — 49 feedback mahasiswa, 34 valid, menghasilkan 34 tema untuk analisis lebih
+                            lanjut.</div>
+                    </div>
+
+                    <!-- Workshop Info -->
+                    <div class="card mb-20">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Informasi Kegiatan Workshop</div>
+                                <div class="card-subtitle">Studi kasus penelitian AHP</div>
+                            </div>
+                            <span class="badge badge-blue">Studi Kasus</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="event-header">
+                                <div class="event-icon">⚡</div>
+                                <div style="flex:1;">
+                                    <div class="event-title">Laravel Filament Mastery: Creating Dynamic CRUD Interfaces
+                                    </div>
+                                    <div class="event-meta mt-8">
+                                        <span>📅 Semester Ganjil 2024/2025</span>
+                                        <span>🏢 Laboratorium Komputer</span>
+                                        <span>👥 Mahasiswa Teknik Informatika</span>
+                                        <span>⏱ 3 jam</span>
+                                    </div>
+                                    <div style="margin-top:12px;font-size:12.5px;color:var(--text-2);line-height:1.6;">
+                                        Workshop ini memperkenalkan framework Laravel dengan admin panel Filament untuk
+                                        pembuatan antarmuka CRUD yang dinamis dan responsif. Peserta mempelajari
+                                        arsitektur MVC, Eloquent ORM, dan komponen Filament untuk membangun aplikasi
+                                        manajemen data modern.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="divider"></div>
+                            <div class="grid-4">
+                                <div style="text-align:center;padding:10px 0;">
+                                    <div class="stat-label">Total Feedback</div>
+                                    <div style="font-size:24px;font-weight:700;color:var(--text);">49</div>
+                                    <div class="stat-sub">Diterima</div>
+                                </div>
+                                <div style="text-align:center;padding:10px 0;border-left:1px solid var(--border);">
+                                    <div class="stat-label">Feedback Valid</div>
+                                    <div style="font-size:24px;font-weight:700;color:var(--success);">34</div>
+                                    <div class="stat-sub">69.4% response rate</div>
+                                </div>
+                                <div style="text-align:center;padding:10px 0;border-left:1px solid var(--border);">
+                                    <div class="stat-label">Tema Diekstrak</div>
+                                    <div style="font-size:24px;font-weight:700;color:var(--blue);">34</div>
+                                    <div class="stat-sub">Multi-tema / feedback</div>
+                                </div>
+                                <div style="text-align:center;padding:10px 0;border-left:1px solid var(--border);">
+                                    <div class="stat-label">Kategori Final</div>
+                                    <div style="font-size:24px;font-weight:700;color:var(--purple);">5</div>
+                                    <div class="stat-sub">Alternatif AHP</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2 mb-20">
+                        <!-- Contoh Feedback -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">Contoh Feedback Mahasiswa</div>
+                                    <div class="card-subtitle">Teks asli sebelum ekstraksi tema</div>
+                                </div>
+                                <span class="badge badge-orange">Raw Data</span>
+                            </div>
+                            <div class="card-body" style="padding:16px 20px;max-height:340px;overflow-y:auto;">
+                                <div class="feedback-pill">
+                                    <div class="feedback-author">Mahasiswa #01</div>
+                                    <div class="feedback-text">Pengen banget ada workshop tentang AI dan machine
+                                        learning, terutama yang implementasi langsung ke aplikasi web. Kalau bisa
+                                        sekalian sama deep learning ya.</div>
+                                    <div class="feedback-theme">
+                                        <span class="badge badge-blue">AI</span>
+                                        <span class="badge badge-purple">Machine Learning</span>
+                                    </div>
+                                </div>
+                                <div class="feedback-pill">
+                                    <div class="feedback-author">Mahasiswa #02</div>
+                                    <div class="feedback-text">Workshop pemrograman web lanjutan kayaknya bagus,
+                                        terutama React atau Next.js. Kurikulum kita kayaknya masih kurang di bagian
+                                        frontend modern.</div>
+                                    <div class="feedback-theme">
+                                        <span class="badge badge-green">Pemrograman Web</span>
+                                    </div>
+                                </div>
+                                <div class="feedback-pill">
+                                    <div class="feedback-author">Mahasiswa #05</div>
+                                    <div class="feedback-text">Desain UI/UX sama figma training dong! Kita mahasiswa TI
+                                        sering bikin produk tapi nggak tau cara desain yang baik dan user-friendly.
+                                    </div>
+                                    <div class="feedback-theme">
+                                        <span class="badge badge-orange">Desain UI/UX</span>
+                                    </div>
+                                </div>
+                                <div class="feedback-pill">
+                                    <div class="feedback-author">Mahasiswa #08</div>
+                                    <div class="feedback-text">Ada yang bahas mobile development nggak? Flutter atau
+                                        React Native buat bikin aplikasi Android iOS. Sekarang kan banyak banget
+                                        lowongan mobile dev.</div>
+                                    <div class="feedback-theme">
+                                        <span class="badge badge-purple">Mobile Development</span>
+                                    </div>
+                                </div>
+                                <div class="feedback-pill">
+                                    <div class="feedback-author">Mahasiswa #12</div>
+                                    <div class="feedback-text">Networking dan keamanan sistem kayaknya perlu banget.
+                                        Atau mungkin tentang cloud computing dan DevOps? Banyak perusahaan yang cari
+                                        skill itu.</div>
+                                    <div class="feedback-theme">
+                                        <span class="badge badge-blue">General IT/TI</span>
+                                    </div>
+                                </div>
+                                <div class="feedback-pill">
+                                    <div class="feedback-author">Mahasiswa #17</div>
+                                    <div class="feedback-text">Artificial intelligence dong yang spesifik buat natural
+                                        language processing atau computer vision. Apalagi yang ada hubungannya sama
+                                        skripsi dan riset.</div>
+                                    <div class="feedback-theme">
+                                        <span class="badge badge-blue">AI</span>
+                                        <span class="badge badge-purple">Computer Vision</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hasil Ekstraksi Tema -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">Hasil Ekstraksi Tema (Top 10)</div>
+                                    <div class="card-subtitle">Frekuensi tema dari 34 feedback valid</div>
+                                </div>
+                                <span class="badge badge-green">Processed</span>
+                            </div>
+                            <div class="card-body" style="padding:14px 20px;max-height:340px;overflow-y:auto;">
+                                <div class="theme-pill">
+                                    <div class="theme-rank">#1</div>
+                                    <div class="theme-name">Artificial Intelligence</div>
+                                    <span class="badge badge-blue" style="margin-right:8px;">AI</span>
+                                    <div class="theme-count">14×</div>
+                                </div>
+                                <div class="theme-pill">
+                                    <div class="theme-rank">#2</div>
+                                    <div class="theme-name">Machine Learning</div>
+                                    <span class="badge badge-blue" style="margin-right:8px;">AI</span>
+                                    <div class="theme-count">8×</div>
+                                </div>
+                                <div class="theme-pill">
+                                    <div class="theme-rank">#3</div>
+                                    <div class="theme-name">React / Next.js</div>
+                                    <span class="badge badge-green" style="margin-right:8px;">Web</span>
+                                    <div class="theme-count">7×</div>
+                                </div>
+                                <div class="theme-pill">
+                                    <div class="theme-rank">#4</div>
+                                    <div class="theme-name">UI/UX Design &amp; Figma</div>
+                                    <span class="badge badge-orange" style="margin-right:8px;">UI/UX</span>
+                                    <div class="theme-count">6×</div>
+                                </div>
+                                <div class="theme-pill">
+                                    <div class="theme-rank">#5</div>
+                                    <div class="theme-name">Mobile Development</div>
+                                    <span class="badge badge-purple" style="margin-right:8px;">Mobile</span>
+                                    <div class="theme-count">5×</div>
+                                </div>
+                                <div class="theme-pill">
+                                    <div class="theme-rank">#6</div>
+                                    <div class="theme-name">Cloud Computing</div>
+                                    <span class="badge badge-blue" style="margin-right:8px;">IT</span>
+                                    <div class="theme-count">5×</div>
+                                </div>
+                                <div class="theme-pill">
+                                    <div class="theme-rank">#7</div>
+                                    <div class="theme-name">Deep Learning / NLP</div>
+                                    <span class="badge badge-blue" style="margin-right:8px;">AI</span>
+                                    <div class="theme-count">4×</div>
+                                </div>
+                                <div class="theme-pill">
+                                    <div class="theme-rank">#8</div>
+                                    <div class="theme-name">Keamanan Sistem / Security</div>
+                                    <span class="badge badge-blue" style="margin-right:8px;">IT</span>
+                                    <div class="theme-count">4×</div>
+                                </div>
+                                <div class="theme-pill">
+                                    <div class="theme-rank">#9</div>
+                                    <div class="theme-name">Flutter / React Native</div>
+                                    <span class="badge badge-purple" style="margin-right:8px;">Mobile</span>
+                                    <div class="theme-count">3×</div>
+                                </div>
+                                <div class="theme-pill">
+                                    <div class="theme-rank">#10</div>
+                                    <div class="theme-name">DevOps &amp; CI/CD</div>
+                                    <span class="badge badge-blue" style="margin-right:8px;">IT</span>
+                                    <div class="theme-count">3×</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabel Kategorisasi -->
+                    <div class="card mb-20">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Hasil Kategorisasi Tema ke Alternatif AHP</div>
+                                <div class="card-subtitle">Pengelompokan tema individual menjadi 5 kategori final</div>
+                            </div>
+                        </div>
+                        <div class="card-body" style="padding:0;">
+                            <div style="overflow-x:auto;">
+                                <table class="cat-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Kode</th>
+                                            <th>Kategori Alternatif</th>
+                                            <th>Tema yang Termasuk</th>
+                                            <th style="text-align:center;">Frekuensi</th>
+                                            <th style="text-align:center;">Persentase</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="badge badge-blue">A1</span></td>
+                                            <td style="font-weight:600;">Artificial Intelligence (AI)</td>
+                                            <td style="font-size:11.5px;color:var(--text-3);">AI, Machine Learning, Deep
+                                                Learning, NLP, Computer Vision, Data Science</td>
+                                            <td style="text-align:center;font-family:var(--mono);font-weight:600;">14
+                                            </td>
+                                            <td style="text-align:center;font-family:var(--mono);color:var(--blue);">
+                                                41.2%</td>
+                                            <td><span class="badge badge-green">Rank #1</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="badge badge-purple">A2</span></td>
+                                            <td style="font-weight:600;">General IT/TI</td>
+                                            <td style="font-size:11.5px;color:var(--text-3);">Cloud Computing, Keamanan
+                                                Sistem, Networking, DevOps, Database, Linux</td>
+                                            <td style="text-align:center;font-family:var(--mono);font-weight:600;">7
+                                            </td>
+                                            <td style="text-align:center;font-family:var(--mono);color:var(--blue);">
+                                                20.6%</td>
+                                            <td><span class="badge badge-blue">Rank #2</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="badge badge-green">A3</span></td>
+                                            <td style="font-weight:600;">Pemrograman Web</td>
+                                            <td style="font-size:11.5px;color:var(--text-3);">React, Next.js, Vue.js,
+                                                Node.js, API RESTful, TypeScript</td>
+                                            <td style="text-align:center;font-family:var(--mono);font-weight:600;">7
+                                            </td>
+                                            <td style="text-align:center;font-family:var(--mono);color:var(--blue);">
+                                                20.6%</td>
+                                            <td><span class="badge badge-blue">Rank #3</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="badge badge-orange">A4</span></td>
+                                            <td style="font-weight:600;">Desain UI/UX</td>
+                                            <td style="font-size:11.5px;color:var(--text-3);">UI/UX Design, Figma,
+                                                Prototyping, Design System, User Research</td>
+                                            <td style="text-align:center;font-family:var(--mono);font-weight:600;">4
+                                            </td>
+                                            <td style="text-align:center;font-family:var(--mono);color:var(--blue);">
+                                                11.8%</td>
+                                            <td><span class="badge badge-orange">Rank #4</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="badge badge-red">A5</span></td>
+                                            <td style="font-weight:600;">Mobile Development</td>
+                                            <td style="font-size:11.5px;color:var(--text-3);">Flutter, React Native,
+                                                Android Native, iOS Development, Kotlin</td>
+                                            <td style="text-align:center;font-family:var(--mono);font-weight:600;">2
+                                            </td>
+                                            <td style="text-align:center;font-family:var(--mono);color:var(--blue);">
+                                                5.9%</td>
+                                            <td><span class="badge badge-orange">Rank #5</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-note mb-20">
+                        <div class="icon">ℹ️</div>
+                        <div>Data ekstraksi tema dilakukan menggunakan pendekatan keyword matching dan kategorisasi
+                            berbasis ontologi teknologi informasi. Setiap feedback dapat menghasilkan lebih dari satu
+                            tema, sehingga total tema (34) dapat berbeda dengan jumlah feedback valid (34). Kategorisasi
+                            final menggunakan prinsip keterwakilan dan relevansi kurikulum.</div>
+                    </div>
+
+                    <div class="nav-footer">
+                        <button class="btn btn-ghost btn-sm" onclick="goTo(0)">← Kembali</button>
+                        <button class="btn btn-primary" onclick="goTo(2)">Lanjut: Kriteria AHP →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== PAGE 2: KRITERIA AHP ==================== -->
+            <div class="page" id="page-2">
+                <div class="container-wide">
+                    <div class="pg-header">
+                        <div class="pg-label">Step 02 / Kriteria</div>
+                        <div class="pg-title">Pembobotan Kriteria AHP</div>
+                        <div class="pg-desc">Masukkan nilai perbandingan berpasangan (pairwise comparison) untuk 3
+                            kriteria utama. Sistem akan menghitung bobot prioritas dan Consistency Ratio secara
+                            otomatis.</div>
+                    </div>
+
+                    <!-- Kriteria Cards -->
+                    <div class="grid-3 mb-20" id="criteriaCards"></div>
+
+                    <!-- Skala Saaty -->
+                    <div class="card mb-20">
+                        <div class="card-header">
+                            <div class="card-title">Skala Perbandingan Saaty</div>
+                            <span class="badge badge-blue">Referensi</span>
+                        </div>
+                        <div class="card-body" style="padding:16px 24px;">
+                            <div class="grid-3" style="gap:6px;" id="saatyScale"></div>
+                        </div>
+                    </div>
+
+                    <!-- Pairwise Matrix Input -->
+                    <div class="card mb-20">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Matrix Pairwise Comparison — Kriteria (3×3)</div>
+                                <div class="card-subtitle">Isi nilai perbandingan menggunakan dropdown skala Saaty.
+                                    Nilai resiprokal terisi otomatis.</div>
+                            </div>
+                            <button class="btn btn-ghost btn-sm" onclick="resetKriteriaMatrix()">↺ Reset</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="pw-matrix-wrap" id="kriteriaMatrixWrap"></div>
+                            <div class="divider"></div>
+                            <div style="display:flex;justify-content:flex-end;">
+                                <button class="btn btn-primary" onclick="calcKriteria()">Hitung Bobot Kriteria
+                                    →</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hasil Perhitungan Kriteria -->
+                    <div class="card mb-20" id="kriteriaResultCard" style="display:none;">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Hasil Perhitungan Bobot Kriteria</div>
+                                <div class="card-subtitle">Normalisasi matrix, priority vector, dan uji konsistensi
+                                </div>
+                            </div>
+                            <div id="kr-badge-cr"></div>
+                        </div>
+                        <div class="card-body">
+                            <div class="grid-2" style="gap:24px;">
+                                <div>
+                                    <div class="label-sm mb-12">Matrix Ternormalisasi</div>
+                                    <div class="matrix-scroll" id="kr-norm-matrix"></div>
+                                    <div class="label-sm mt-16 mb-12">Priority Vector (Bobot)</div>
+                                    <div id="kr-priority-bars"></div>
+                                </div>
+                                <div>
+                                    <div class="label-sm mb-12">Uji Konsistensi</div>
+                                    <div class="cr-grid">
+                                        <div class="cr-cell">
+                                            <div class="cr-label">λ<sub>max</sub></div>
+                                            <div class="cr-value cr-neutral" id="kr-lmax">—</div>
+                                        </div>
+                                        <div class="cr-cell">
+                                            <div class="cr-label">CI</div>
+                                            <div class="cr-value cr-neutral" id="kr-ci">—</div>
+                                        </div>
+                                        <div class="cr-cell">
+                                            <div class="cr-label">CR</div>
+                                            <div class="cr-value" id="kr-cr">—</div>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top:10px;" id="kr-cr-note"></div>
+                                    <div class="divider"></div>
+                                    <div class="label-sm mb-12">Bobot Prioritas Final</div>
+                                    <div id="kr-weight-table"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="nav-footer">
+                        <button class="btn btn-ghost btn-sm" onclick="goTo(1)">← Kembali</button>
+                        <button class="btn btn-primary" onclick="goTo(3)">Lanjut: Alternatif Tema →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== PAGE 3: ALTERNATIF TEMA ==================== -->
+            <div class="page" id="page-3">
+                <div class="container-wide">
+                    <div class="pg-header">
+                        <div class="pg-label">Step 03 / Alternatif</div>
+                        <div class="pg-title">Data Alternatif Tema Workshop</div>
+                        <div class="pg-desc">5 kategori tema hasil kategorisasi feedback mahasiswa yang menjadi
+                            alternatif keputusan dalam analisis AHP.</div>
+                    </div>
+
+                    <!-- Stat Overview -->
+                    <div class="grid-4 mb-20">
+                        <div class="card stat-card" style="text-align:center;">
+                            <div class="stat-label">Total Alternatif</div>
+                            <div class="stat-value" style="color:var(--blue);">5</div>
+                            <div class="stat-sub">Kategori tema</div>
+                        </div>
+                        <div class="card stat-card" style="text-align:center;">
+                            <div class="stat-label">Tema Teratas</div>
+                            <div class="stat-value" style="font-size:18px;font-weight:700;">AI</div>
+                            <div class="stat-sub">41.2% usulan</div>
+                        </div>
+                        <div class="card stat-card" style="text-align:center;">
+                            <div class="stat-label">Total Usulan</div>
+                            <div class="stat-value">34</div>
+                            <div class="stat-sub">Feedback valid</div>
+                        </div>
+                        <div class="card stat-card" style="text-align:center;">
+                            <div class="stat-label">Kriteria Eval</div>
+                            <div class="stat-value">3</div>
+                            <div class="stat-sub">C1, C2, C3</div>
+                        </div>
+                    </div>
+
+                    <!-- Alternatif Cards -->
+                    <div id="altCards" class="mb-20"></div>
+
+                    <!-- Chart Section -->
+                    <div class="card mb-20">
+                        <div class="card-header">
+                            <div class="card-title">Distribusi Frekuensi Usulan per Kategori</div>
+                            <span class="badge badge-blue">Chart.js</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-box">
+                                <canvas id="chart-alt-freq"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-note mb-20">
+                        <div class="icon">📌</div>
+                        <div>Ranking sementara ini hanya berdasarkan frekuensi usulan (C1). Pada halaman berikutnya,
+                            setiap alternatif akan dinilai terhadap semua kriteria menggunakan pairwise comparison
+                            matrix AHP untuk menghasilkan skor global yang lebih komprehensif.</div>
+                    </div>
+
+                    <div class="nav-footer">
+                        <button class="btn btn-ghost btn-sm" onclick="goTo(2)">← Kembali</button>
+                        <button class="btn btn-primary" onclick="goTo(4)">Lanjut: Penilaian Alternatif →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== PAGE 4: PENILAIAN ALTERNATIF ==================== -->
+            <div class="page" id="page-4">
+                <div class="container-wide">
+                    <div class="pg-header">
+                        <div class="pg-label">Step 04 / Penilaian</div>
+                        <div class="pg-title">Penilaian Alternatif per Kriteria</div>
+                        <div class="pg-desc">Lakukan pairwise comparison untuk setiap pasangan alternatif (5×5) pada
+                            masing-masing kriteria. Pilih tab kriteria, isi matrix, lalu simpan bobot.</div>
+                    </div>
+
+                    <!-- Progress tracker -->
+                    <div class="prog-track mb-20" id="altProgTrack"></div>
+
+                    <!-- Tabs -->
+                    <div class="tab-row" id="altTabs"></div>
+
+                    <!-- Tab Contents -->
+                    <div id="altTabContents"></div>
+
+                    <div class="nav-footer">
+                        <button class="btn btn-ghost btn-sm" onclick="goTo(3)">← Kembali</button>
+                        <button class="btn btn-primary" onclick="onFinishAlt()">Hitung Hasil Akhir →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== PAGE 5: HASIL AKHIR ==================== -->
+            <div class="page" id="page-5">
+                <div class="container-wide">
+                    <div class="pg-header">
+                        <div class="pg-label">Step 05 / Hasil</div>
+                        <div class="pg-title">Sintesis &amp; Hasil Akhir AHP</div>
+                        <div class="pg-desc">Ranking rekomendasi tema workshop berdasarkan sintesis bobot kriteria dan
+                            bobot alternatif per kriteria menggunakan metode Analytical Hierarchy Process.</div>
+                    </div>
+
+                    <!-- Result Hero -->
+                    <div class="result-hero" id="resultHero">
+                        <div class="result-trophy">🏆</div>
+                        <div class="result-hero-text">
+                            <h2>Rekomendasi Tema Terbaik</h2>
+                            <h1 id="res-top-name">—</h1>
+                            <p id="res-top-desc">Tema ini mendapatkan skor tertinggi berdasarkan sintesis AHP dari 3
+                                kriteria utama dan penilaian 5 alternatif.</p>
+                        </div>
+                        <div style="margin-left:auto;flex-shrink:0;">
+                            <div style="text-align:center;">
+                                <div class="stat-label">Skor Global</div>
+                                <div style="font-size:32px;font-weight:700;color:var(--blue);font-family:var(--mono);"
+                                    id="res-top-score">—</div>
+                                <div style="margin-top:4px;" id="res-top-cr-badge"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2 mb-20">
+                        <!-- Ranking -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Ranking Rekomendasi Tema</div>
+                                <span class="badge badge-blue">AHP Final</span>
+                            </div>
+                            <div class="card-body" id="result-ranking"></div>
+                        </div>
+
+                        <!-- Bobot Kriteria -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Bobot Prioritas Kriteria</div>
+                                <span class="badge badge-green">CR = <span id="kr-cr-result-badge">—</span></span>
+                            </div>
+                            <div class="card-body">
+                                <div id="result-crit-weights"></div>
+                                <div class="divider"></div>
+                                <div class="chart-box-sm">
+                                    <canvas id="chart-crit-weights"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart Bar Hasil Akhir -->
+                    <div class="card mb-20">
+                        <div class="card-header">
+                            <div class="card-title">Grafik Skor Global Alternatif</div>
+                            <span class="badge badge-purple">Visualization</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-box">
+                                <canvas id="chart-bar"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabel Kontribusi -->
+                    <div class="card mb-20">
+                        <div class="card-header">
+                            <div class="card-title">Tabel Sintesis AHP — Kontribusi per Kriteria</div>
+                            <span class="badge badge-orange">Contribution Matrix</span>
+                        </div>
+                        <div class="card-body" style="padding:0;overflow-x:auto;">
+                            <table class="contrib-tbl" id="result-contrib-matrix">
+                                <thead>
+                                    <tr>
+                                        <th>Alternatif</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Insight Panel -->
+                    <div class="insight-panel mb-20" id="result-insight"></div>
+
+                    <!-- Penjelasan Metodologi -->
+                    <div class="card mb-20">
+                        <div class="card-header">
+                            <div class="card-title">Penjelasan Hasil Penelitian</div>
+                        </div>
+                        <div class="card-body" id="result-explanation"
+                            style="font-size:13px;color:var(--text-2);line-height:1.7;"></div>
+                    </div>
+
+                    <div class="nav-footer">
+                        <button class="btn btn-ghost btn-sm" onclick="goTo(4)">← Kembali</button>
+                        <button class="btn btn-outline btn-sm" onclick="exportJSON()">⬇ Export JSON</button>
+                        <button class="btn btn-danger-ghost btn-sm" onclick="resetAll()">↺ Reset Simulasi</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ====================================================
+     JAVASCRIPT
+==================================================== -->
+    <script>
+        /* ====================================================
+           DATA CONSTANTS
+        ==================================================== */
+        const KRITERIAS = [
+            { id: 'c1', name: 'Frekuensi Usulan Mahasiswa', desc: 'Seberapa sering tema ini diusulkan oleh mahasiswa dalam feedback, mencerminkan minat dan permintaan nyata.', icon: '📊', color: '#EFF6FF', iconColor: '#2563EB' },
+            { id: 'c2', name: 'Relevansi Kurikulum', desc: 'Kesesuaian tema dengan mata kuliah yang ada di kurikulum program studi Teknik Informatika.', icon: '📚', color: '#DCFCE7', iconColor: '#16A34A' },
+            { id: 'c3', name: 'Relevansi Profil Lulusan', desc: 'Keterkaitan tema dengan kompetensi yang dibutuhkan oleh profil lulusan program studi sesuai KKNI.', icon: '🎓', color: '#EDE9FE', iconColor: '#7C3AED' },
+        ];
+
+        const ALTERNATIVES = [
+            { code: 'A1', name: 'Artificial Intelligence (AI)', freq: 14, pct: 41.2, color: '#2563EB', bg: '#EFF6FF' },
+            { code: 'A2', name: 'General IT/TI', freq: 7, pct: 20.6, color: '#7C3AED', bg: '#EDE9FE' },
+            { code: 'A3', name: 'Pemrograman Web', freq: 7, pct: 20.6, color: '#16A34A', bg: '#DCFCE7' },
+            { code: 'A4', name: 'Desain UI/UX', freq: 4, pct: 11.8, color: '#D97706', bg: '#FEF3C7' },
+            { code: 'A5', name: 'Mobile Development', freq: 2, pct: 5.9, color: '#DC2626', bg: '#FEE2E2' },
+        ];
+
+        const SAATY_SCALE = [
+            { val: 1, label: '1 — Sama Penting', desc: 'Kedua elemen sama pentingnya' },
+            { val: 2, label: '2 — Antara 1–3', desc: 'Nilai tengah antara sama dan sedikit lebih penting' },
+            { val: 3, label: '3 — Sedikit Lebih Penting', desc: 'Satu elemen sedikit lebih penting dari yang lain' },
+            { val: 4, label: '4 — Antara 3–5', desc: 'Nilai tengah antara sedikit dan cukup penting' },
+            { val: 5, label: '5 — Cukup Penting', desc: 'Satu elemen cukup penting dari yang lain' },
+            { val: 6, label: '6 — Antara 5–7', desc: 'Nilai tengah antara cukup dan sangat penting' },
+            { val: 7, label: '7 — Sangat Penting', desc: 'Satu elemen sangat penting dari yang lain' },
+            { val: 8, label: '8 — Antara 7–9', desc: 'Nilai tengah antara sangat dan mutlak penting' },
+            { val: 9, label: '9 — Mutlak Penting', desc: 'Satu elemen mutlak lebih penting dari yang lain' },
+        ];
+
+        // Random Index (RI) Saaty
+        const RI = { 1: 0, 2: 0, 3: 0.58, 4: 0.90, 5: 1.12, 6: 1.24, 7: 1.32, 8: 1.41, 9: 1.45, 10: 1.51 };
+
+        // Default pairwise values for Kriteria (pre-filled from paper: C1>C2>C3)
+        // C1 vs C2 = 3, C1 vs C3 = 7, C2 vs C3 = 3
+        const DEFAULT_KR_MATRIX = [
+            [1, 3, 7],
+            [1 / 3, 1, 3],
+            [1 / 7, 1 / 3, 1]
+        ];
+
+        // Default pairwise values for Alternatives per Criteria (from paper data)
+        // C1: AI=0.400, IT=0.200, Web=0.200, UI=0.133, Mobile=0.067
+        const DEFAULT_ALT_MATRICES = {
+            c1: [
+                [1, 2, 2, 3, 5],
+                [1 / 2, 1, 1, 2, 3],
+                [1 / 2, 1, 1, 2, 3],
+                [1 / 3, 1 / 2, 1 / 2, 1, 2],
+                [1 / 5, 1 / 3, 1 / 3, 1 / 2, 1]
+            ],
+            c2: [
+                [1, 1, 1, 3, 4],
+                [1, 1, 1, 2, 3],
+                [1, 1, 1, 2, 3],
+                [1 / 3, 1 / 2, 1 / 2, 1, 2],
+                [1 / 4, 1 / 3, 1 / 3, 1 / 2, 1]
+            ],
+            c3: [
+                [1, 1, 1, 2, 5],
+                [1, 1, 1, 2, 4],
+                [1, 1, 1, 2, 3],
+                [1 / 2, 1 / 2, 1 / 2, 1, 2],
+                [1 / 5, 1 / 4, 1 / 3, 1 / 2, 1]
+            ]
+        };
+
+        /* ====================================================
+           APPLICATION STATE
+        ==================================================== */
+        const S = {
+            currentPage: 0,
+            krWeights: {},
+            altWeights: {},
+            krCR: null,
+            altCR: {},
+            krMatrix: DEFAULT_KR_MATRIX.map(r => [...r]),
+            altMatrices: {
+                c1: DEFAULT_ALT_MATRICES.c1.map(r => [...r]),
+                c2: DEFAULT_ALT_MATRICES.c2.map(r => [...r]),
+                c3: DEFAULT_ALT_MATRICES.c3.map(r => [...r]),
+            },
+            charts: {},
+        };
+
+        /* ====================================================
+           NAVIGATION
+        ==================================================== */
+        const STEPS = [
+            { label: 'Dashboard' },
+            { label: 'Dataset' },
+            { label: 'Kriteria' },
+            { label: 'Alternatif' },
+            { label: 'Penilaian' },
+            { label: 'Hasil' },
+        ];
+
+        function buildNav() {
+            const container = document.getElementById('navSteps');
+            container.innerHTML = STEPS.map((s, i) => {
+                const state = i < S.currentPage ? 'done clickable' : i === S.currentPage ? 'active' : 'clickable';
+                const icon = i < S.currentPage ? '✓' : i;
+                return `
+      ${i > 0 ? '<div class="nav-divider"></div>' : ''}
+      <div class="nav-step ${state}" id="nav-step-${i}" onclick="navClick(${i})">
+        <div class="step-circle">${icon}</div>
+        ${s.label}
+      </div>`;
+            }).join('');
+        }
+
+        function navClick(idx) {
+            if (idx <= S.currentPage || idx < S.currentPage + 2) goTo(idx);
+        }
+
+        function goTo(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(`page-${page}`).classList.add('active');
+            S.currentPage = page;
+            buildNav();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (page === 3) renderPage3();
+            if (page === 5) computeResults();
+        }
+
+        /* ====================================================
+           AHP CORE MATH ENGINE
+        ==================================================== */
+        function ahpCalc(matrix) {
+            const n = matrix.length;
+
+            // Column sums
+            const colSum = Array(n).fill(0);
+            for (let j = 0; j < n; j++)
+                for (let i = 0; i < n; i++)
+                    colSum[j] += matrix[i][j];
+
+            // Normalized matrix
+            const norm = matrix.map(row => row.map((val, j) => val / colSum[j]));
+
+            // Priority vector (row average of normalized)
+            const pv = norm.map(row => row.reduce((a, b) => a + b, 0) / n);
+
+            // Lambda max
+            const weighted = matrix.map(row =>
+                row.reduce((sum, val, j) => sum + val * pv[j], 0)
+            );
+            const lmax = weighted.reduce((sum, val, i) => sum + val / pv[i], 0) / n;
+
+            // CI and CR
+            const ci = (lmax - n) / (n - 1);
+            const cr = ci / (RI[n] || 1);
+
+            return { pv, norm, lmax, ci, cr, n };
+        }
+
+        function fmt4(v) { return isNaN(v) ? '—' : v.toFixed(4); }
+        function fmt3(v) { return isNaN(v) ? '—' : v.toFixed(3); }
+        function fmt2(v) { return isNaN(v) ? '—' : v.toFixed(2); }
+
+        /* ====================================================
+           PAGE 0 — INIT (No specific render needed)
+        ==================================================== */
+
+        /* ====================================================
+           PAGE 2 — KRITERIA MATRIX
+        ==================================================== */
+        function buildSaatyOptions(selectedVal) {
+            const vals = [9, 8, 7, 6, 5, 4, 3, 2, 1];
+            const recips = [1 / 9, 1 / 8, 1 / 7, 1 / 6, 1 / 5, 1 / 4, 1 / 3, 1 / 2];
+            let opts = '';
+            [1 / 9, 1 / 8, 1 / 7, 1 / 6, 1 / 5, 1 / 4, 1 / 3, 1 / 2, 1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(v => {
+                const label = v < 1 ? `1/${Math.round(1 / v)}` : v.toString();
+                const sel = Math.abs(v - selectedVal) < 0.001 ? 'selected' : '';
+                opts += `<option value="${v}" ${sel}>${label}</option>`;
+            });
+            return opts;
+        }
+
+        function renderCriteriaCards() {
+            document.getElementById('criteriaCards').innerHTML = KRITERIAS.map((k, i) => `
+    <div class="criteria-card">
+      <div class="criteria-icon" style="background:${k.color};color:${k.iconColor};">${k.icon}</div>
+      <div>
+        <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:${k.iconColor};margin-bottom:4px;">${k.id.toUpperCase()}</div>
+        <div style="font-size:13.5px;font-weight:600;margin-bottom:4px;">${k.name}</div>
+        <div style="font-size:12px;color:var(--text-3);line-height:1.5;">${k.desc}</div>
+      </div>
+    </div>
+  `).join('');
+        }
+
+        function renderSaatyScale() {
+            document.getElementById('saatyScale').innerHTML = SAATY_SCALE.map(s => `
+    <div class="saaty-row">
+      <div class="saaty-name">${s.label}</div>
+    </div>
+  `).join('');
+        }
+
+        function renderKriteriaMatrix() {
+            const n = KRITERIAS.length;
+            let html = `<table class="pw-matrix-tbl">
+    <thead><tr><th style="min-width:120px;">Kriteria</th>`;
+            KRITERIAS.forEach(k => { html += `<th>${k.id.toUpperCase()}<br><span style="font-weight:400;font-size:9px;">${k.name.split(' ').slice(0, 2).join(' ')}</span></th>`; });
+            html += '</tr></thead><tbody>';
+
+            for (let i = 0; i < n; i++) {
+                html += `<tr><td style="text-align:left;font-size:11px;font-weight:600;padding:8px 10px;white-space:nowrap;">${KRITERIAS[i].id.toUpperCase()} — ${KRITERIAS[i].name.split(' ').slice(0, 3).join(' ')}</td>`;
+                for (let j = 0; j < n; j++) {
+                    if (i === j) {
+                        html += `<td class="diag-cell">1.000</td>`;
+                    } else if (i > j) {
+                        html += `<td class="recip-cell" id="kr-cell-${i}-${j}">—</td>`;
+                    } else {
+                        html += `<td class="input-cell">
+          <select class="select-saaty" id="kr-sel-${i}-${j}" onchange="onKrChange(${i},${j})">
+            ${buildSaatyOptions(S.krMatrix[i][j])}
+          </select>
+        </td>`;
+                    }
+                }
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            document.getElementById('kriteriaMatrixWrap').innerHTML = html;
+            updateKrReciprocals();
+        }
+
+        function onKrChange(i, j) {
+            const sel = document.getElementById(`kr-sel-${i}-${j}`);
+            const val = parseFloat(sel.value);
+            S.krMatrix[i][j] = val;
+            S.krMatrix[j][i] = 1 / val;
+            updateKrReciprocals();
+        }
+
+        function updateKrReciprocals() {
+            const n = KRITERIAS.length;
+            for (let i = 0; i < n; i++) {
+                for (let j = 0; j < n; j++) {
+                    if (i > j) {
+                        const cell = document.getElementById(`kr-cell-${i}-${j}`);
+                        if (cell) {
+                            const v = S.krMatrix[i][j];
+                            cell.textContent = v < 1 ? `1/${Math.round(1 / v)}` : fmt3(v);
+                        }
+                    }
+                }
+            }
+        }
+
+        function calcKriteria() {
+            const res = ahpCalc(S.krMatrix);
+            S.krWeights = {};
+            KRITERIAS.forEach((k, i) => { S.krWeights[k.id] = res.pv[i]; });
+            S.krCR = res.cr;
+
+            const card = document.getElementById('kriteriaResultCard');
+            card.style.display = 'block';
+            card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            // Normalized matrix
+            const n = KRITERIAS.length;
+            let mHtml = `<table class="matrix-tbl"><thead><tr><th></th>`;
+            KRITERIAS.forEach(k => { mHtml += `<th>${k.id.toUpperCase()}</th>`; });
+            mHtml += '<th style="color:var(--blue);">PV</th></tr></thead><tbody>';
+            res.norm.forEach((row, i) => {
+                mHtml += `<tr><td style="font-weight:600;font-size:11px;">${KRITERIAS[i].id.toUpperCase()}</td>`;
+                row.forEach(v => { mHtml += `<td>${fmt4(v)}</td>`; });
+                mHtml += `<td class="diag" style="font-weight:700;">${fmt4(res.pv[i])}</td></tr>`;
+            });
+            mHtml += '</tbody></table>';
+            document.getElementById('kr-norm-matrix').innerHTML = mHtml;
+
+            // Priority bars
+            const maxPV = Math.max(...res.pv);
+            document.getElementById('kr-priority-bars').innerHTML = KRITERIAS.map((k, i) => `
+    <div class="prio-row">
+      <div class="prio-name">${k.id.toUpperCase()} — ${k.name.split(' ').slice(0, 2).join(' ')}</div>
+      <div class="prio-bar-wrap"><div class="prio-bar-fill" style="width:${(res.pv[i] / maxPV * 100).toFixed(1)}%;background:${k.iconColor};"></div></div>
+      <div class="prio-pct">${(res.pv[i] * 100).toFixed(1)}%</div>
+    </div>
+  `).join('');
+
+            // CR values
+            document.getElementById('kr-lmax').textContent = fmt4(res.lmax);
+            document.getElementById('kr-ci').textContent = fmt4(res.ci);
+            const crEl = document.getElementById('kr-cr');
+            const ok = res.cr <= 0.1;
+            crEl.textContent = fmt4(res.cr);
+            crEl.className = `cr-value ${ok ? 'cr-ok' : 'cr-warn'}`;
+
+            document.getElementById('kr-badge-cr').innerHTML = ok
+                ? `<span class="badge badge-green">✓ CR ≤ 0.10 — Konsisten</span>`
+                : `<span class="badge badge-orange">⚠ CR > 0.10 — Revisi</span>`;
+
+            document.getElementById('kr-cr-note').innerHTML = ok
+                ? `<div class="info-note"><div class="icon">✅</div><div><strong>Konsisten!</strong> CR = ${fmt4(res.cr)} ≤ 0.10. Penilaian pairwise comparison dapat diterima dan bobot prioritas valid.</div></div>`
+                : `<div class="warn-note"><div class="icon">⚠️</div><div><strong>Perlu Revisi.</strong> CR = ${fmt4(res.cr)} > 0.10. Penilaian perlu direvisi agar lebih konsisten.</div></div>`;
+
+            // Weight table
+            document.getElementById('kr-weight-table').innerHTML = `
+    <table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <thead><tr>
+        <th style="padding:7px 10px;text-align:left;background:var(--bg);color:var(--text-3);font-size:10px;text-transform:uppercase;letter-spacing:.05em;border:1px solid var(--border);">Kriteria</th>
+        <th style="padding:7px 10px;text-align:center;background:var(--bg);color:var(--text-3);font-size:10px;text-transform:uppercase;letter-spacing:.05em;border:1px solid var(--border);">Bobot</th>
+        <th style="padding:7px 10px;text-align:center;background:var(--bg);color:var(--text-3);font-size:10px;text-transform:uppercase;letter-spacing:.05em;border:1px solid var(--border);">Persentase</th>
+      </tr></thead><tbody>
+      ${KRITERIAS.map((k, i) => `
+        <tr>
+          <td style="padding:7px 10px;border:1px solid var(--border);font-weight:600;color:var(--text);">${k.id.toUpperCase()} — ${k.name}</td>
+          <td style="padding:7px 10px;border:1px solid var(--border);text-align:center;font-family:var(--mono);font-weight:600;color:var(--blue);">${fmt4(res.pv[i])}</td>
+          <td style="padding:7px 10px;border:1px solid var(--border);text-align:center;font-family:var(--mono);">${(res.pv[i] * 100).toFixed(2)}%</td>
+        </tr>
+      `).join('')}
+      </tbody>
+    </table>`;
+        }
+
+        function resetKriteriaMatrix() {
+            S.krMatrix = DEFAULT_KR_MATRIX.map(r => [...r]);
+            document.getElementById('kriteriaResultCard').style.display = 'none';
+            renderKriteriaMatrix();
+        }
+
+        /* ====================================================
+           PAGE 3 — ALTERNATIF
+        ==================================================== */
+        function renderPage3() {
+            // Alt cards
+            const maxFreq = Math.max(...ALTERNATIVES.map(a => a.freq));
+            document.getElementById('altCards').innerHTML = `
+    <div class="grid-2 mb-12">
+      ${ALTERNATIVES.map((a, i) => `
+        <div class="card alt-card" style="border-left:3px solid ${a.color};">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div class="alt-rank-badge" style="background:${a.bg};color:${a.color};">${i + 1}</div>
+            <div style="flex:1;">
+              <div style="font-size:13.5px;font-weight:600;">${a.name}</div>
+              <div style="font-size:11px;color:var(--text-3);margin-top:2px;">${a.code} · ${a.freq} usulan · ${a.pct}%</div>
+            </div>
+            <span class="badge" style="background:${a.bg};color:${a.color};">Rank #${i + 1}</span>
+          </div>
+          <div class="alt-freq-bar">
+            <div class="alt-freq-fill" style="width:${(a.freq / maxFreq * 100).toFixed(1)}%;background:${a.color};"></div>
+          </div>
+          <div style="display:flex;gap:16px;margin-top:10px;">
+            <div style="font-size:11.5px;color:var(--text-3);">
+              <span style="font-weight:600;color:var(--text);">${a.freq}</span> usulan</div>
+            <div style="font-size:11.5px;color:var(--text-3);">
+              <span style="font-weight:600;color:var(--text);">${a.pct}%</span> dari total</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>`;
+
+            // Chart
+            if (S.charts.altFreq) S.charts.altFreq.destroy();
+            const ctx = document.getElementById('chart-alt-freq').getContext('2d');
+            S.charts.altFreq = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ALTERNATIVES.map(a => a.name.split(' ').slice(0, 3).join(' ')),
+                    datasets: [{
+                        label: 'Frekuensi Usulan',
+                        data: ALTERNATIVES.map(a => a.freq),
+                        backgroundColor: ALTERNATIVES.map(a => a.color + 'CC'),
+                        borderColor: ALTERNATIVES.map(a => a.color),
+                        borderWidth: 1.5,
+                        borderRadius: 7,
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1E293B', padding: 10, cornerRadius: 8,
+                            callbacks: { label: ctx => ` ${ctx.parsed.y} usulan (${ALTERNATIVES[ctx.dataIndex].pct}%)` }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#94A3B8', font: { family: 'DM Sans', size: 11 } }, grid: { color: '#F1F5F9' } },
+                        y: { ticks: { color: '#94A3B8', font: { family: 'DM Sans', size: 11 } }, grid: { color: '#F1F5F9' }, beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        /* ====================================================
+           PAGE 4 — PENILAIAN ALTERNATIF
+        ==================================================== */
+        function renderPage4() {
+            // Progress track
+            document.getElementById('altProgTrack').innerHTML = KRITERIAS.map((k, i) => `
+    <div class="prog-step ${S.altWeights[k.id] ? 'done' : i === 0 ? 'curr' : ''}" id="prog-${k.id}">
+      <div class="prog-dot"></div>
+      ${k.id.toUpperCase()}
+    </div>
+    ${i < KRITERIAS.length - 1 ? '<div class="prog-line"></div>' : ''}
+  `).join('');
+
+            // Tabs
+            document.getElementById('altTabs').innerHTML = KRITERIAS.map((k, i) => `
+    <button class="tab-btn ${i === 0 ? 'active' : ''} ${S.altWeights[k.id] ? 'saved' : ''}"
+      id="atab-${k.id}" onclick="switchAltTab('${k.id}')">
+      ${k.id.toUpperCase()} — ${k.name.split(' ').slice(0, 3).join(' ')}
+    </button>
+  `).join('');
+
+            // Tab contents
+            document.getElementById('altTabContents').innerHTML = KRITERIAS.map((k, i) => `
+    <div class="tab-content ${i === 0 ? 'active' : ''}" id="atc-${k.id}">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">${k.icon} ${k.name}</div>
+            <div class="card-subtitle">Pairwise comparison matrix 5 alternatif × 5 alternatif</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="resetAltMatrix('${k.id}')">↺ Reset</button>
+        </div>
+        <div class="card-body">
+          <div class="info-note mb-16">
+            <div class="icon">💡</div>
+            <div>Bandingkan setiap pasangan alternatif berdasarkan kriteria <strong>${k.name}</strong>. Nilai diagonal = 1, nilai resiprokal terisi otomatis.</div>
+          </div>
+          <div id="alt-matrix-wrap-${k.id}" class="pw-matrix-wrap mb-16"></div>
+          <div style="display:flex;justify-content:flex-end;">
+            <button class="btn btn-primary" onclick="calcAlt('${k.id}')">Hitung Bobot ${k.id.toUpperCase()} →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-16" id="alt-result-${k.id}" style="display:none;">
+        <div class="card-header">
+          <div class="card-title">Hasil Bobot Alternatif — ${k.name}</div>
+          <div id="acr-badge-${k.id}"></div>
+        </div>
+        <div class="card-body">
+          <div class="grid-2" style="gap:20px;">
+            <div>
+              <div class="label-sm mb-12">Bobot Prioritas (Priority Vector)</div>
+              <div id="alt-prio-${k.id}"></div>
+            </div>
+            <div>
+              <div class="label-sm mb-12">Uji Konsistensi</div>
+              <div class="cr-grid">
+                <div class="cr-cell">
+                  <div class="cr-label">λ<sub>max</sub></div>
+                  <div class="cr-value cr-neutral" id="al-lmax-${k.id}">—</div>
+                </div>
+                <div class="cr-cell">
+                  <div class="cr-label">CI</div>
+                  <div class="cr-value cr-neutral" id="al-ci-${k.id}">—</div>
+                </div>
+                <div class="cr-cell">
+                  <div class="cr-label">CR</div>
+                  <div class="cr-value" id="al-cr-${k.id}">—</div>
+                </div>
+              </div>
+              <div class="mt-12" id="al-cr-note-${k.id}"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+            // Render each matrix
+            KRITERIAS.forEach(k => renderAltMatrix(k.id));
+        }
+
+        function renderAltMatrix(kId) {
+            const n = ALTERNATIVES.length;
+            const matrix = S.altMatrices[kId];
+            let html = `<table class="pw-matrix-tbl"><thead><tr><th>Alternatif</th>`;
+            ALTERNATIVES.forEach(a => { html += `<th style="max-width:60px;">${a.code}</th>`; });
+            html += '</tr></thead><tbody>';
+
+            for (let i = 0; i < n; i++) {
+                html += `<tr><td style="text-align:left;font-size:11px;font-weight:600;padding:7px 10px;white-space:nowrap;max-width:130px;overflow:hidden;text-overflow:ellipsis;">${ALTERNATIVES[i].code} — ${ALTERNATIVES[i].name.split(' ').slice(0, 2).join(' ')}</td>`;
+                for (let j = 0; j < n; j++) {
+                    if (i === j) {
+                        html += `<td class="diag-cell">1</td>`;
+                    } else if (i > j) {
+                        html += `<td class="recip-cell" id="ac-${kId}-${i}-${j}">—</td>`;
+                    } else {
+                        const v = matrix[i][j];
+                        html += `<td class="input-cell">
+          <select class="select-saaty" id="as-${kId}-${i}-${j}" onchange="onAltChange('${kId}',${i},${j})">
+            ${buildSaatyOptions(v)}
+          </select>
+        </td>`;
+                    }
+                }
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            document.getElementById(`alt-matrix-wrap-${kId}`).innerHTML = html;
+            updateAltReciprocals(kId);
+        }
+
+        function onAltChange(kId, i, j) {
+            const val = parseFloat(document.getElementById(`as-${kId}-${i}-${j}`).value);
+            S.altMatrices[kId][i][j] = val;
+            S.altMatrices[kId][j][i] = 1 / val;
+            updateAltReciprocals(kId);
+        }
+
+        function updateAltReciprocals(kId) {
+            const n = ALTERNATIVES.length;
+            for (let i = 0; i < n; i++) {
+                for (let j = 0; j < n; j++) {
+                    if (i > j) {
+                        const cell = document.getElementById(`ac-${kId}-${i}-${j}`);
+                        if (cell) {
+                            const v = S.altMatrices[kId][i][j];
+                            cell.textContent = v < 1 ? `1/${Math.round(1 / v)}` : fmt3(v);
+                        }
+                    }
+                }
+            }
+        }
+
+        function switchAltTab(kId) {
+            KRITERIAS.forEach(k => {
+                document.getElementById(`atab-${k.id}`).classList.remove('active');
+                document.getElementById(`atc-${k.id}`).classList.remove('active');
+            });
+            document.getElementById(`atab-${kId}`).classList.add('active');
+            document.getElementById(`atc-${kId}`).classList.add('active');
+        }
+
+        function calcAlt(kId) {
+            const res = ahpCalc(S.altMatrices[kId]);
+            S.altWeights[kId] = {};
+            ALTERNATIVES.forEach((a, i) => { S.altWeights[kId][a.code] = res.pv[i]; });
+            S.altCR[kId] = res.cr;
+
+            // Show result card
+            const rc = document.getElementById(`alt-result-${kId}`);
+            rc.style.display = 'block';
+            rc.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            // Priority bars
+            const maxPV = Math.max(...res.pv);
+            document.getElementById(`alt-prio-${kId}`).innerHTML = ALTERNATIVES.map((a, i) => `
+    <div class="prio-row">
+      <div class="prio-name">${a.code} — ${a.name.split(' ').slice(0, 2).join(' ')}</div>
+      <div class="prio-bar-wrap"><div class="prio-bar-fill" style="width:${(res.pv[i] / maxPV * 100).toFixed(1)}%;background:${a.color};"></div></div>
+      <div class="prio-pct">${(res.pv[i] * 100).toFixed(1)}%</div>
+    </div>
+  `).join('');
+
+            // CR
+            const ok = res.cr <= 0.1;
+            document.getElementById(`al-lmax-${kId}`).textContent = fmt4(res.lmax);
+            document.getElementById(`al-ci-${kId}`).textContent = fmt4(res.ci);
+            const crEl = document.getElementById(`al-cr-${kId}`);
+            crEl.textContent = fmt4(res.cr);
+            crEl.className = `cr-value ${ok ? 'cr-ok' : 'cr-warn'}`;
+
+            document.getElementById(`acr-badge-${kId}`).innerHTML = ok
+                ? `<span class="badge badge-green">✓ Konsisten (CR=${fmt4(res.cr)})</span>`
+                : `<span class="badge badge-orange">⚠ CR=${fmt4(res.cr)} > 0.10</span>`;
+
+            document.getElementById(`al-cr-note-${kId}`).innerHTML = ok
+                ? `<div class="info-note"><div class="icon">✅</div><div>Konsisten. Bobot alternatif valid untuk kriteria ini.</div></div>`
+                : `<div class="warn-note"><div class="icon">⚠️</div><div>CR melebihi 0.10. Pertimbangkan untuk merevisi penilaian.</div></div>`;
+
+            // Mark tab as saved
+            const tab = document.getElementById(`atab-${kId}`);
+            if (!tab.classList.contains('active')) {
+                tab.classList.add('saved');
+            } else {
+                tab.classList.add('saved');
+            }
+
+            // Update progress
+            updateProgTrack();
+        }
+
+        function resetAltMatrix(kId) {
+            S.altMatrices[kId] = DEFAULT_ALT_MATRICES[kId].map(r => [...r]);
+            delete S.altWeights[kId];
+            document.getElementById(`alt-result-${kId}`).style.display = 'none';
+            const tab = document.getElementById(`atab-${kId}`);
+            tab.classList.remove('saved');
+            renderAltMatrix(kId);
+            updateProgTrack();
+        }
+
+        function updateProgTrack() {
+            KRITERIAS.forEach(k => {
+                const el = document.getElementById(`prog-${k.id}`);
+                if (el) {
+                    el.className = `prog-step ${S.altWeights[k.id] ? 'done' : 'curr'}`;
+                }
+            });
+        }
+
+        function onFinishAlt() {
+            // Auto-calc any un-calculated
+            KRITERIAS.forEach(k => {
+                if (!S.altWeights[k.id]) calcAlt(k.id);
+            });
+            if (!S.krWeights.c1) calcKriteria();
+            goTo(5);
+        }
+
+        /* ====================================================
+           PAGE 5 — HASIL AKHIR
+        ==================================================== */
+        const RESULT_COLORS = ['#2563EB', '#7C3AED', '#16A34A', '#D97706', '#DC2626'];
+
+        function computeResults() {
+            // Ensure weights exist
+            if (!S.krWeights.c1) calcKriteria();
+            KRITERIAS.forEach(k => { if (!S.altWeights[k.id]) calcAlt(k.id); });
+
+            // Final scores
+            const scores = {};
+            ALTERNATIVES.forEach(a => { scores[a.code] = 0; });
+            KRITERIAS.forEach(k => {
+                const kw = S.krWeights[k.id] || (1 / KRITERIAS.length);
+                ALTERNATIVES.forEach(a => {
+                    const aw = (S.altWeights[k.id] && S.altWeights[k.id][a.code]) || (1 / ALTERNATIVES.length);
+                    scores[a.code] += kw * aw;
+                });
+            });
+
+            const ranked = ALTERNATIVES.map(a => ({ ...a, score: scores[a.code] }))
+                .sort((a, b) => b.score - a.score);
+            const maxSc = ranked[0].score;
+
+            // Hero
+            document.getElementById('res-top-name').textContent = ranked[0].name;
+            document.getElementById('res-top-score').textContent = fmt4(ranked[0].score);
+            document.getElementById('kr-cr-result-badge').textContent = S.krCR !== null ? fmt4(S.krCR) : '—';
+            document.getElementById('res-top-cr-badge').innerHTML = (S.krCR !== null && S.krCR <= 0.1)
+                ? `<span class="badge badge-green">✓ Konsisten</span>`
+                : `<span class="badge badge-orange">⚠ Periksa CR</span>`;
+
+            // Ranking list
+            document.getElementById('result-ranking').innerHTML = ranked.map((item, i) => `
+    <div class="rank-row rank-${i + 1}">
+      <div class="rank-num">${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}</div>
+      <div style="flex:1;">
+        <div class="rank-name">${item.name}</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:2px;">${item.code}</div>
+      </div>
+      <div class="score-bar-wrap"><div class="score-bar-fill" style="width:${(item.score / maxSc * 100).toFixed(1)}%;"></div></div>
+      <div class="rank-score">${fmt4(item.score)}</div>
+    </div>
+  `).join('');
+
+            // Criteria weight bars
+            const maxW = Math.max(...KRITERIAS.map(k => S.krWeights[k.id] || 0));
+            document.getElementById('result-crit-weights').innerHTML = KRITERIAS.map((k, i) => {
+                const w = S.krWeights[k.id] || 0;
+                return `<div class="prio-row">
+      <div class="prio-name fw-600">${k.id.toUpperCase()} — ${k.name.split(' ').slice(0, 2).join(' ')}</div>
+      <div class="prio-bar-wrap"><div class="prio-bar-fill" style="width:${(w / maxW * 100).toFixed(1)}%;background:${k.iconColor};"></div></div>
+      <div class="prio-pct">${(w * 100).toFixed(1)}%</div>
+    </div>`;
+            }).join('');
+
+            // Bar chart (final scores)
+            if (S.charts.bar) S.charts.bar.destroy();
+            S.charts.bar = new Chart(document.getElementById('chart-bar').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ranked.map(r => r.name.split(' ').slice(0, 3).join(' ')),
+                    datasets: [{
+                        label: 'Skor Akhir AHP',
+                        data: ranked.map(r => parseFloat((r.score * 100).toFixed(3))),
+                        backgroundColor: ranked.map((_, i) => RESULT_COLORS[i] + 'CC'),
+                        borderColor: ranked.map((_, i) => RESULT_COLORS[i]),
+                        borderWidth: 1.5,
+                        borderRadius: 8,
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1E293B', padding: 10, cornerRadius: 8,
+                            callbacks: { label: ctx => ` Skor: ${ctx.parsed.y.toFixed(3)}%` }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#94A3B8', font: { family: 'DM Sans', size: 11 } }, grid: { color: '#F1F5F9' } },
+                        y: { ticks: { color: '#94A3B8', font: { family: 'DM Mono', size: 11 } }, grid: { color: '#F1F5F9' } }
+                    }
+                }
+            });
+
+            // Doughnut chart (criteria weights)
+            if (S.charts.crit) S.charts.crit.destroy();
+            S.charts.crit = new Chart(document.getElementById('chart-crit-weights').getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: KRITERIAS.map(k => k.id.toUpperCase()),
+                    datasets: [{
+                        data: KRITERIAS.map(k => parseFloat(((S.krWeights[k.id] || 0) * 100).toFixed(2))),
+                        backgroundColor: KRITERIAS.map(k => k.iconColor + 'CC'),
+                        borderColor: KRITERIAS.map(k => k.iconColor),
+                        borderWidth: 2,
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { font: { family: 'DM Sans', size: 11 }, color: '#475569', padding: 12 }
+                        },
+                        tooltip: {
+                            backgroundColor: '#1E293B', padding: 10, cornerRadius: 8,
+                            callbacks: { label: ctx => ` ${KRITERIAS[ctx.dataIndex].name}: ${ctx.parsed.toFixed(1)}%` }
+                        }
+                    },
+                    cutout: '60%',
+                }
+            });
+
+            // Contribution matrix
+            let mHtml = `<thead><tr>
+    <th style="text-align:left;padding:9px 14px;">Alternatif</th>
+    ${KRITERIAS.map(k => `<th style="padding:9px 14px;">${k.id.toUpperCase()}<br><span style="font-weight:400;font-size:9px;">w=${((S.krWeights[k.id] || 0) * 100).toFixed(1)}%</span></th>`).join('')}
+    <th style="padding:9px 14px;color:var(--blue);">Skor Global</th>
+  </tr></thead><tbody>`;
+            ranked.forEach((item, ri) => {
+                mHtml += `<tr>
+      <td style="padding:9px 14px;font-weight:600;color:var(--text);white-space:nowrap;">
+        ${ri === 0 ? '🥇 ' : ri === 1 ? '🥈 ' : ri === 2 ? '🥉 ' : `${ri + 1}. `}${item.name}
+      </td>`;
+                KRITERIAS.forEach(k => {
+                    const aw = (S.altWeights[k.id] && S.altWeights[k.id][item.code]) || 0;
+                    const kw = S.krWeights[k.id] || 0;
+                    const contrib = kw * aw;
+                    mHtml += `<td style="padding:9px 14px;font-family:var(--mono);font-size:11.5px;">${(aw * 100).toFixed(1)}%<br><span style="font-size:10px;color:var(--text-3);">${(contrib * 100).toFixed(2)}%</span></td>`;
+                });
+                mHtml += `<td class="total-col" style="padding:9px 14px;font-family:var(--mono);font-weight:700;">${fmt4(item.score)}</td></tr>`;
+            });
+            mHtml += '</tbody>';
+            document.getElementById('result-contrib-matrix').innerHTML = mHtml;
+
+            // Insight panel
+            const top = ranked[0];
+            const second = ranked[1];
+            const gap = ((top.score - second.score) * 100).toFixed(1);
+            document.getElementById('result-insight').innerHTML = `
+    <h4>💡 Insight Penelitian</h4>
+    <div class="insight-item"><div class="insight-dot"></div><div>Tema <strong>${top.name}</strong> mendominasi dengan skor <strong>${fmt4(top.score)}</strong>, unggul ${gap}% dari tema peringkat kedua (${second.name}).</div></div>
+    <div class="insight-item"><div class="insight-dot"></div><div>Kriteria <strong>${KRITERIAS[0].name}</strong> memiliki bobot tertinggi (${((S.krWeights['c1'] || 0) * 100).toFixed(1)}%), yang mendukung dominasi AI mengingat tingginya frekuensi usulan mahasiswa (41.2%).</div></div>
+    <div class="insight-item"><div class="insight-dot"></div><div>CR = <strong>${fmt4(S.krCR)}</strong> menunjukkan penilaian pairwise comparison konsisten dan dapat diandalkan untuk pengambilan keputusan.</div></div>
+    <div class="insight-item"><div class="insight-dot"></div><div>${ranked.slice(1, 3).map(r => r.name).join(' dan ')} menempati posisi 2–3 sebagai alternatif kompetitif yang perlu dipertimbangkan jika tema utama tidak feasible.</div></div>
+  `;
+
+            // Explanation
+            document.getElementById('result-explanation').innerHTML = `
+    <p style="margin-bottom:10px;">Berdasarkan sintesis AHP menggunakan <strong>${KRITERIAS.length} kriteria</strong> dan <strong>${ALTERNATIVES.length} alternatif tema</strong>, rekomendasi utama untuk kegiatan workshop berikutnya adalah <strong>"${top.name}"</strong> dengan skor global AHP sebesar <strong>${fmt4(top.score)}</strong>.</p>
+    <p style="margin-bottom:10px;">Sintesis dihitung menggunakan formula: <code style="background:var(--bg);padding:2px 6px;border-radius:4px;font-size:11.5px;">Skor(Ai) = Σ w(Ck) × v(Ai, Ck)</code>, dimana w(Ck) adalah bobot prioritas kriteria dan v(Ai, Ck) adalah bobot prioritas alternatif terhadap kriteria Ck.</p>
+    <p style="margin-bottom:10px;">Kontribusi per kriteria untuk tema teratas: ${KRITERIAS.map(k => {
+                const kw = S.krWeights[k.id] || 0;
+                const aw = (S.altWeights[k.id] && S.altWeights[k.id][top.code]) || 0;
+                return `<strong>${k.id.toUpperCase()}</strong>: ${(kw * 100).toFixed(1)}% × ${(aw * 100).toFixed(1)}% = ${(kw * aw * 100).toFixed(2)}%`;
+            }).join(', ')}.</p>
+    <p style="color:var(--text-3);font-size:12px;">Catatan: Nilai dinyatakan valid apabila Consistency Ratio (CR) ≤ 0.10. Bobot prioritas diperoleh melalui pendekatan eigenvector approximation (normalisasi kolom) pada matriks perbandingan berpasangan Saaty. Random Index (RI) yang digunakan mengacu pada tabel Saaty standar.</p>
+  `;
+        }
+
+        /* ====================================================
+           EXPORT JSON
+        ==================================================== */
+        function exportJSON() {
+            const scores = {};
+            ALTERNATIVES.forEach(a => { scores[a.code] = 0; });
+            KRITERIAS.forEach(k => {
+                const kw = S.krWeights[k.id] || 0;
+                ALTERNATIVES.forEach(a => {
+                    const aw = (S.altWeights[k.id] && S.altWeights[k.id][a.code]) || 0;
+                    scores[a.code] += kw * aw;
+                });
+            });
+
+            const ranked = ALTERNATIVES.map(a => ({ code: a.code, name: a.name, score: scores[a.code] }))
+                .sort((a, b) => b.score - a.score);
+
+            const data = {
+                judul: 'Model AHP untuk Menentukan Prioritas Tema Kegiatan Keilmuan',
+                workshop: 'Laravel Filament Mastery: Creating Dynamic CRUD Interfaces',
+                dataset: { totalFeedback: 1551, feedbackValid: 1109, temasEkstrak: 1142 },
+                studikasus: { feedback: 49, feedbackValid: 34, tema: 34 },
+                kriteria: KRITERIAS.map(k => ({ id: k.id, nama: k.name, bobot: S.krWeights[k.id] || 0 })),
+                konsistensiKriteria: { CR: S.krCR, valid: S.krCR !== null && S.krCR <= 0.1 },
+                alternatif: ALTERNATIVES.map(a => ({
+                    kode: a.code, nama: a.name, frekuensi: a.freq, persen: a.pct,
+                    bobotPerKriteria: KRITERIAS.reduce((obj, k) => { obj[k.id] = (S.altWeights[k.id] && S.altWeights[k.id][a.code]) || 0; return obj; }, {}),
+                    skorAkhir: scores[a.code],
+                })),
+                rankingAkhir: ranked,
+                generatedAt: new Date().toISOString(),
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'ahp-hasil-rekomendasi.json';
+            a.click(); URL.revokeObjectURL(url);
+        }
+
+        /* ====================================================
+           RESET ALL
+        ==================================================== */
+        function resetAll() {
+            S.krWeights = {}; S.altWeights = {}; S.krCR = null; S.altCR = {};
+            S.krMatrix = DEFAULT_KR_MATRIX.map(r => [...r]);
+            S.altMatrices = {
+                c1: DEFAULT_ALT_MATRICES.c1.map(r => [...r]),
+                c2: DEFAULT_ALT_MATRICES.c2.map(r => [...r]),
+                c3: DEFAULT_ALT_MATRICES.c3.map(r => [...r]),
+            };
+            Object.values(S.charts).forEach(c => { if (c) c.destroy(); });
+            S.charts = {};
+            goTo(0);
+        }
+
+        /* ====================================================
+           INIT
+        ==================================================== */
+        document.addEventListener('DOMContentLoaded', () => {
+            buildNav();
+            renderCriteriaCards();
+            renderSaatyScale();
+            renderKriteriaMatrix();
+            renderPage4();
+        });
+    </script>
+</body>
+
+</html>
