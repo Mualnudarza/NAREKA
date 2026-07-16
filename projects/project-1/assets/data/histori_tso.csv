@@ -1,0 +1,16 @@
+id,branch,customer_name,pppoe_secret,type,tanggal_jadwal,team_katim,access,port_access,status
+1,Bumiaji,Maya Sari 1,cust3600,Garansi,01-Jan-26,Team Alpha / Rudi,P-5,Port 2,Selesai
+2,Dau,Doni Kurniawan 2,cust3601,Reguler,08-Feb-26,Team Bravo / Sani,P-6,Port 3,Selesai
+3,Temas,Lestari Putri 3,cust3602,Garansi,15-Mar-26,Team Charlie / Wawan,P-7,Port 4,Selesai
+4,Bumiaji,Hendra Gunawan 4,cust3603,Reguler,22-Apr-26,Team Delta / Rudi,P-8,Port 5,Selesai
+5,Dau,Wulan Sari 5,cust3604,Garansi,01-May-26,Team Echo / Sani,P-9,Port 6,Selesai
+6,Temas,Bayu Aditya 6,cust3605,Reguler,08-Jun-26,Team Alpha / Wawan,P-10,Port 7,Selesai
+7,Bumiaji,Citra Ayu 7,cust3606,Garansi,01-Jan-26,Team Bravo / Rudi,P-11,Port 8,Selesai
+8,Dau,Ahmad Fauzi 8,cust3607,Reguler,08-Feb-26,Team Charlie / Sani,P-12,Port 9,Selesai
+9,Temas,Budi Santoso 9,cust3608,Garansi,15-Mar-26,Team Delta / Wawan,P-13,Port 2,Selesai
+10,Bumiaji,Rina Wijaya 10,cust3609,Reguler,22-Apr-26,Team Echo / Rudi,P-14,Port 3,Selesai
+11,Dau,Sinta Dewi 11,cust3610,Garansi,01-May-26,Team Alpha / Sani,P-5,Port 4,Selesai
+12,Temas,Agus Prasetyo 12,cust3611,Reguler,08-Jun-26,Team Bravo / Wawan,P-6,Port 5,Selesai
+13,Bumiaji,Maya Sari 13,cust3612,Garansi,01-Jan-26,Team Charlie / Rudi,P-7,Port 6,Selesai
+14,Dau,Doni Kurniawan 14,cust3613,Reguler,08-Feb-26,Team Delta / Sani,P-8,Port 7,Selesai
+15,Temas,Lestari Putri 15,cust3614,Garansi,15-Mar-26,Team Echo / Wawan,P-9,Port 8,Selesai

@@ -1,0 +1,16 @@
+id,branch,customer_name,pppoe_secret,phone,sales,terminator,finish_date,result
+1,Dau,Bayu Aditya 1,cust5000,081350000000,Andi Wijaya,Bagus,01-Jan-26,Tidak Ditemukan
+2,Temas,Citra Ayu 2,cust5001,081350000173,Yusuf Bahtiar,Irwan,08-Feb-26,Perangkat Kembali Lengkap
+3,Bumiaji,Ahmad Fauzi 3,cust5002,081350000346,Farida Amelia,Dwi,15-Mar-26,Perangkat Kembali Lengkap
+4,Dau,Budi Santoso 4,cust5003,081350000519,Nia Kartika,Bagus,22-Apr-26,Perangkat Sebagian
+5,Temas,Rina Wijaya 5,cust5004,081350000692,Rahmat Hidayat,Irwan,01-May-26,Perangkat Kembali Lengkap
+6,Bumiaji,Sinta Dewi 6,cust5005,081350000865,Putri Ayu,Dwi,08-Jun-26,Tidak Ditemukan
+7,Dau,Agus Prasetyo 7,cust5006,081350001038,Reza Pratama,Bagus,01-Jan-26,Perangkat Sebagian
+8,Temas,Maya Sari 8,cust5007,081350001211,Dewi Lestari,Irwan,08-Feb-26,Perangkat Kembali Lengkap
+9,Bumiaji,Doni Kurniawan 9,cust5008,081350001384,Andi Wijaya,Dwi,15-Mar-26,Perangkat Kembali Lengkap
+10,Dau,Lestari Putri 10,cust5009,081350001557,Yusuf Bahtiar,Bagus,22-Apr-26,Perangkat Sebagian
+11,Temas,Hendra Gunawan 11,cust5010,081350001730,Farida Amelia,Irwan,01-May-26,Tidak Ditemukan
+12,Bumiaji,Wulan Sari 12,cust5011,081350001903,Nia Kartika,Dwi,08-Jun-26,Perangkat Kembali Lengkap
+13,Dau,Bayu Aditya 13,cust5012,081350002076,Rahmat Hidayat,Bagus,01-Jan-26,Perangkat Sebagian
+14,Temas,Citra Ayu 14,cust5013,081350002249,Putri Ayu,Irwan,08-Feb-26,Perangkat Kembali Lengkap
+15,Bumiaji,Ahmad Fauzi 15,cust5014,081350002422,Reza Pratama,Dwi,15-Mar-26,Perangkat Kembali Lengkap

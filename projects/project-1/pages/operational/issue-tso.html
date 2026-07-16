@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Issue & TSO | GriyaNet ERP</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div id="app-navbar"></div>
+<div class="container-fluid">
+  <div class="row">
+    <div id="app-sidebar"></div>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+      <div class="pt-3 pb-2 mb-3 border-bottom">
+        <div class="page-breadcrumb">
+          <a href="../../index.html">Dashboard</a><span class="sep">/</span>
+          <span>Operational &amp; Technical</span><span class="sep">/</span>
+          <span class="text-dark">Issue &amp; TSO</span>
+        </div>
+        <h1 class="h2 mb-0">Issue &amp; TSO</h1>
+        <p class="text-muted mb-0">Monitoring proses penyelesaian gangguan layanan pelanggan (troubleshoot) pada tingkat regional.</p>
+      </div>
+
+      <div class="filter-bar">
+        <div class="row g-2 align-items-end">
+          <div class="col-6 col-md-3">
+            <label class="form-label mb-1">Branch</label>
+            <select id="filterBranch" class="form-select form-select-sm"></select>
+          </div>
+          <div class="col-6 col-md-3">
+            <label class="form-label mb-1">Tanggal</label>
+            <input type="date" class="form-control form-control-sm" id="filterTanggal" value="2026-07-13">
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-6 col-md-4"><div class="kpi-card"><div class="kpi-label">Wait List TSO</div><div class="kpi-value" id="kpiWaitlist">0</div></div></div>
+        <div class="col-6 col-md-4"><div class="kpi-card"><div class="kpi-label">Penjadwalan Hari Ini</div><div class="kpi-value" id="kpiSchedule">0</div></div></div>
+        <div class="col-6 col-md-4"><div class="kpi-card"><div class="kpi-label">Total WO Aktif</div><div class="kpi-value" id="kpiTotal">0</div></div></div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="panel-card">
+            <div class="panel-title">Distribusi WO Aktif per Branch</div>
+            <canvas id="branchChart" height="220"></canvas>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="panel-card">
+            <div class="panel-title">Komposisi Status WO</div>
+            <canvas id="statusChart" height="220"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-title">Histori WO Aktif</div>
+        <div id="tsoTable"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<div class="modal fade" id="tsoModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Detail Troubleshoot</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body"><div id="tsoDetailRows"></div></div>
+      <div class="modal-footer"><span class="text-muted small me-auto">Tampilan mengikuti halaman Detail Troubleshoot existing ERP (read-only).</span><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/js/data.js"></script>
+<script src="../../assets/js/common.js"></script>
+<script>
+  window.BASE = "../../";
+  window.ACTIVE_MENU = "op-issue";
+</script>
+<script src="../../assets/js/layout.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  fillBranchSelect(document.getElementById("filterBranch"));
+
+  document.getElementById("kpiWaitlist").textContent = WO_TSO.filter(w=>w.status==="Wait List").length;
+  document.getElementById("kpiSchedule").textContent = WO_TSO.filter(w=>w.status==="Penjadwalan").length;
+  document.getElementById("kpiTotal").textContent = WO_TSO.length;
+
+  const byBranch = BRANCHES.map(b => WO_TSO.filter(w => w.branch === b).length);
+  new Chart(document.getElementById("branchChart"), {
+    type: "bar",
+    data: { labels: BRANCHES, datasets: [{ label: "WO Aktif", data: byBranch, backgroundColor: "#2778c4" }] },
+    options: { plugins: { legend: { display:false } }, scales: { x: { ticks:{ autoSkip:false, maxRotation:60, minRotation:40 } } } }
+  });
+
+  const statusCounts = countBy(WO_TSO, "status");
+  new Chart(document.getElementById("statusChart"), {
+    type: "pie",
+    data: { labels: Object.keys(statusCounts), datasets: [{ data: Object.values(statusCounts), backgroundColor:["#6c757d","#3fc3ee","#f8bb86","#a5dc86"] }] },
+    options: { plugins: { legend: { position:"bottom" } } }
+  });
+
+  let filters = { branch: "" };
+  function filterFn(r){ return !filters.branch || r.branch === filters.branch; }
+  const table = renderSimpleTable({
+    mountId: "tsoTable", data: WO_TSO, filterFn: filterFn,
+    searchKeys: ["customer_name","pppoe_secret","team_katim"],
+    columns: [
+      {label:"Branch", key:"branch"}, {label:"Tipe WO", key:"type"}, {label:"PPPoE Secret", key:"pppoe_secret"},
+      {label:"Nama Customer", key:"customer_name"}, {label:"Team / KaTIM", key:"team_katim"},
+      {label:"Access", key:"access"}, {label:"Status", render:r=>badge(r.status)},
+      {label:"Aksi", render:r=>`<button class="btn btn-sm btn-outline-primary btn-tso-detail" data-id="${r.id}">Detail</button>`}
+    ]
+  });
+
+  document.getElementById("filterBranch").addEventListener("change", e => { filters.branch = e.target.value; table.setFilter(filterFn); });
+
+  document.getElementById("tsoTable").addEventListener("click", e => {
+    const btn = e.target.closest(".btn-tso-detail"); if(!btn) return;
+    const row = WO_TSO.find(w => w.id == btn.dataset.id);
+    const rows = [["Branch",row.branch],["Tipe WO",row.type],["PPPoE Secret",row.pppoe_secret],
+      ["Nama Customer",row.customer_name],["Team / KaTIM",row.team_katim],["Access",row.access],["Status WO",badge(row.status)]];
+    document.getElementById("tsoDetailRows").innerHTML = rows.map(r=>`<div class="detail-row"><div class="detail-label">${r[0]}</div><div class="detail-value">${r[1]}</div></div>`).join("");
+    new bootstrap.Modal(document.getElementById("tsoModal")).show();
+  });
+});
+</script>
+</body>
+</html>

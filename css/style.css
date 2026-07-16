@@ -1,0 +1,443 @@
+:root {
+  --bg: #d9cfd2;
+  --black: #14131a;
+  --white: #ffffff;
+  --gold: #f0a83c;
+  --gold-dark: #d98f22;
+  --teal: #16856f;
+  --teal-dark: #0e5f4e;
+  --text-main: #17151c;
+  --text-muted: #75717d;
+  --border-soft: #ece7e9;
+  --radius-lg: 28px;
+  --radius-md: 20px;
+  --radius-sm: 14px;
+  --shadow-card: 0 10px 30px rgba(20, 19, 26, 0.08);
+  font-size: 16px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-main);
+  font-family: "Inter", system-ui, sans-serif;
+  padding: 24px clamp(16px, 4vw, 48px) 60px;
+}
+
+h1, h2, h3 {
+  font-family: "Poppins", "Inter", sans-serif;
+  margin: 0;
+}
+
+a { text-decoration: none; color: inherit; }
+
+/* ============ NAVBAR ============ */
+.navbar {
+  background: var(--black);
+  border-radius: 999px;
+  padding: 14px 20px 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 480px;
+  margin-bottom: 18px;
+}
+.navbar__logo {
+  color: var(--white);
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
+}
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.navbar__icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+.navbar__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--white);
+  background: #eee;
+}
+
+/* ============ FILTER BAR ============ */
+.filterbar {
+  background: var(--white);
+  border-radius: 999px;
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.filterbar__field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.filterbar__icon { font-size: 1.1rem; }
+.filterbar__label {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.filterbar__value, .filterbar__select {
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: var(--text-main);
+}
+.filterbar__search {
+  flex: 1;
+  min-width: 140px;
+  border: none;
+  outline: none;
+  background: #f4f1f2;
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+.btn {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 22px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-block;
+}
+.btn--primary { background: var(--teal); color: var(--white); }
+.btn--primary:hover { background: var(--teal-dark); }
+.btn--gold { background: var(--gold); color: var(--black); }
+.btn--gold:hover { background: var(--gold-dark); }
+
+/* ============ TOP GRID ============ */
+.grid-top {
+  display: grid;
+  grid-template-columns: 1.1fr 1.4fr 1fr;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+.card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 26px;
+  box-shadow: var(--shadow-card);
+}
+
+/* ---- Kartu perkenalan ---- */
+.card--intro { display: flex; flex-direction: column; }
+.card--intro__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.pill {
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.pill--dark { background: var(--black); color: var(--gold); }
+.round-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f4f1f2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+.round-btn--ghost { background: #eef7f4; color: var(--teal); }
+.card--intro__name {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.card--intro__role {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0 0 18px;
+}
+.card--intro__photo {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  flex: 1;
+  min-height: 180px;
+}
+.card--intro__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---- Kartu deskripsi (Hello) ---- */
+.card--greeting h2 { font-size: 1.5rem; margin-bottom: 10px; }
+.card--greeting__desc {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+.highlight-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+.highlight-pill {
+  background: var(--black);
+  color: var(--white);
+  border-radius: var(--radius-sm);
+  padding: 12px 18px;
+  min-width: 150px;
+}
+.highlight-pill:nth-child(2) {
+  background: #f4f1f2;
+  color: var(--text-main);
+}
+.highlight-pill strong { display: block; font-size: 0.95rem; }
+.highlight-pill span { font-size: 0.75rem; opacity: 0.7; }
+.card--greeting__actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.link-btn { font-weight: 600; font-size: 0.9rem; }
+
+/* ---- Kartu skills (pengganti peta) ---- */
+.card--skills__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.skills-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  min-height: 140px;
+  align-content: flex-start;
+}
+.skill-tag {
+  background: #f4f1f2;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+.card--skills__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-soft);
+  padding-top: 14px;
+}
+.card--skills__legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.dot--gold { background: var(--gold); }
+.dot--gray { background: #b7b3ba; }
+.dot--teal { background: var(--teal); }
+
+/* ============ PROJECT TICKETS ============ */
+.projects { margin-bottom: 18px; }
+.projects__head { margin-bottom: 16px; }
+.projects__head h2 { font-size: 1.4rem; }
+.projects__head p { color: var(--text-muted); margin: 4px 0 0; font-size: 0.9rem; }
+
+.ticket-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 18px;
+}
+.ticket-grid__empty {
+  color: var(--text-muted);
+  padding: 30px;
+  text-align: center;
+}
+
+.ticket {
+  display: flex;
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.ticket:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 34px rgba(20, 19, 26, 0.14);
+}
+.ticket__stub {
+  width: 110px;
+  flex-shrink: 0;
+  border-right: 2px dashed #e4dfe1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  position: relative;
+}
+.ticket__qr {
+  width: 76px;
+  height: 76px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  gap: 2px;
+}
+.ticket__qr span { background: transparent; border-radius: 1px; }
+.ticket__qr span.on { background: var(--black); }
+.ticket__body { padding: 18px 20px; flex: 1; }
+.ticket__code {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+.ticket__title {
+  font-size: 1.05rem;
+  margin: 4px 0 14px;
+}
+.ticket__route {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.ticket__point {
+  width: 6px; height: 6px; border-radius: 50%;
+  border: 1.5px solid var(--text-muted);
+}
+.ticket__line { flex: 1; height: 1px; background: #ddd8da; border-top: 1px dashed #bdb7ba; }
+.ticket__plane { font-size: 0.85rem; color: var(--teal); }
+.ticket__endpoints {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.ticket__endpoints strong { display: block; font-size: 0.95rem; }
+.ticket__endpoints span { font-size: 0.7rem; color: var(--text-muted); }
+.ticket__end-right { text-align: right; }
+.ticket__badge {
+  background: var(--gold);
+  color: var(--black);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 999px;
+}
+.ticket__meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  border-top: 1px dashed #e4dfe1;
+  padding-top: 14px;
+}
+.ticket__meta span { display: block; font-size: 0.68rem; color: var(--text-muted); }
+.ticket__meta strong { font-size: 0.82rem; }
+
+/* ============ CTA CARD ============ */
+.card--cta {
+  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+  color: var(--white);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.card--cta__body { max-width: 480px; position: relative; z-index: 1; }
+.card--cta__body h2 {
+  font-size: 1.6rem;
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+}
+.card--cta__body p {
+  opacity: 0.85;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+.card--cta__socials {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.card--cta__socials a {
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  padding-bottom: 2px;
+}
+.card--cta__deco { position: absolute; inset: 0; }
+.deco-circle {
+  position: absolute;
+  right: -40px;
+  top: -40px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 1px dashed rgba(255,255,255,0.35);
+}
+.deco-dash {
+  position: absolute;
+  right: 60px;
+  bottom: 30px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 1px dashed rgba(255,255,255,0.25);
+}
+
+/* ============ FOOTER ============ */
+.site-footer {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-top: 30px;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1000px) {
+  .grid-top { grid-template-columns: 1fr 1fr; }
+  .card--skills { grid-column: 1 / -1; }
+}
+@media (max-width: 680px) {
+  .navbar { max-width: 100%; }
+  .grid-top { grid-template-columns: 1fr; }
+  .card--cta { flex-direction: column; align-items: flex-start; }
+  .ticket { flex-direction: column; }
+  .ticket__stub { width: 100%; border-right: none; border-bottom: 2px dashed #e4dfe1; }
+}

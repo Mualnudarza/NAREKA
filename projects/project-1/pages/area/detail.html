@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Detail Area | GriyaNet ERP</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+<style>
+.kpi-card.mono {
+  background: linear-gradient(135deg, #212529 0%, #495057 100%);
+  border: none;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+}
+.kpi-card.mono .kpi-label { color: rgba(255,255,255,.65); }
+.kpi-card.mono .kpi-value { color: #fff; }
+</style>
+</head>
+<body>
+<div id="app-navbar"></div>
+<div class="container-fluid">
+  <div class="row">
+    <div id="app-sidebar"></div>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+      <div class="pt-3 pb-2 mb-3 border-bottom">
+        <div class="page-breadcrumb">
+          <a href="../../index.html">Dashboard</a><span class="sep">/</span>
+          <a href="open-area.html">Area</a><span class="sep">/</span>
+          <span class="text-dark">Detail Area</span>
+        </div>
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div>
+            <h1 class="h2 mb-0">Detail Area — <span id="branchTitle">-</span></h1>
+            <p class="text-muted mb-0">Rincian area primary dan overlay pada branch terpilih.</p>
+          </div>
+          <button class="btn btn-outline-dark btn-sm" id="btnPolygonArea">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon></svg>
+            Lihat Poligon Area
+          </button>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-3" id="kpiRow">
+        <div class="col-6 col-md-3">
+          <div class="kpi-card mono">
+            <div class="kpi-label">Total Customer Aktif</div>
+            <div class="kpi-value" id="kpi-aktif">0</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="kpi-card mono">
+            <div class="kpi-label">Total Customer Isolir</div>
+            <div class="kpi-value" id="kpi-isolir">0</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="kpi-card mono">
+            <div class="kpi-label">Total Customer Terminate</div>
+            <div class="kpi-value" id="kpi-terminate">0</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="kpi-card mono">
+            <div class="kpi-label">Total Fasum</div>
+            <div class="kpi-value" id="kpi-fasum">0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>Daftar Customer Area</span>
+          <div class="btn-group btn-group-sm" role="group" id="catTabs">
+            <button type="button" class="btn btn-outline-primary active" data-type="all">Semua</button>
+            <button type="button" class="btn btn-outline-primary" data-type="aktif">Aktif</button>
+            <button type="button" class="btn btn-outline-primary" data-type="isolir">Isolir</button>
+            <button type="button" class="btn btn-outline-primary" data-type="terminate">Terminate</button>
+            <button type="button" class="btn btn-outline-primary" data-type="fasum">Fasum</button>
+          </div>
+        </div>
+        <div id="customerTable"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Modal Poligon -->
+<div class="modal fade" id="polygonModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cakupan Poligon Area — <span id="polygonAreaName"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="map-placeholder">
+          <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon></svg>
+          <div class="fw-semibold mt-2">Simulasi Tampilan Peta / Poligon Area</div>
+          <div class="small">Pada implementasi sesungguhnya, area ini akan menampilkan cakupan poligon area dari data GIS / Map Access ERP.</div>
+        </div>
+        <div class="detail-row mt-3"><div class="detail-label">Kode Area</div><div class="detail-value" id="polygonAreaCode">-</div></div>
+        <div class="detail-row"><div class="detail-label">Kategori</div><div class="detail-value" id="polygonAreaCat">-</div></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Detail Customer -->
+<div class="modal fade" id="customerModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Detail Customer</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body"><div id="customerDetailRows"></div></div>
+      <div class="modal-footer"><span class="text-muted small me-auto">Tampilan mengikuti halaman Detail Customer existing ERP (read-only).</span><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/js/data.js"></script>
+<script src="../../assets/js/common.js"></script>
+<script>
+  window.BASE = "../../";
+  window.ACTIVE_MENU = "area-open";
+</script>
+<script src="../../assets/js/layout.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const branch = params.get("branch") || BRANCHES[0];
+  const areaId = parseInt(params.get("id"), 10);
+  document.getElementById("branchTitle").textContent = branch;
+
+  const area = AREA_DATA.find(a => a.id === areaId) || {};
+  document.getElementById("kpi-aktif").textContent = area.customer_active ?? 0;
+  document.getElementById("kpi-isolir").textContent = area.customer_isolir ?? 0;
+  document.getElementById("kpi-terminate").textContent = area.customer_terminate ?? 0;
+  document.getElementById("kpi-fasum").textContent = area.fasum ?? 0;
+
+  const MONTHS = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+  function parseDate(str) {
+    const p = str.split('-');
+    if (p.length !== 3) return null;
+    return new Date(2000 + parseInt(p[2],10), MONTHS[p[1]], parseInt(p[0],10));
+  }
+
+  let currentStatus = "all";
+
+  const customersInBranch = CUSTOMER_DATA.filter(c => c.branch === branch);
+
+  const table = renderSimpleTable({
+    mountId: "customerTable",
+    data: customersInBranch,
+    searchKeys: ["customer_name","phone","package","pppoe_secret"],
+    filterFn: r => {
+      if (currentStatus === "all") return true;
+      if (currentStatus === "fasum") return r.status === "Fasum";
+      return r.status.toLowerCase() === currentStatus;
+    },
+    columns: [
+      {label:"Nama", key:"customer_name"},
+      {label:"No Telp", key:"phone"},
+      {label:"Paket Layanan", key:"package"},
+      {
+        label:"Lama Berlangganan",
+        render: r => {
+          const d = parseDate(r.subscribe_date);
+          if (!d) return "-";
+          const now = new Date();
+          const months = (now.getFullYear() - d.getFullYear()) * 12 + (now.getMonth() - d.getMonth());
+          if (months < 12) return months + " bulan";
+          const yrs = Math.floor(months / 12);
+          const rem = months % 12;
+          return rem > 0 ? yrs + " thn " + rem + " bln" : yrs + " tahun";
+        }
+      },
+      {label:"Status Customer", render: r => badge(r.status)},
+      {label:"Aksi", render: r => `<button class="btn btn-sm btn-outline-primary btn-cust-detail" data-id="${r.id}">Detail</button>`}
+    ]
+  });
+
+  document.getElementById("customerTable").addEventListener("click", (e) => {
+    const btn = e.target.closest(".btn-cust-detail");
+    if (!btn) return;
+    const row = customersInBranch.find(c => c.id == btn.dataset.id);
+    if (!row) return;
+    const fields = [
+      ["Nama Customer", row.customer_name],
+      ["ID Pelanggan", row.pppoe_secret],
+      ["No Telp", row.phone],
+      ["Paket Layanan", row.package],
+      ["Tanggal Berlangganan", row.subscribe_date],
+      ["Tanggal Expired", row.expired_date],
+      ["Status", badge(row.status)]
+    ];
+    document.getElementById("customerDetailRows").innerHTML = fields.map(f =>
+      `<div class="detail-row"><div class="detail-label">${f[0]}</div><div class="detail-value">${f[1]}</div></div>`
+    ).join("");
+    new bootstrap.Modal(document.getElementById("customerModal")).show();
+  });
+
+  document.getElementById("catTabs").addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+    document.querySelectorAll("#catTabs button").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentStatus = btn.dataset.type;
+    table.setFilter(r => {
+      if (currentStatus === "all") return true;
+      if (currentStatus === "fasum") return r.status === "Fasum";
+      return r.status.toLowerCase() === currentStatus;
+    });
+  });
+
+  // Polygon button opens modal for the current area
+  document.getElementById("btnPolygonArea").addEventListener("click", () => {
+    if (!area) return;
+    document.getElementById("polygonAreaName").textContent = area.area_name || "-";
+    document.getElementById("polygonAreaCode").textContent = area.area_code || "-";
+    document.getElementById("polygonAreaCat").innerHTML = badge(area.is_primary === 1 ? "Primary" : "Overlay");
+    new bootstrap.Modal(document.getElementById("polygonModal")).show();
+  });
+});
+</script>
+</body>
+</html>

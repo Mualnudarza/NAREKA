@@ -1,0 +1,26 @@
+id,branch,pppoe_secret,customer_name,team,katim,access,sn,status
+1,Temas,cust2000,Rina Wijaya 1,Team Alpha,Katim Rudi,P-3,SN500000,Menunggu Teknisi
+2,Bumiaji,cust2001,Sinta Dewi 2,Team Bravo,Katim Sani,P-4,SN500017,Dalam Proses
+3,Dau,cust2002,Agus Prasetyo 3,Team Charlie,Katim Wawan,P-5,SN500034,Selesai
+4,Temas,cust2003,Maya Sari 4,Team Delta,Katim Doni,P-6,SN500051,Gagal Instalasi
+5,Bumiaji,cust2004,Doni Kurniawan 5,Team Echo,Katim Eko,P-7,SN500068,Menunggu Teknisi
+6,Dau,cust2005,Lestari Putri 6,Team Alpha,Katim Rudi,P-8,SN500085,Dalam Proses
+7,Temas,cust2006,Hendra Gunawan 7,Team Bravo,Katim Sani,P-9,SN500102,Selesai
+8,Bumiaji,cust2007,Wulan Sari 8,Team Charlie,Katim Wawan,P-10,SN500119,Gagal Instalasi
+9,Dau,cust2008,Bayu Aditya 9,Team Delta,Katim Doni,P-11,SN500136,Menunggu Teknisi
+10,Temas,cust2009,Citra Ayu 10,Team Echo,Katim Eko,P-12,SN500153,Dalam Proses
+11,Bumiaji,cust2010,Ahmad Fauzi 11,Team Alpha,Katim Rudi,P-13,SN500170,Selesai
+12,Dau,cust2011,Budi Santoso 12,Team Bravo,Katim Sani,P-14,SN500187,Gagal Instalasi
+13,Temas,cust2012,Rina Wijaya 13,Team Charlie,Katim Wawan,P-15,SN500204,Menunggu Teknisi
+14,Bumiaji,cust2013,Sinta Dewi 14,Team Delta,Katim Doni,P-16,SN500221,Dalam Proses
+15,Dau,cust2014,Agus Prasetyo 15,Team Echo,Katim Eko,P-17,SN500238,Selesai
+16,Temas,cust2015,Maya Sari 16,Team Alpha,Katim Rudi,P-18,SN500255,Gagal Instalasi
+17,Bumiaji,cust2016,Doni Kurniawan 17,Team Bravo,Katim Sani,P-19,SN500272,Menunggu Teknisi
+18,Dau,cust2017,Lestari Putri 18,Team Charlie,Katim Wawan,P-20,SN500289,Dalam Proses
+19,Temas,cust2018,Hendra Gunawan 19,Team Delta,Katim Doni,P-21,SN500306,Selesai
+20,Bumiaji,cust2019,Wulan Sari 20,Team Echo,Katim Eko,P-22,SN500323,Gagal Instalasi
+21,Dau,cust2020,Bayu Aditya 21,Team Alpha,Katim Rudi,P-3,SN500340,Menunggu Teknisi
+22,Temas,cust2021,Citra Ayu 22,Team Bravo,Katim Sani,P-4,SN500357,Dalam Proses
+23,Bumiaji,cust2022,Ahmad Fauzi 23,Team Charlie,Katim Wawan,P-5,SN500374,Selesai
+24,Dau,cust2023,Budi Santoso 24,Team Delta,Katim Doni,P-6,SN500391,Gagal Instalasi
+25,Temas,cust2024,Rina Wijaya 25,Team Echo,Katim Eko,P-7,SN500408,Menunggu Teknisi

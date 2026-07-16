@@ -1,0 +1,19 @@
+id,branch,customer_name,customer_id,package,sales,surveyor,alamat,status
+1,Dau,Agus Prasetyo 1,CUST9000,Home 20 Mbps,Andi Wijaya,Bagus,"Jl. Merdeka No. 1, Dau",Menunggu Pembayaran
+2,Temas,Maya Sari 2,CUST9001,Home 30 Mbps,Yusuf Bahtiar,Irwan,"Jl. Merdeka No. 2, Temas",Menunggu Penjadwalan
+3,Bumiaji,Doni Kurniawan 3,CUST9002,Home 50 Mbps,Farida Amelia,Dwi,"Jl. Merdeka No. 3, Bumiaji",Menunggu Pembayaran
+4,Dau,Lestari Putri 4,CUST9003,Bisnis 50 Mbps,Nia Kartika,Fitri,"Jl. Merdeka No. 4, Dau",Menunggu Penjadwalan
+5,Temas,Hendra Gunawan 5,CUST9004,Home 10 Mbps,Rahmat Hidayat,Bagus,"Jl. Merdeka No. 5, Temas",Menunggu Pembayaran
+6,Bumiaji,Wulan Sari 6,CUST9005,Home 20 Mbps,Putri Ayu,Irwan,"Jl. Merdeka No. 6, Bumiaji",Menunggu Penjadwalan
+7,Dau,Bayu Aditya 7,CUST9006,Home 30 Mbps,Reza Pratama,Dwi,"Jl. Merdeka No. 7, Dau",Menunggu Pembayaran
+8,Temas,Citra Ayu 8,CUST9007,Home 50 Mbps,Dewi Lestari,Fitri,"Jl. Merdeka No. 8, Temas",Menunggu Penjadwalan
+9,Bumiaji,Ahmad Fauzi 9,CUST9008,Bisnis 50 Mbps,Andi Wijaya,Bagus,"Jl. Merdeka No. 9, Bumiaji",Menunggu Pembayaran
+10,Dau,Budi Santoso 10,CUST9009,Home 10 Mbps,Yusuf Bahtiar,Irwan,"Jl. Merdeka No. 10, Dau",Menunggu Penjadwalan
+11,Temas,Rina Wijaya 11,CUST9010,Home 20 Mbps,Farida Amelia,Dwi,"Jl. Merdeka No. 11, Temas",Menunggu Pembayaran
+12,Bumiaji,Sinta Dewi 12,CUST9011,Home 30 Mbps,Nia Kartika,Fitri,"Jl. Merdeka No. 12, Bumiaji",Menunggu Penjadwalan
+13,Dau,Agus Prasetyo 13,CUST9012,Home 50 Mbps,Rahmat Hidayat,Bagus,"Jl. Merdeka No. 13, Dau",Menunggu Pembayaran
+14,Temas,Maya Sari 14,CUST9013,Bisnis 50 Mbps,Putri Ayu,Irwan,"Jl. Merdeka No. 14, Temas",Menunggu Penjadwalan
+15,Bumiaji,Doni Kurniawan 15,CUST9014,Home 10 Mbps,Reza Pratama,Dwi,"Jl. Merdeka No. 15, Bumiaji",Menunggu Pembayaran
+16,Dau,Lestari Putri 16,CUST9015,Home 20 Mbps,Dewi Lestari,Fitri,"Jl. Merdeka No. 16, Dau",Menunggu Penjadwalan
+17,Temas,Hendra Gunawan 17,CUST9016,Home 30 Mbps,Andi Wijaya,Bagus,"Jl. Merdeka No. 17, Temas",Menunggu Pembayaran
+18,Bumiaji,Wulan Sari 18,CUST9017,Home 50 Mbps,Yusuf Bahtiar,Irwan,"Jl. Merdeka No. 18, Bumiaji",Menunggu Penjadwalan

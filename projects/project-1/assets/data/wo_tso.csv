@@ -1,0 +1,23 @@
+id,branch,type,pppoe_secret,customer_name,team_katim,access,status
+1,Bumiaji,Gangguan Koneksi,cust3000,Doni Kurniawan 1,Team Alpha / Rudi,P-3,Wait List
+2,Dau,Perangkat Rusak,cust3001,Lestari Putri 2,Team Bravo / Sani,P-4,Penjadwalan
+3,Temas,Redaman Tinggi,cust3002,Hendra Gunawan 3,Team Charlie / Wawan,P-5,Dalam Proses
+4,Bumiaji,Ganti Modem,cust3003,Wulan Sari 4,Team Delta / Rudi,P-6,Selesai
+5,Dau,Gangguan Koneksi,cust3004,Bayu Aditya 5,Team Echo / Sani,P-7,Wait List
+6,Temas,Perangkat Rusak,cust3005,Citra Ayu 6,Team Alpha / Wawan,P-8,Penjadwalan
+7,Bumiaji,Redaman Tinggi,cust3006,Ahmad Fauzi 7,Team Bravo / Rudi,P-9,Dalam Proses
+8,Dau,Ganti Modem,cust3007,Budi Santoso 8,Team Charlie / Sani,P-10,Selesai
+9,Temas,Gangguan Koneksi,cust3008,Rina Wijaya 9,Team Delta / Wawan,P-11,Wait List
+10,Bumiaji,Perangkat Rusak,cust3009,Sinta Dewi 10,Team Echo / Rudi,P-12,Penjadwalan
+11,Dau,Redaman Tinggi,cust3010,Agus Prasetyo 11,Team Alpha / Sani,P-13,Dalam Proses
+12,Temas,Ganti Modem,cust3011,Maya Sari 12,Team Bravo / Wawan,P-14,Selesai
+13,Bumiaji,Gangguan Koneksi,cust3012,Doni Kurniawan 13,Team Charlie / Rudi,P-15,Wait List
+14,Dau,Perangkat Rusak,cust3013,Lestari Putri 14,Team Delta / Sani,P-16,Penjadwalan
+15,Temas,Redaman Tinggi,cust3014,Hendra Gunawan 15,Team Echo / Wawan,P-17,Dalam Proses
+16,Bumiaji,Ganti Modem,cust3015,Wulan Sari 16,Team Alpha / Rudi,P-3,Selesai
+17,Dau,Gangguan Koneksi,cust3016,Bayu Aditya 17,Team Bravo / Sani,P-4,Wait List
+18,Temas,Perangkat Rusak,cust3017,Citra Ayu 18,Team Charlie / Wawan,P-5,Penjadwalan
+19,Bumiaji,Redaman Tinggi,cust3018,Ahmad Fauzi 19,Team Delta / Rudi,P-6,Dalam Proses
+20,Dau,Ganti Modem,cust3019,Budi Santoso 20,Team Echo / Sani,P-7,Selesai
+21,Temas,Gangguan Koneksi,cust3020,Rina Wijaya 21,Team Alpha / Wawan,P-8,Wait List
+22,Bumiaji,Perangkat Rusak,cust3021,Sinta Dewi 22,Team Bravo / Rudi,P-9,Penjadwalan

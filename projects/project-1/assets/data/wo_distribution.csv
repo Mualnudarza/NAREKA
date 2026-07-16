@@ -1,0 +1,17 @@
+id,branch,area,type_splitter,kode,katim,tanggal,phase,status
+1,Temas,AR-001,1:8,SPL-100,Katim Rudi,01-Jan-26,Instalasi,Dalam Proses
+2,Bumiaji,AR-002,1:16,SPL-101,Katim Sani,08-Feb-26,Penyambungan,Selesai
+3,Dau,AR-003,1:8,SPL-102,Katim Wawan,15-Mar-26,Testing,Pending
+4,Temas,AR-004,1:16,SPL-103,Katim Rudi,22-Apr-26,Instalasi,Dalam Proses
+5,Bumiaji,AR-005,1:8,SPL-104,Katim Sani,01-May-26,Penyambungan,Selesai
+6,Dau,AR-006,1:16,SPL-105,Katim Wawan,01-Jan-26,Testing,Pending
+7,Temas,AR-007,1:8,SPL-106,Katim Rudi,08-Feb-26,Instalasi,Dalam Proses
+8,Bumiaji,AR-008,1:16,SPL-107,Katim Sani,15-Mar-26,Penyambungan,Selesai
+9,Dau,AR-009,1:8,SPL-108,Katim Wawan,22-Apr-26,Testing,Pending
+10,Temas,AR-010,1:16,SPL-109,Katim Rudi,01-May-26,Instalasi,Dalam Proses
+11,Bumiaji,AR-001,1:8,SPL-110,Katim Sani,01-Jan-26,Penyambungan,Selesai
+12,Dau,AR-002,1:16,SPL-111,Katim Wawan,08-Feb-26,Testing,Pending
+13,Temas,AR-003,1:8,SPL-112,Katim Rudi,15-Mar-26,Instalasi,Dalam Proses
+14,Bumiaji,AR-004,1:16,SPL-113,Katim Sani,22-Apr-26,Penyambungan,Selesai
+15,Dau,AR-005,1:8,SPL-114,Katim Wawan,01-May-26,Testing,Pending
+16,Temas,AR-006,1:16,SPL-115,Katim Rudi,01-Jan-26,Instalasi,Dalam Proses

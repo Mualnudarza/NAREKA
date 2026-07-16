@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modul Man Power Planning | GriyaNet ERP</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div id="app-navbar"></div>
+<div class="container-fluid">
+  <div class="row">
+    <div id="app-sidebar"></div>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+      <div class="pt-3 pb-2 mb-3 border-bottom">
+        <div class="page-breadcrumb"><a href="../../index.html">Dashboard</a><span class="sep">/</span><span>Man Power Planning</span><span class="sep">/</span><span class="text-dark">Overview</span></div>
+        <h1 class="h2 mb-0">Modul Man Power Planning</h1>
+        <p class="text-muted mb-0">Pusat monitoring ketersediaan Account Executive dan Tim Teknisi pada setiap branch.</p>
+      </div>
+
+      <div class="filter-bar">
+        <div class="row g-2 align-items-end">
+          <div class="col-6 col-md-3"><label class="form-label mb-1">Branch</label><select id="filterBranch" class="form-select form-select-sm"></select></div>
+        </div>
+      </div>
+
+      <div class="ops-tabs mb-3" id="mppTabs">
+        <button class="ops-tab active" data-view="ae">Account Executive</button>
+        <button class="ops-tab" data-view="team">Tim Teknisi</button>
+      </div>
+
+      <div id="viewMount"></div>
+
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/js/data.js"></script>
+<script src="../../assets/js/common.js"></script>
+<script>
+  window.BASE = "../../";
+  window.ACTIVE_MENU = "mpp-main";
+</script>
+<script src="../../assets/js/layout.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const state = { view:"ae", branch:"" };
+  fillBranchSelect(document.getElementById("filterBranch"));
+  const viewMount = document.getElementById("viewMount");
+
+  function byBranch(r){ return !state.branch || !r.branch || r.branch === state.branch; }
+  function kpi(items){ return `<div class="row g-3 mb-3">${items.map(x=>`<div class="col-6 col-md-3"><div class="kpi-card mono"><div class="kpi-label">${x[0]}</div><div class="kpi-value">${x[1]}</div></div></div>`).join("")}</div>`; }
+  function renderFilteredTable(mountId, opts){
+    const mount = document.getElementById(mountId);
+    if(!mount) return;
+    const statuses = opts.statuses || [];
+    let flt = "all";
+    const btnHtml = ["all",...statuses].map(s=>
+      `<button class="btn btn-sm btn-outline-primary${s==="all"?" active":""}" data-flt="${s}">${s==="all"?"Semua":s}</button>`
+    ).join("");
+    mount.innerHTML = `<div class="panel-title"><span>${opts.title}</span><div class="btn-group btn-group-sm" role="group">${btnHtml}</div></div><div id="${mountId}-t"></div>`;
+    const tbl = renderSimpleTable({
+      mountId:mountId+"-t", data:opts.data, searchKeys:opts.searchKeys, columns:opts.columns,
+      filterFn: r => flt==="all" || (r.status===flt || r.team_status===flt)
+    });
+    mount.addEventListener("click", e => {
+      const btn = e.target.closest("[data-flt]"); if(!btn) return;
+      flt = btn.dataset.flt;
+      mount.querySelectorAll("[data-flt]").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      tbl.setFilter(r => flt==="all" || (r.status===flt || r.team_status===flt));
+    });
+  }
+
+  const views = {
+    ae(){
+      const aeFiltered = AE_DATA.filter(byBranch);
+      viewMount.innerHTML = kpi([["Total Account Executive",aeFiltered.length],["Total AE Aktif",aeFiltered.filter(r=>r.status==="Aktif").length],["Total AE Non Aktif",aeFiltered.filter(r=>r.status==="Non Aktif").length]]) +
+        `<div class="panel-card" id="aeTablePanel"></div>`;
+
+      renderFilteredTable("aeTablePanel", {
+        title: "Daftar Account Executive", data: aeFiltered, statuses: ["Aktif", "Non Aktif"],
+        searchKeys: ["fullname","nickname","nip"],
+        columns: [
+          {label:"Branch", key:"branch"}, {label:"NIP", key:"nip"}, {label:"Nama Lengkap", key:"fullname"},
+          {label:"Nick Name", key:"nickname"}, {label:"No. Telepon", key:"phone"}, {label:"Status", render:r=>badge(r.status)}
+        ]
+      });
+    },
+    team(){
+      const teamFiltered = TEAM_MONITORING.filter(byBranch);
+      const totalTechnicians = teamFiltered.length * 2;
+      const activeTechnicians = teamFiltered.filter(t=>t.team_status==="Aktif").length * 2;
+      viewMount.innerHTML = kpi([["Total Tim Teknisi",teamFiltered.length],["Total Tim Aktif",teamFiltered.filter(r=>r.team_status==="Aktif").length],["Total Teknisi",totalTechnicians],["Total Teknisi Aktif",activeTechnicians]]) +
+        `<div class="panel-card" id="teamTablePanel"></div>`;
+
+      renderFilteredTable("teamTablePanel", {
+        title: "Daftar Tim Teknisi", data: teamFiltered, statuses: ["Aktif", "Non Aktif"],
+        searchKeys: ["team_name","lead_name","branch"],
+        columns: [
+          {label:"Branch", key:"branch"}, {label:"Nama Team", key:"team_name"}, {label:"Lead NIP", key:"lead_nip"},
+          {label:"Nama Lead", key:"lead_name"}, {label:"Lead Status", render:r=>badge(r.lead_status)},
+          {label:"Team Status", render:r=>badge(r.team_status)}
+        ]
+      });
+    }
+  };
+
+  function render(){ views[state.view](); }
+  render();
+  document.getElementById("mppTabs").addEventListener("click", e => { const b=e.target.closest("button"); if(!b) return; document.querySelectorAll(".ops-tab").forEach(x=>x.classList.remove("active")); b.classList.add("active"); state.view=b.dataset.view; render(); });
+  document.getElementById("filterBranch").addEventListener("change", e => { state.branch=e.target.value; render(); });
+});
+</script>
+</body>
+</html>

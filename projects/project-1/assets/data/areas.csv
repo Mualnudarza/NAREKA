@@ -1,0 +1,31 @@
+id,branch,area_name,area_code,is_primary,area_primary_id,open_date,customer_active,customer_isolir,customer_terminate,fasum
+1,Temas,PAPA,AR-001,1,,01-Jan-26,40,3,0,2
+2,Temas,PAPA - Overlay,AR-002,0,1,08-Feb-26,10,1,0,1
+3,Bumiaji,ORMO,AR-003,1,,08-Feb-26,47,6,2,3
+4,Bumiaji,ORMO - Overlay,AR-004,0,3,15-Mar-26,14,3,1,2
+5,Dau,BSUL,AR-005,1,,15-Mar-26,54,9,4,4
+6,Dau,BSUL - Overlay,AR-006,0,5,22-Apr-26,18,5,2,3
+7,Temas,ETIK,AR-007,1,,22-Apr-26,61,12,6,5
+8,Temas,ETIK - Overlay,AR-008,0,7,01-May-26,22,7,3,1
+9,Bumiaji,LOCA,AR-009,1,,01-May-26,68,15,0,6
+10,Bumiaji,LOCA - Overlay,AR-010,0,9,08-Jun-26,26,1,0,2
+11,Dau,LAJA,AR-011,1,,08-Jun-26,75,3,2,2
+12,Dau,LAJA - Overlay,AR-012,0,11,15-Jan-26,30,3,1,3
+13,Temas,SURA,AR-013,1,,15-Jan-26,82,6,4,3
+14,Temas,SURA - Overlay,AR-014,0,13,22-Feb-26,34,5,2,1
+15,Bumiaji,KRBT,AR-015,1,,22-Feb-26,89,9,6,4
+16,Bumiaji,KRBT - Overlay,AR-016,0,15,01-Mar-26,38,7,3,2
+17,Dau,MABA,AR-017,1,,01-Mar-26,96,12,0,5
+18,Dau,MABA - Overlay,AR-018,0,17,08-Apr-26,42,1,0,3
+19,Temas,RITI,AR-019,1,,08-Apr-26,103,15,2,6
+20,Temas,RITI - Overlay,AR-020,0,19,15-May-26,46,3,1,1
+21,Bumiaji,GADA,AR-021,1,,15-May-26,110,3,4,2
+22,Bumiaji,GADA - Overlay,AR-022,0,21,22-Jun-26,10,5,2,2
+23,Dau,FABO,AR-023,1,,22-Jun-26,117,6,6,3
+24,Dau,FABO - Overlay,AR-024,0,23,01-Jan-26,14,7,3,3
+25,Temas,DAMA,AR-025,1,,01-Jan-26,124,9,0,4
+26,Temas,DAMA - Overlay,AR-026,0,25,08-Feb-26,18,1,0,1
+27,Bumiaji,LAHO,AR-027,1,,08-Feb-26,41,12,2,5
+28,Bumiaji,LAHO - Overlay,AR-028,0,27,15-Mar-26,22,3,1,2
+29,Dau,GOJO,AR-029,1,,15-Mar-26,48,15,4,6
+30,Dau,GOJO - Overlay,AR-030,0,29,22-Apr-26,26,5,2,3
