@@ -85,4 +85,18 @@
   w.HISTORI_DISMANTLE = typed('histori_dismantle', ['id']);
   w.AE_DATA = typed('ae_data', []);
   w.TIM_TEKNISI_DATA = w.TEAM_MONITORING;
+
+  w.ROUTERS = loadCSV('routers.csv');
+  w.VLANS = loadCSV('vlans.csv');
+  w.OLTS = loadCSV('olts.csv');
+  w.STOCK_CABLE = loadCSV('stock_cable.csv');
+  w.HISTORY_CABLE = loadCSV('history_cable.csv');
+  w.SISA_KABEL = loadCSV('sisa_kabel.csv');
+  w.SISA_KABEL_CLOSE = loadCSV('sisa_kabel_close.csv');
+  w.PURCHASE_HISTORY = loadCSV('purchase_history.csv');
+  w.MODEM = loadCSV('modem.csv');
+  w.REPLACE_MODEM = loadCSV('replace_modem.csv');
+  w.TERMINATE_MODEM = loadCSV('terminate_modem.csv');
+  w.RETURN_MODEM = loadCSV('return_modem.csv');
+  w.HISTORY_BATCH_MODEM = loadCSV('history_batch_modem.csv');
 })(window);

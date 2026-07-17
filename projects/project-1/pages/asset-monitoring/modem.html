@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monitoring Modem | Modul Implementasi Asset</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+<style>
+  .card-menu { transition: transform .15s ease, box-shadow .15s ease; cursor: pointer; }
+  .card-menu:hover { transform: translateY(-2px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15); }
+  .tab-btn { background: #f8f9fa; border: 1px solid #dee2e6; }
+  .tab-btn.active { background: #2778c4; color: #fff; border-color: #2778c4; }
+  .kpi-card-mono { 
+    background: linear-gradient(135deg, #1b1e21 0%, #343a40 100%); 
+    color: #fff; 
+    border-radius: .5rem; 
+    height: 100%;
+    padding: 1rem;
+  }
+  .kpi-card-mono .kpi-label { color: rgba(255,255,255,.7); font-size: .8rem; text-transform: uppercase; margin-bottom: .25rem; }
+  .kpi-card-mono .kpi-value { font-size: 1.8rem; font-weight: 700; }
+  .table thead th { background: #f8f9fa; font-weight: 600; }
+  .btn-detail { font-size: .75rem; padding: .2rem .5rem; }
+  .tab-pane { padding-top: 1rem; }
+</style>
+</head>
+<body>
+<div id="app-navbar"></div>
+<div class="container-fluid">
+  <div class="row">
+    <div id="app-sidebar"></div>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+      <div class="pt-3 pb-2 mb-3 border-bottom">
+        <div class="page-breadcrumb">
+          <a href="../../index.html">Dashboard</a><span class="sep">/</span>
+          <a href="./perangkat.html">Modul Implementasi Asset</a><span class="sep">/</span>
+          <span class="text-dark">Monitoring Modem</span>
+        </div>
+        <h1 class="h2 mb-0">Monitoring Modem</h1>
+        <p class="text-muted mb-0">Monitoring kondisi aset modem di seluruh branch regional (read-only).</p>
+      </div>
+
+      <div class="filter-bar mb-3">
+        <div class="row g-2 align-items-end">
+          <div class="col-6 col-md-3">
+            <label class="form-label mb-1">Branch</label>
+            <select id="filterBranch" class="form-select form-select-sm"></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-card mb-3">
+        <div class="panel-title">Menu Monitoring Modem</div>
+        <div class="row g-3" id="modemCardMenu">
+          <div class="col-6 col-md-3">
+            <a href="#" class="card-menu card h-100 text-decoration-none" data-view="dashboard">
+              <div class="card-body text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mb-2 text-primary"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <h6 class="mb-1">Dashboard Modem</h6>
+                <p class="text-muted small mb-0">Ready, Replace, Terminate</p>
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-3">
+            <a href="#" class="card-menu card h-100 text-decoration-none" data-view="replace">
+              <div class="card-body text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mb-2 text-primary"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="12" x2="15" y2="12"></line><line x1="12" y1="9" x2="12" y2="15"></line></svg>
+                <h6 class="mb-1">Replace Modem</h6>
+                <p class="text-muted small mb-0">Modem dalam proses penggantian</p>
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-3">
+            <a href="#" class="card-menu card h-100 text-decoration-none" data-view="terminate">
+              <div class="card-body text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mb-2 text-primary"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                <h6 class="mb-1">Modem Terminate</h6>
+                <p class="text-muted small mb-0">Modem dari pelanggan terminate</p>
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-3">
+            <a href="#" class="card-menu card h-100 text-decoration-none" data-view="return">
+              <div class="card-body text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mb-2 text-primary"><polyline points="17 1 17 5 19 7 19 19 5 19 5 7 7 5 7 1"></polyline><line x1="7" y1="5" x2="17" y2="5"></line><line x1="12" y1="1" x2="12" y2="5"></line></svg>
+                <h6 class="mb-1">Modem Siap Return</h6>
+                <p class="text-muted small mb-0">Modem siap dikembalikan ke supplier</p>
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-3 mt-3">
+            <a href="#" class="card-menu card h-100 text-decoration-none" data-view="history-batch">
+              <div class="card-body text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mb-2 text-primary"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                <h6 class="mb-1">History Batch Modem</h6>
+                <p class="text-muted small mb-0">Histori pengelolaan batch modem</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div id="dashboardView" style="display:none;">
+        <div class="row g-3 mb-3">
+          <div class="col-6 col-md-4">
+            <div class="kpi-card-mono">
+              <div class="kpi-label">Total Modem Ready</div>
+              <div class="kpi-value" id="kpiModemReady">0</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="kpi-card-mono">
+              <div class="kpi-label">Total Modem Replace</div>
+              <div class="kpi-value" id="kpiModemReplace">0</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="kpi-card-mono">
+              <div class="kpi-label">Total Modem Terminate</div>
+              <div class="kpi-value" id="kpiModemTerminate">0</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">Tabel Data Modem</div>
+          <div id="dataModemTable"></div>
+        </div>
+      </div>
+
+      <div id="replaceView" style="display:none;">
+        <div class="row g-3 mb-3">
+          <div class="col-6 col-md-4">
+            <div class="kpi-card-mono">
+              <div class="kpi-label">Total Modem Ready</div>
+              <div class="kpi-value" id="kpiReplaceModemReady">0</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="kpi-card-mono">
+              <div class="kpi-label">Total Modem Replace</div>
+              <div class="kpi-value" id="kpiReplaceModemReplace">0</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="kpi-card-mono">
+              <div class="kpi-label">Total Modem Terminate</div>
+              <div class="kpi-value" id="kpiReplaceModemTerminate">0</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">Tabel Replace Modem</div>
+          <div id="replaceModemTable"></div>
+        </div>
+      </div>
+
+      <div id="terminateView" style="display:none;">
+        <div class="panel-card">
+          <div class="panel-title">Tabel Modem Terminate</div>
+          <div id="terminateModemTable"></div>
+        </div>
+      </div>
+
+      <div id="returnView" style="display:none;">
+        <div class="panel-card">
+          <div class="panel-title">Tabel Modem Siap Return</div>
+          <div id="returnModemTable"></div>
+        </div>
+      </div>
+
+      <div id="historyBatchView" style="display:none;">
+        <div class="row g-3 mb-3">
+          <div class="col-6 col-md-4">
+            <div class="kpi-card-mono">
+              <div class="kpi-label">Total Akumulasi Harga Modem</div>
+              <div class="kpi-value" id="kpiTotalHargaModem">0</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="kpi-card-mono">
+              <div class="kpi-label">Total Harga Modem Terambil</div>
+              <div class="kpi-value" id="kpiHargaModemTerambil">0</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="kpi-card-mono">
+              <div class="kpi-label">Total Harga Modem Hilang</div>
+              <div class="kpi-value" id="kpiHargaModemHilang">0</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">Tabel History Batch Modem</div>
+          <div id="historyBatchModemTable"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/js/data.js"></script>
+<script src="../../assets/js/common.js"></script>
+<script>
+  window.BASE = "../../";
+  window.ACTIVE_MENU = "asset-modem";
+</script>
+<script src="../../assets/js/layout.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const filterBranch = document.getElementById("filterBranch");
+  fillBranchSelect(filterBranch);
+
+  const MOCK_DATA_MODEM = (typeof MODEM !== 'undefined' && MODEM.length > 0) ? MODEM : [
+    { branch: "Temas", kode_ref: "MOD-001", supplier: "Huawei", brand: "HG8245H5", type: "ONT", serial_number: "SN123456789", harga: 350000, purchase_date: "2026-01-15" },
+    { branch: "Temas", kode_ref: "MOD-002", supplier: "ZTE", brand: "F670L", type: "ONT", serial_number: "SN987654321", harga: 320000, purchase_date: "2026-01-20" },
+    { branch: "Bumiaji", kode_ref: "MOD-003", supplier: "Fiberhome", brand: "AN5506", type: "ONT", serial_number: "SN112233445", harga: 300000, purchase_date: "2026-02-01" },
+  ];
+
+  const MOCK_REPLACE_MODEM = (typeof REPLACE_MODEM !== 'undefined' && REPLACE_MODEM.length > 0) ? REPLACE_MODEM : [
+    { branch: "Temas", kode_ref: "RPL-001", supplier: "Huawei", brand: "HG8245H5", type: "ONT", serial_number: "SNREPLACE001", harga: 350000, replace_date: "2026-03-01" },
+    { branch: "Dau", kode_ref: "RPL-002", supplier: "ZTE", brand: "F670L", type: "ONT", serial_number: "SNREPLACE002", harga: 320000, replace_date: "2026-03-05" },
+  ];
+
+  const MOCK_MODEM_TERMINATE = (typeof TERMINATE_MODEM !== 'undefined' && TERMINATE_MODEM.length > 0) ? TERMINATE_MODEM : [
+    { branch: "Temas", customer_name: "Budi Santoso", pppoe_secret: "budi123", modem_sn: "SNTERM001", phone: "08123456789", address: "Jl. Merdeka No. 1", sales: "Sales A" },
+    { branch: "Bumiaji", customer_name: "Citra Lestari", pppoe_secret: "citra456", modem_sn: "SNTERM002", phone: "08198765432", address: "Jl. Maju No. 5", sales: "Sales B" },
+  ];
+
+  const MOCK_MODEM_RETURN = (typeof RETURN_MODEM !== 'undefined' && RETURN_MODEM.length > 0) ? RETURN_MODEM : [
+    { branch: "Temas", supplier: "Huawei", brand: "HG8245H5", type: "ONT", serial_number: "SNRETURN001", harga: 350000, purchase_date: "2025-12-01", branch_pickup_date: "2026-01-01", cause: "Rusak" },
+    { branch: "Dau", supplier: "ZTE", brand: "F670L", type: "ONT", serial_number: "SNRETURN002", harga: 320000, purchase_date: "2026-01-01", branch_pickup_date: "2026-02-01", cause: "Performa Buruk" },
+  ];
+
+  const MOCK_HISTORY_BATCH_MODEM = (typeof HISTORY_BATCH_MODEM !== 'undefined' && HISTORY_BATCH_MODEM.length > 0) ? HISTORY_BATCH_MODEM : [
+    { branch: "Temas", batch_code: "BATCH-001", batch_date: "2026-01-10", total_taken: 10, total_lost: 1, total_price: 3500000 },
+    { branch: "Bumiaji", batch_code: "BATCH-002", batch_date: "2026-02-05", total_taken: 8, total_lost: 0, total_price: 2400000 },
+  ];
+
+  let currentView = "dashboard";
+
+  const dataModemTable = renderSimpleTable({
+    mountId: "dataModemTable",
+    data: MOCK_DATA_MODEM,
+    columns: [
+      { label: "Branch", key: "branch" },
+      { label: "Kode Referensi", key: "kode_ref" },
+      { label: "Supplier", key: "supplier" },
+      { label: "Brand", key: "brand" },
+      { label: "Type", key: "type" },
+      { label: "Serial Number", key: "serial_number" },
+      { label: "Harga", key: "harga" },
+      { label: "Tanggal Belanja", key: "purchase_date" },
+      { label: "Detail", render: r => `<button class="btn btn-outline-primary btn-sm btn-detail" onclick="alert('Detail ${r.serial_number} - read only')">Detail</button>` }
+    ],
+    searchKeys: ["branch", "kode_ref", "serial_number", "brand"]
+  });
+
+  const replaceModemTable = renderSimpleTable({
+    mountId: "replaceModemTable",
+    data: MOCK_REPLACE_MODEM,
+    columns: [
+      { label: "Branch", key: "branch" },
+      { label: "Kode Referensi", key: "kode_ref" },
+      { label: "Supplier", key: "supplier" },
+      { label: "Brand", key: "brand" },
+      { label: "Type", key: "type" },
+      { label: "Serial Number", key: "serial_number" },
+      { label: "Harga", key: "harga" },
+      { label: "Tanggal Pergantian", key: "replace_date" },
+      { label: "Detail", render: r => `<button class="btn btn-outline-primary btn-sm btn-detail" onclick="alert('Detail ${r.serial_number} - read only')">Detail</button>` }
+    ],
+    searchKeys: ["branch", "kode_ref", "serial_number", "brand"]
+  });
+
+  const terminateModemTable = renderSimpleTable({
+    mountId: "terminateModemTable",
+    data: MOCK_MODEM_TERMINATE,
+    columns: [
+      { label: "Branch", key: "branch" },
+      { label: "Nama Customer", key: "customer_name" },
+      { label: "PPPoE Secret", key: "pppoe_secret" },
+      { label: "Serial Number Modem", key: "modem_sn" },
+      { label: "Nomor Telepon", key: "phone" },
+      { label: "Alamat", key: "address" },
+      { label: "Sales", key: "sales" }
+    ],
+    searchKeys: ["branch", "customer_name", "modem_sn", "pppoe_secret"]
+  });
+
+  const returnModemTable = renderSimpleTable({
+    mountId: "returnModemTable",
+    data: MOCK_MODEM_RETURN,
+    columns: [
+      { label: "Branch", key: "branch" },
+      { label: "Supplier", key: "supplier" },
+      { label: "Brand", key: "brand" },
+      { label: "Type", key: "type" },
+      { label: "Serial Number", key: "serial_number" },
+      { label: "Harga", key: "harga" },
+      { label: "Tanggal Belanja", key: "purchase_date" },
+      { label: "Tanggal Branch Ambil", key: "branch_pickup_date" },
+      { label: "Cause", key: "cause" },
+      { label: "Print", render: r => `<button class="btn btn-outline-secondary btn-sm btn-detail" onclick="alert('Print ${r.serial_number}')">Print</button>` }
+    ],
+    searchKeys: ["branch", "supplier", "serial_number", "brand"]
+  });
+
+  const historyBatchModemTable = renderSimpleTable({
+    mountId: "historyBatchModemTable",
+    data: MOCK_HISTORY_BATCH_MODEM,
+    columns: [
+      { label: "Branch", key: "branch" },
+      { label: "Kode Batch", key: "batch_code" },
+      { label: "Tanggal", key: "batch_date" },
+      { label: "Total Terambil", key: "total_taken" },
+      { label: "Total Hilang", key: "total_lost" },
+      { label: "Total Harga", key: "total_price" },
+      { label: "Detail", render: r => `<button class="btn btn-outline-primary btn-sm btn-detail" onclick="alert('Detail ${r.batch_code} - read only')">Detail</button>` }
+    ],
+    searchKeys: ["branch", "batch_code"]
+  });
+
+  function updateKPIs() {
+    const branch = filterBranch.value;
+    const filteredDataModem = MOCK_DATA_MODEM.filter(r => !branch || r.branch === branch);
+    const filteredReplaceModem = MOCK_REPLACE_MODEM.filter(r => !branch || r.branch === branch);
+    const filteredTerminateModem = MOCK_MODEM_TERMINATE.filter(r => !branch || r.branch === branch);
+
+    // Dashboard KPIs
+    document.getElementById("kpiModemReady").textContent = filteredDataModem.length;
+    document.getElementById("kpiModemReplace").textContent = filteredReplaceModem.length;
+    document.getElementById("kpiModemTerminate").textContent = filteredTerminateModem.length;
+
+    // Replace KPIs (same as dashboard for now, adjust if logic differs)
+    document.getElementById("kpiReplaceModemReady").textContent = filteredDataModem.length;
+    document.getElementById("kpiReplaceModemReplace").textContent = filteredReplaceModem.length;
+    document.getElementById("kpiReplaceModemTerminate").textContent = filteredTerminateModem.length;
+
+    // History Batch Modem KPIs
+    const filteredBatch = MOCK_HISTORY_BATCH_MODEM.filter(r => !branch || r.branch === branch);
+    const totalHarga = filteredBatch.reduce((sum, r) => sum + r.total_price, 0);
+    const totalTerambil = filteredBatch.reduce((sum, r) => sum + (r.total_taken * (r.total_price / (r.total_taken + r.total_lost))), 0); // Simplified
+    const totalHilang = filteredBatch.reduce((sum, r) => sum + (r.total_lost * (r.total_price / (r.total_taken + r.total_lost))), 0); // Simplified
+
+    document.getElementById("kpiTotalHargaModem").textContent = totalHarga.toLocaleString('id-ID');
+    document.getElementById("kpiHargaModemTerambil").textContent = totalTerambil.toLocaleString('id-ID');
+    document.getElementById("kpiHargaModemHilang").textContent = totalHilang.toLocaleString('id-ID');
+  }
+
+  function renderView() {
+    document.getElementById("dashboardView").style.display = "none";
+    document.getElementById("replaceView").style.display = "none";
+    document.getElementById("terminateView").style.display = "none";
+    document.getElementById("returnView").style.display = "none";
+    document.getElementById("historyBatchView").style.display = "none";
+
+    document.querySelectorAll("#modemCardMenu .card-menu").forEach(card => card.classList.remove("border-primary"));
+    const activeCard = document.querySelector(`#modemCardMenu .card-menu[data-view="${currentView}"]`);
+    if (activeCard) activeCard.classList.add("border-primary");
+
+    const branch = filterBranch.value;
+    const filterFn = r => !branch || r.branch === branch;
+
+    switch (currentView) {
+      case "dashboard":
+        document.getElementById("dashboardView").style.display = "block";
+        dataModemTable.setFilter(filterFn);
+        updateKPIs();
+        break;
+      case "replace":
+        document.getElementById("replaceView").style.display = "block";
+        replaceModemTable.setFilter(filterFn);
+        updateKPIs();
+        break;
+      case "terminate":
+        document.getElementById("terminateView").style.display = "block";
+        terminateModemTable.setFilter(filterFn);
+        break;
+      case "return":
+        document.getElementById("returnView").style.display = "block";
+        returnModemTable.setFilter(filterFn);
+        break;
+      case "history-batch":
+        document.getElementById("historyBatchView").style.display = "block";
+        historyBatchModemTable.setFilter(filterFn);
+        updateKPIs();
+        break;
+    }
+  }
+
+  document.querySelectorAll("#modemCardMenu .card-menu").forEach(el => {
+    el.addEventListener("click", e => {
+      e.preventDefault();
+      currentView = el.dataset.view;
+      renderView();
+    });
+  });
+
+  filterBranch.addEventListener("change", renderView);
+  renderView();
+});
+</script>
+</body>
+</html>

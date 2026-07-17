@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monitoring Kabel | Modul Implementasi Asset</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+<style>
+  .card-menu { transition: transform .15s ease, box-shadow .15s ease; cursor: pointer; }
+  .card-menu:hover { transform: translateY(-2px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15); }
+  .tab-btn { background: #f8f9fa; border: 1px solid #dee2e6; }
+  .tab-btn.active { background: #2778c4; color: #fff; border-color: #2778c4; }
+  .kpi-card-mono { 
+    background: linear-gradient(135deg, #1b1e21 0%, #343a40 100%); 
+    color: #fff; 
+    border-radius: .5rem; 
+    height: 100%;
+    padding: 1rem;
+  }
+  .kpi-card-mono .kpi-label { color: rgba(255,255,255,.7); font-size: .8rem; text-transform: uppercase; margin-bottom: .25rem; }
+  .kpi-card-mono .kpi-value { font-size: 1.8rem; font-weight: 700; }
+  .table thead th { background: #f8f9fa; font-weight: 600; }
+  .btn-detail { font-size: .75rem; padding: .2rem .5rem; }
+  .tab-pane { padding-top: 1rem; }
+</style>
+</head>
+<body>
+<div id="app-navbar"></div>
+<div class="container-fluid">
+  <div class="row">
+    <div id="app-sidebar"></div>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+      <div class="pt-3 pb-2 mb-3 border-bottom">
+        <div class="page-breadcrumb">
+          <a href="../../index.html">Dashboard</a><span class="sep">/</span>
+          <a href="./perangkat.html">Modul Implementasi Asset</a><span class="sep">/</span>
+          <span class="text-dark">Monitoring Kabel</span>
+        </div>
+        <h1 class="h2 mb-0">Monitoring Kabel</h1>
+        <p class="text-muted mb-0">Monitoring persediaan kabel di seluruh branch regional (read-only).</p>
+      </div>
+
+      <div class="filter-bar mb-3">
+        <div class="row g-2 align-items-end">
+          <div class="col-6 col-md-3">
+            <label class="form-label mb-1">Branch</label>
+            <select id="filterBranch" class="form-select form-select-sm"></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-card mb-3">
+        <div class="panel-title">Menu Monitoring Kabel</div>
+        <div class="row g-3" id="cableCardMenu">
+          <div class="col-6 col-md-3">
+            <a href="#" class="card-menu card h-100 text-decoration-none" data-view="dashboard">
+              <div class="card-body text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mb-2 text-primary"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <h6 class="mb-1">Dashboard Kabel</h6>
+                <p class="text-muted small mb-0">Ringkasan & Stok Kabel</p>
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-3">
+            <a href="#" class="card-menu card h-100 text-decoration-none" data-view="history">
+              <div class="card-body text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mb-2 text-primary"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                <h6 class="mb-1">History Kabel</h6>
+                <p class="text-muted small mb-0">Ready & Close</p>
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-3">
+            <a href="#" class="card-menu card h-100 text-decoration-none" data-view="sisa">
+              <div class="card-body text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mb-2 text-primary"><path d="M20 12V6H4v6m2-6v10m6-10v10"></path><line x1="12" y1="18" x2="12" y2="22"></line><line x1="16" y1="18" x2="16" y2="22"></line><line x1="8" y1="18" x2="8" y2="22"></line></svg>
+                <h6 class="mb-1">Sisa Kabel</h6>
+                <p class="text-muted small mb-0">Ready, Active, Close</p>
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-3">
+            <a href="#" class="card-menu card h-100 text-decoration-none" data-view="belanja">
+              <div class="card-body text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mb-2 text-primary"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-4a4 4 0 1 0 0 8h4a4 4 0 1 1 0 8h-4"></path><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line></svg>
+                <h6 class="mb-1">History Belanja</h6>
+                <p class="text-muted small mb-0">Histori pembelian kabel</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div id="dashboardView" style="display:none;">
+        <div class="row g-3 mb-3">
+          <div class="col-6 col-md-4">
+            <div class="kpi-card-mono">
+              <div class="kpi-label">Total Hasbel Open</div>
+              <div class="kpi-value" id="kpiHasbelOpen">0</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="kpi-card-mono">
+              <div class="kpi-label">Total Hasbel Ready</div>
+              <div class="kpi-value" id="kpiHasbelReady">0</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">Tabel Stok Kabel</div>
+          <div id="stockCableTable"></div>
+        </div>
+      </div>
+
+      <div id="historyView" style="display:none;">
+        <div class="panel-card mb-3">
+          <div class="panel-title d-flex justify-content-between align-items-center">
+            <span>History Kabel</span>
+            <div class="btn-group btn-group-sm" role="group" id="historyTabs">
+              <button type="button" class="tab-btn active" data-tab="ready">Ready</button>
+              <button type="button" class="tab-btn" data-tab="close">Close</button>
+            </div>
+          </div>
+          <div id="historyCableTable"></div>
+        </div>
+      </div>
+
+      <div id="sisaView" style="display:none;">
+        <div class="panel-card mb-3">
+          <div class="panel-title d-flex justify-content-between align-items-center">
+            <span>Sisa Kabel</span>
+            <div class="btn-group btn-group-sm" role="group" id="sisaTabs">
+              <button type="button" class="tab-btn active" data-tab="ready">Ready</button>
+              <button type="button" class="tab-btn" data-tab="active">Active</button>
+              <button type="button" class="tab-btn" data-tab="close">Close</button>
+            </div>
+          </div>
+          <div id="sisaCableTable"></div>
+        </div>
+      </div>
+
+      <div id="belanjaView" style="display:none;">
+        <div class="panel-card">
+          <div class="panel-title">History Belanja Kabel</div>
+          <div id="purchaseHistoryTable"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/js/data.js"></script>
+<script src="../../assets/js/common.js"></script>
+<script>
+  window.BASE = "../../";
+  window.ACTIVE_MENU = "asset-kabel";
+</script>
+<script src="../../assets/js/layout.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const filterBranch = document.getElementById("filterBranch");
+  fillBranchSelect(filterBranch);
+
+  const MOCK_STOCK_CABLE = (typeof STOCK_CABLE !== 'undefined' && STOCK_CABLE.length > 0) ? STOCK_CABLE : [
+    { branch: "Temas", kode: "KBL-FO-001", merek: "Furukawa", tipe: "Outdoor", jumlah_core: 24, panjang: 1000, sisa_kabel: 850, harga_meter: 7500, status: "Available" },
+    { branch: "Bumiaji", kode: "KBL-FO-003", merek: "Fiberhome", tipe: "Outdoor", jumlah_core: 12, panjang: 1200, sisa_kabel: 1100, harga_meter: 6000, status: "Available" }
+  ];
+
+  const MOCK_HISTORY_CABLE_READY = (typeof HISTORY_CABLE !== 'undefined' && HISTORY_CABLE.length > 0) ? HISTORY_CABLE.filter(c => c.tipe_transaksi === "Pembelian") : [
+    { branch: "Temas", kabel: "KBL-FO-001", tipe_transaksi: "Pembelian", penggunaan: "Stok Awal", created_at: "2026-01-05" }
+  ];
+
+  const MOCK_HISTORY_CABLE_CLOSE = (typeof HISTORY_CABLE !== 'undefined' && HISTORY_CABLE.length > 0) ? HISTORY_CABLE.filter(c => c.tipe_transaksi !== "Pembelian") : [
+    { branch: "Temas", kabel: "KBL-UTP-002", tipe_transaksi: "Penggunaan", penggunaan: "Instalasi Pelanggan", created_at: "2026-02-15" }
+  ];
+
+  const MOCK_SISA_CABLE_READY = (typeof SISA_KABEL !== 'undefined' && SISA_KABEL.length > 0) ? SISA_KABEL.filter(c => c.status_print === "Printed") : [
+    { branch: "Temas", teknisi: "Andi", kode: "KBL-FO-001-A", merek: "Furukawa", core: 12, start_meter: 0, end_meter: 500, panjang: 500, status_print: "Printed", created_at: "2026-01-10" }
+  ];
+
+  const MOCK_SISA_CABLE_ACTIVE = (typeof SISA_KABEL !== 'undefined' && SISA_KABEL.length > 0) ? SISA_KABEL.filter(c => c.status_print === "Pending").map(c => ({
+    branch: c.branch, created_by: "Supervisor", used_by: c.teknisi, kode: c.kode, merek: c.merek, core: c.core, start_meter: c.start_meter, end_meter: c.end_meter, panjang: c.panjang, created_at: c.created_at
+  })) : [
+    { branch: "Temas", created_by: "Supervisor", used_by: "Teknisi Eko", kode: "KBL-UTP-002-B", merek: "Belden", core: 4, start_meter: 50, end_meter: 100, panjang: 50, created_at: "2026-02-20" }
+  ];
+
+  const MOCK_SISA_CABLE_CLOSE = (typeof SISA_KABEL_CLOSE !== 'undefined' && SISA_KABEL_CLOSE.length > 0) ? SISA_KABEL_CLOSE : [
+    { branch: "Temas", created_by: "Supervisor", used_by: "Teknisi Eko", status: "Selesai", kode: "KBL-UTP-002-A", merek: "Belden", core: 4, start_meter: 0, end_meter: 50, panjang: 50, used_length: 50, remain_length: 0, created_at: "2026-02-18" }
+  ];
+
+  const MOCK_PURCHASE_HISTORY = (typeof PURCHASE_HISTORY !== 'undefined' && PURCHASE_HISTORY.length > 0) ? PURCHASE_HISTORY : [
+    { branch: "Temas", reference: "PO-KBL-001", merek: "Furukawa", total_item: 1, harga_satuan: 7500000, total_harga: 7500000 }
+  ];
+
+  let currentView = "dashboard";
+  let historyTab = "ready";
+  let sisaTab = "ready";
+
+  const stockCableTable = renderSimpleTable({
+    mountId:"stockCableTable",
+    data: MOCK_STOCK_CABLE,
+    columns:[
+      {label:"Branch",key:"branch"},
+      {label:"Kode",key:"kode"},
+      {label:"Merek",key:"merek"},
+      {label:"Tipe",key:"tipe"},
+      {label:"Jumlah Core",key:"jumlah_core"},
+      {label:"Panjang (m)",key:"panjang"},
+      {label:"Sisa (m)",key:"sisa_kabel"},
+      {label:"Harga/m",key:"harga_meter"},
+      {label:"Status",render:r=>badge(r.status)},
+      {label:"Detail",render:r=>`<button class="btn btn-outline-primary btn-sm btn-detail" onclick="alert('Detail ${r.kode} - read only')">Detail</button>`}
+    ],
+    searchKeys:["branch","kode","merek","tipe"]
+  });
+
+  const historyCableReadyTable = renderSimpleTable({
+    mountId:"historyCableTable",
+    data: MOCK_HISTORY_CABLE_READY,
+    columns:[
+      {label:"Branch",key:"branch"},
+      {label:"Kabel",key:"kabel"},
+      {label:"Tipe Transaksi",key:"tipe_transaksi"},
+      {label:"Penggunaan Kabel",key:"penggunaan"},
+      {label:"Tanggal Dibuat",key:"created_at"}
+    ],
+    searchKeys:["branch","kabel","tipe_transaksi"]
+  });
+
+  const historyCableCloseTable = renderSimpleTable({
+    mountId:"historyCableTable",
+    data: MOCK_HISTORY_CABLE_CLOSE,
+    columns:[
+      {label:"Branch",key:"branch"},
+      {label:"Kabel",key:"kabel"},
+      {label:"Tipe Transaksi",key:"tipe_transaksi"},
+      {label:"Penggunaan Kabel",key:"penggunaan"},
+      {label:"Tanggal Dibuat",key:"created_at"}
+    ],
+    searchKeys:["branch","kabel","tipe_transaksi"]
+  });
+
+  const sisaCableReadyTable = renderSimpleTable({
+    mountId:"sisaCableTable",
+    data: MOCK_SISA_CABLE_READY,
+    columns:[
+      {label:"Branch",key:"branch"},
+      {label:"Nama Teknisi",key:"teknisi"},
+      {label:"Kode",key:"kode"},
+      {label:"Merek",key:"merek"},
+      {label:"Core",key:"core"},
+      {label:"Start",key:"start_meter"},
+      {label:"End",key:"end_meter"},
+      {label:"Panjang (m)",key:"panjang"},
+      {label:"Status Print",render:r=>badge(r.status_print)},
+      {label:"Print",render:r=>`<button class="btn btn-outline-secondary btn-sm btn-detail" onclick="alert('Print ${r.kode}')">Print</button>`},
+      {label:"Detail",render:r=>`<button class="btn btn-outline-primary btn-sm btn-detail" onclick="alert('Detail ${r.kode} - read only')">Detail</button>`},
+      {label:"Tanggal Dibuat",key:"created_at"}
+    ],
+    searchKeys:["branch","teknisi","kode","merek"]
+  });
+
+  const sisaCableActiveTable = renderSimpleTable({
+    mountId:"sisaCableTable",
+    data: MOCK_SISA_CABLE_ACTIVE,
+    columns:[
+      {label:"Branch",key:"branch"},
+      {label:"Pembuat",key:"created_by"},
+      {label:"Pengguna",key:"used_by"},
+      {label:"Kode",key:"kode"},
+      {label:"Merek",key:"merek"},
+      {label:"Core",key:"core"},
+      {label:"Start",key:"start_meter"},
+      {label:"End",key:"end_meter"},
+      {label:"Panjang (m)",key:"panjang"},
+      {label:"Tanggal Dibuat",key:"created_at"}
+    ],
+    searchKeys:["branch","created_by","used_by","kode"]
+  });
+
+  const sisaCableCloseTable = renderSimpleTable({
+    mountId:"sisaCableTable",
+    data: MOCK_SISA_CABLE_CLOSE,
+    columns:[
+      {label:"Branch",key:"branch"},
+      {label:"Pembuat",key:"created_by"},
+      {label:"Pengguna",key:"used_by"},
+      {label:"Status Pemakaian",render:r=>badge(r.status)},
+      {label:"Kode",key:"kode"},
+      {label:"Merek",key:"merek"},
+      {label:"Core",key:"core"},
+      {label:"Start",key:"start_meter"},
+      {label:"End",key:"end_meter"},
+      {label:"Panjang (m)",key:"panjang"},
+      {label:"Terpakai (m)",key:"used_length"},
+      {label:"Tidak Terpakai (m)",key:"remain_length"},
+      {label:"Tanggal Dibuat",key:"created_at"}
+    ],
+    searchKeys:["branch","created_by","used_by","kode"]
+  });
+
+  const purchaseHistoryTable = renderSimpleTable({
+    mountId:"purchaseHistoryTable",
+    data: MOCK_PURCHASE_HISTORY,
+    columns:[
+      {label:"Branch",key:"branch"},
+      {label:"Reff",key:"reference"},
+      {label:"Merek",key:"merek"},
+      {label:"Total Item",key:"total_item"},
+      {label:"Harga Satuan",key:"harga_satuan"},
+      {label:"Total Harga",key:"total_harga"},
+      {label:"Print",render:r=>`<button class="btn btn-outline-secondary btn-sm btn-detail" onclick="alert('Print ${r.reference}')">Print</button>`}
+    ],
+    searchKeys:["branch","reference","merek"]
+  });
+
+  function updateKPIs() {
+    const branch = filterBranch.value;
+    const filteredStock = MOCK_STOCK_CABLE.filter(r => !branch || r.branch === branch);
+    const hasbelOpen = filteredStock.filter(r => r.status === "Available").length;
+    const hasbelReady = filteredStock.filter(r => r.status !== "Available").length; // Placeholder for actual logic
+
+    document.getElementById("kpiHasbelOpen").textContent = hasbelOpen;
+    document.getElementById("kpiHasbelReady").textContent = hasbelReady;
+  }
+
+  function renderView() {
+    document.getElementById("dashboardView").style.display = "none";
+    document.getElementById("historyView").style.display = "none";
+    document.getElementById("sisaView").style.display = "none";
+    document.getElementById("belanjaView").style.display = "none";
+
+    document.querySelectorAll("#cableCardMenu .card-menu").forEach(card => card.classList.remove("border-primary"));
+    const activeCard = document.querySelector(`#cableCardMenu .card-menu[data-view="${currentView}"]`);
+    if (activeCard) activeCard.classList.add("border-primary");
+
+    const branch = filterBranch.value;
+    const filterFn = r => !branch || r.branch === branch;
+
+    switch (currentView) {
+      case "dashboard":
+        document.getElementById("dashboardView").style.display = "block";
+        stockCableTable.setFilter(filterFn);
+        updateKPIs();
+        break;
+      case "history":
+        document.getElementById("historyView").style.display = "block";
+        document.querySelectorAll("#historyTabs button").forEach(b => b.classList.remove("active"));
+        document.querySelector(`#historyTabs button[data-tab="${historyTab}"]`).classList.add("active");
+        if (historyTab === "ready") {
+          historyCableReadyTable.setFilter(filterFn);
+          historyCableReadyTable.redraw();
+        } else {
+          historyCableCloseTable.setFilter(filterFn);
+          historyCableCloseTable.redraw();
+        }
+        break;
+      case "sisa":
+        document.getElementById("sisaView").style.display = "block";
+        document.querySelectorAll("#sisaTabs button").forEach(b => b.classList.remove("active"));
+        document.querySelector(`#sisaTabs button[data-tab="${sisaTab}"]`).classList.add("active");
+        if (sisaTab === "ready") {
+          sisaCableReadyTable.setFilter(filterFn);
+          sisaCableReadyTable.redraw();
+        } else if (sisaTab === "active") {
+          sisaCableActiveTable.setFilter(filterFn);
+          sisaCableActiveTable.redraw();
+        } else {
+          sisaCableCloseTable.setFilter(filterFn);
+          sisaCableCloseTable.redraw();
+        }
+        break;
+      case "belanja":
+        document.getElementById("belanjaView").style.display = "block";
+        purchaseHistoryTable.setFilter(filterFn);
+        break;
+    }
+  }
+
+  document.querySelectorAll("#cableCardMenu .card-menu").forEach(el => {
+    el.addEventListener("click", e => {
+      e.preventDefault();
+      currentView = el.dataset.view;
+      renderView();
+    });
+  });
+
+  document.getElementById("historyTabs").addEventListener("click", e => {
+    const btn = e.target.closest("button[data-tab]");
+    if (!btn) return;
+    historyTab = btn.dataset.tab;
+    renderView();
+  });
+
+  document.getElementById("sisaTabs").addEventListener("click", e => {
+    const btn = e.target.closest("button[data-tab]");
+    if (!btn) return;
+    sisaTab = btn.dataset.tab;
+    renderView();
+  });
+
+  filterBranch.addEventListener("change", renderView);
+  renderView();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monitoring Perangkat | Modul Implementasi Asset</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+<style>
+  .card-menu { transition: transform .15s ease, box-shadow .15s ease; cursor: pointer; }
+  .card-menu:hover { transform: translateY(-2px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15); }
+  .tab-btn { background: #f8f9fa; border: 1px solid #dee2e6; }
+  .tab-btn.active { background: #2778c4; color: #fff; border-color: #2778c4; }
+  .kpi-card-mono { background: linear-gradient(135deg, #1b1e21 0%, #343a40 50%, #f8f9fa 100%); color: #fff; border-radius: .5rem; }
+  .table thead th { background: #f8f9fa; font-weight: 600; }
+  .btn-detail { font-size: .75rem; padding: .2rem .5rem; }
+</style>
+</head>
+<body>
+<div id="app-navbar"></div>
+<div class="container-fluid">
+  <div class="row">
+    <div id="app-sidebar"></div>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+      <div class="pt-3 pb-2 mb-3 border-bottom">
+        <div class="page-breadcrumb">
+          <a href="../../index.html">Dashboard</a><span class="sep">/</span>
+          <a href="./index.html">Modul Implementasi Asset</a><span class="sep">/</span>
+          <span class="text-dark">Monitoring Perangkat</span>
+        </div>
+        <h1 class="h2 mb-0">Monitoring Perangkat</h1>
+        <p class="text-muted mb-0">Monitoring kondisi perangkat jaringan utama di seluruh branch regional (read-only).</p>
+      </div>
+
+      <div class="filter-bar mb-3">
+        <div class="row g-2 align-items-end">
+          <div class="col-6 col-md-3">
+            <label class="form-label mb-1">Branch</label>
+            <select id="filterBranch" class="form-select form-select-sm"></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-card mb-3">
+        <div class="panel-title">Menu Monitoring Perangkat</div>
+        <div class="row g-3" id="deviceCardMenu">
+          <div class="col-6 col-md-4">
+            <a href="#" class="card-menu card h-100 text-decoration-none" data-view="router">
+              <div class="card-body text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mb-2 text-primary"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                <h6 class="mb-1">List Router</h6>
+                <p class="text-muted small mb-0">Router, VLAN Router</p>
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-4">
+            <a href="#" class="card-menu card h-100 text-decoration-none" data-view="olt">
+              <div class="card-body text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mb-2 text-primary"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                <h6 class="mb-1">List OLT</h6>
+                <p class="text-muted small mb-0">Daftar OLT regional</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div id="routerView" style="display:none;">
+        <div class="panel-card mb-3">
+          <div class="panel-title d-flex justify-content-between align-items-center">
+            <span>List Router</span>
+            <div class="btn-group btn-group-sm" role="group" id="routerTabs">
+              <button type="button" class="tab-btn active" data-tab="router">Router</button>
+              <button type="button" class="tab-btn" data-tab="vlan">VLAN Router</button>
+            </div>
+          </div>
+          <div id="routerTable"></div>
+        </div>
+      </div>
+
+      <div id="oltView" style="display:none;">
+        <div class="panel-card">
+          <div class="panel-title">List OLT</div>
+          <div id="oltTable"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/js/data.js"></script>
+<script src="../../assets/js/common.js"></script>
+<script>
+  window.BASE = "../../";
+  window.ACTIVE_MENU = "asset-perangkat";
+</script>
+<script src="../../assets/js/layout.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const filterBranch = document.getElementById("filterBranch");
+  fillBranchSelect(filterBranch);
+
+  const MOCK_ROUTER = (typeof ROUTERS !== 'undefined' && ROUTERS.length > 0) ? ROUTERS.map(r => ({
+    branch: r.branch, datacenter: r.datacenter, router: r.router, oltRemote: r.oltRemote,
+    ip: r.ip_address, snmpPort: r.snmp_port, totalVlan: r.total_vlan,
+    totalOlt: r.total_olt, totalPortOlt: r.total_port_olt
+  })) : [
+    {branch:"Temas",datacenter:"DC Malang",router:"RT-01",oltRemote:"OLT-001",ip:"10.10.1.1",snmpPort:161,totalVlan:45,totalOlt:4,totalPortOlt:64},
+    {branch:"Bumiaji",datacenter:"DC Malang",router:"RT-03",oltRemote:"OLT-003",ip:"10.10.2.1",snmpPort:161,totalVlan:52,totalOlt:5,totalPortOlt:80},
+    {branch:"Dau",datacenter:"DC Malang",router:"RT-05",oltRemote:"OLT-005",ip:"10.10.3.1",snmpPort:161,totalVlan:33,totalOlt:3,totalPortOlt:48},
+    {branch:"Karangploso",datacenter:"DC Malang",router:"RT-06",oltRemote:"OLT-006",ip:"10.10.4.1",snmpPort:161,totalVlan:29,totalOlt:2,totalPortOlt:32},
+    {branch:"Singosari",datacenter:"DC Malang",router:"RT-07",oltRemote:"OLT-007",ip:"10.10.5.1",snmpPort:161,totalVlan:47,totalOlt:4,totalPortOlt:64},
+  ];
+
+  const MOCK_VLAN = (typeof VLANS !== 'undefined' && VLANS.length > 0) ? VLANS.map(r => ({
+    branch: r.branch, datacenter: r.datacenter || 'DC Malang', router: r.router,
+    vlanPppoe: r.vlan_pppoe, vlanHotspot: r.vlan_hotspot
+  })) : [
+    {branch:"Temas",datacenter:"DC Malang",router:"RT-01",vlanPppoe:"100-110",vlanHotspot:"200-205"},
+    {branch:"Bumiaji",datacenter:"DC Malang",router:"RT-03",vlanPppoe:"121-135",vlanHotspot:"211-220"},
+    {branch:"Dau",datacenter:"DC Malang",router:"RT-05",vlanPppoe:"146-155",vlanHotspot:"226-230"},
+  ];
+
+  const MOCK_OLT = (typeof OLTS !== 'undefined' && OLTS.length > 0) ? OLTS.map(r => ({
+    branch: r.branch, olt: r.olt, port: r.port, status: r.status
+  })) : [
+    {branch:"Temas",olt:"OLT-001",port:16,status:"Aktif"},
+    {branch:"Bumiaji",olt:"OLT-003",port:16,status:"Aktif"},
+    {branch:"Dau",olt:"OLT-005",port:16,status:"Aktif"},
+  ];
+
+  let currentView = "router";
+  let currentTab = "router";
+
+  const routerTable = renderSimpleTable({
+    mountId:"routerTable",
+    data: MOCK_ROUTER,
+    columns:[
+      {label:"Datacenter",key:"datacenter"},
+      {label:"Router",key:"router"},
+      {label:"OLT Remote",key:"oltRemote"},
+      {label:"IP Address",key:"ip"},
+      {label:"Port SNMP",key:"snmpPort"},
+      {label:"Total VLAN",key:"totalVlan"},
+      {label:"Total OLT",key:"totalOlt"},
+      {label:"Total Port OLT",key:"totalPortOlt"},
+      {label:"Detail",render:r=>`<button class="btn btn-outline-primary btn-sm btn-detail" onclick="alert('Detail ${r.router} - read only')">Detail</button>`}
+    ],
+    searchKeys:["datacenter","router","oltRemote","ip"]
+  });
+
+  const vlanTable = renderSimpleTable({
+    mountId:"routerTable",
+    data: MOCK_VLAN,
+    columns:[
+      {label:"Datacenter",key:"datacenter"},
+      {label:"Router",key:"router"},
+      {label:"VLAN PPPoE",key:"vlanPppoe"},
+      {label:"VLAN Hotspot",key:"vlanHotspot"}
+    ],
+    searchKeys:["datacenter","router","vlanPppoe","vlanHotspot"]
+  });
+
+  const oltTable = renderSimpleTable({
+    mountId:"oltTable",
+    data: MOCK_OLT,
+    columns:[
+      {label:"Branch",key:"branch"},
+      {label:"OLT",key:"olt"},
+      {label:"Port",key:"port"},
+      {label:"Status",render:r=>`<span class="badge ${r.status==='Aktif'?'bg-success':'bg-secondary'}">${r.status}</span>`}
+    ],
+    searchKeys:["branch","olt"]
+  });
+
+  function applyFilter(){
+    const b = filterBranch.value;
+    if(currentView==="router"){
+      if(currentTab==="router") routerTable.setFilter(r=>!b||r.branch===b);
+      else vlanTable.setFilter(r=>!b||r.branch===b);
+    }else{
+      oltTable.setFilter(r=>!b||r.branch===b);
+    }
+  }
+
+  filterBranch.addEventListener("change", applyFilter);
+
+  document.querySelectorAll("[data-view]").forEach(el=>{
+    el.addEventListener("click",e=>{
+      e.preventDefault();
+      currentView=el.dataset.view;
+      document.getElementById("routerView").style.display=currentView==="router"?"block":"none";
+      document.getElementById("oltView").style.display=currentView==="olt"?"block":"none";
+      document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("border-primary"));
+      el.classList.add("border-primary");
+      applyFilter();
+    });
+  });
+
+  document.getElementById("routerTabs").addEventListener("click",e=>{
+    const btn=e.target.closest("button[data-tab]");
+    if(!btn) return;
+    currentTab=btn.dataset.tab;
+    document.querySelectorAll("#routerTabs button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    if(currentTab==="router") routerTable.redraw();
+    else vlanTable.redraw();
+    applyFilter();
+  });
+
+  applyFilter();
+});
+</script>
+</body>
+</html>

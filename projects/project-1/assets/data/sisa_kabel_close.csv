@@ -1,0 +1,3 @@
+id,branch,created_by,used_by,status,kode,merek,core,start_meter,end_meter,panjang,used_length,remain_length,created_at
+1,Temas,Supervisor,Andi,Selesai,KBL-UTP-002-A,Belden,4,0,50,50,50,0,2026-02-18
+2,Dau,Supervisor,Galih,Dibatalkan,KBL-UTP-004-B,Panduit,8,0,10,10,0,10,2026-03-22

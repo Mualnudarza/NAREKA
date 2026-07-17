@@ -1,0 +1,11 @@
+id,branch,olt,port,status
+1,Temas,OLT-001,16,Aktif
+2,Temas,OLT-002,16,Aktif
+3,Bumiaji,OLT-003,16,Aktif
+4,Bumiaji,OLT-004,16,Aktif
+5,Dau,OLT-005,16,Aktif
+6,Karangploso,OLT-006,16,Aktif
+7,Singosari,OLT-007,16,Aktif
+8,Lawang,OLT-008,16,Aktif
+9,Pakis,OLT-009,16,Aktif
+10,Jabung,OLT-010,16,Aktif

@@ -1,0 +1,6 @@
+id,branch,kode,merek,tipe,jumlah_core,panjang,sisa_kabel,harga_meter,status
+1,Temas,KBL-FO-001,Furukawa,Outdoor,24,1000,850,7500,Available
+2,Temas,KBL-UTP-002,Belden,Indoor,8,300,150,3000,Low Stock
+3,Bumiaji,KBL-FO-003,Fiberhome,Outdoor,12,1200,1100,6000,Available
+4,Dau,KBL-UTP-004,Panduit,Indoor,8,200,50,4000,Critical
+5,Karangploso,KBL-FO-005,Furukawa,Outdoor,48,1500,1450,9000,Available
