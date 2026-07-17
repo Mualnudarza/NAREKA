@@ -18,7 +18,7 @@
 const PROJECTS = [
   {
     code: "PRJ-01",              // kode unik, tampil seperti nomor penerbangan
-    title: "Landing Page Kedai Kopi",
+    title: "Prototype BRD-SPVR",  // judul proyek, tampil di atas tiket
     from: "Konsep",              // titik kiri di garis rute tiket
     to: "Demo",                  // titik kanan di garis rute tiket
     badge: "HTML · CSS · JS",    // badge kuning di tengah (pengganti durasi)
@@ -26,7 +26,7 @@ const PROJECTS = [
     date: "12/05/2024",
     tools: "HTML, CSS, JS",
     status: "Selesai",
-    link: "projects/project-1/index.html"
+    link: "projects/BRD-SPVR/index.html"
   },
   {
     code: "PRJ-02",
