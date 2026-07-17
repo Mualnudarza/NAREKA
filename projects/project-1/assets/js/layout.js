@@ -53,7 +53,6 @@ function renderLayout() {
                 ${heading("Operational &amp; Technical")}
                 ${item("pages/operational/psb.html", "op-psb", "chevrons-right", "Modul Operasional &amp; Teknis")}
                 ${heading("Monitoring Infrastruktur")}
-                ${item("pages/infra-monitoring/index.html", "infra-monitoring", "layers", "Modul Monitoring")}
                 <div class="ms-3">
                   ${item("pages/infra-monitoring/monitor-odp.html", "infra-monitoring-odp", "monitor", "Monitor ODP")}
                   ${item("pages/infra-monitoring/list-area-splitter.html", "infra-monitoring-splitter-area", "list", "List Area Splitter")}
