@@ -23,7 +23,7 @@
           <span class="text-dark">Customer Retention</span>
         </div>
         <h1 class="h2 mb-0">Monitoring Customer Regional (Retention)</h1>
-        <p class="text-muted mb-0">Monitoring kondisi Customer Aktif, Isolir, dan Terminate pada seluruh branch regional untuk mengendalikan risiko penurunan pelanggan.</p>
+        <p class="text-muted mb-0">Monitoring kondisi Customer Isolir dan Terminate pada seluruh branch regional untuk mengendalikan risiko penurunan pelanggan.</p>
       </div>
 
       <div class="filter-bar">
@@ -79,10 +79,9 @@
 
       <div class="panel-card">
         <div class="panel-title">
-          <span>Daftar Customer</span>
+          <span>Daftar Customer Isolir & Terminate</span>
           <div class="btn-group btn-group-sm" role="group" id="statusTabs">
             <button type="button" class="btn btn-outline-primary active" data-status="all">Semua</button>
-            <button type="button" class="btn btn-outline-primary" data-status="Aktif">Aktif</button>
             <button type="button" class="btn btn-outline-primary" data-status="Isolir">Isolir</button>
             <button type="button" class="btn btn-outline-primary" data-status="Terminate">Terminate</button>
           </div>
@@ -94,7 +93,6 @@
   </div>
 </div>
 
-<!-- Modal Detail Customer -->
 <div class="modal fade" id="custModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -112,13 +110,13 @@
             <div id="custDetailRows"></div>
           </div>
           <div class="tab-pane fade" id="tabAnalisa">
-            <p class="text-muted small">Tab Analisa menampilkan riwayat penggunaan layanan &amp; catatan tim retention (mengikuti tampilan existing ERP).</p>
+            <p class="text-muted small">Tab Analisa menampilkan riwayat penggunaan layanan & catatan tim retention (mengikuti tampilan existing ERP).</p>
             <canvas id="custUsageChart" height="140"></canvas>
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <span class="text-muted small me-auto">Halaman ini merepresentasikan tampilan Tab Data Customer &amp; Tab Analisa existing ERP (read-only).</span>
+        <span class="text-muted small me-auto">Halaman ini merepresentasikan tampilan Tab Data Customer & Tab Analisa existing ERP (read-only).</span>
         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
       </div>
     </div>
@@ -134,7 +132,6 @@
 </script>
 <script src="../../assets/js/layout.js"></script>
 <script>
-  // Helper to parse date strings like '01-Jan-26'
   const MONTHS = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
   function parseDate(str) {
     const p = str.split('-');
@@ -153,42 +150,41 @@ document.addEventListener("DOMContentLoaded", () => {
   let trendChartInstance = null;
   let currentStatusFilter = "all";
 
-  function getFilteredCustomers() {
+  // Base filter: branch + month/year (no status filter for KPI & chart)
+  function getBaseFiltered() {
     const branch = document.getElementById("filterBranch").value;
     const monthIdx = parseInt(filterBulan.value, 10);
     const year = document.getElementById("filterTahun").value;
-    const monthStr = monthNames[monthIdx];
     const yearSuffix = year.slice(-2);
 
     return CUSTOMER_DATA.filter(c => {
       if (branch && c.branch !== branch) return false;
-      // Filter by month and year from subscribe_date
       const subDate = parseDate(c.subscribe_date);
-      if (!subDate || subDate.getMonth() !== monthIdx || String(subDate.getFullYear()).slice(-2) !== yearSuffix) {
-        return false;
-      }
-      // Apply status filter if selected
-      if (currentStatusFilter !== "all" && c.status !== currentStatusFilter) return false;
-      return true;
+      if (!subDate || subDate.getMonth() !== monthIdx || String(subDate.getFullYear()).slice(-2) !== yearSuffix) return false;
+      return c.status !== "Fasum"; // Exclude Fasum from retention analysis
     });
   }
 
+  // Table filter: base + status (only Isolir/Terminate)
+  function getTableFiltered() {
+    const base = getBaseFiltered();
+    if (currentStatusFilter === "all") return base.filter(c => c.status === "Isolir" || c.status === "Terminate");
+    return base.filter(c => c.status === currentStatusFilter);
+  }
+
   function updateDashboard() {
-    const filteredCustomers = getFilteredCustomers();
+    const base = getBaseFiltered();
 
-    const activeCount = filteredCustomers.filter(c => c.status === "Aktif").length;
-    const isolirCount = filteredCustomers.filter(c => c.status === "Isolir").length;
-    const terminateCount = filteredCustomers.filter(c => c.status === "Terminate").length;
+    const activeCount = base.filter(c => c.status === "Aktif").length;
+    const isolirCount = base.filter(c => c.status === "Isolir").length;
+    const terminateCount = base.filter(c => c.status === "Terminate").length;
 
-    document.getElementById("kpiTotal").textContent = filteredCustomers.length;
+    document.getElementById("kpiTotal").textContent = base.length;
     document.getElementById("kpiAktif").textContent = activeCount;
     document.getElementById("kpiIsolir").textContent = isolirCount;
     document.getElementById("kpiTerminate").textContent = terminateCount;
 
-    // Update Trend Chart
-    const trendData = []; // Placeholder for actual trend data
-    // For now, we'll use dummy data simulating monthly trends.
-    // In a real app, this would involve complex data aggregation.
+    // Trend Chart (dummy)
     const dummyTrendData = {
       labels: ["Jan","Feb","Mar","Apr","Mei","Jun"],
       datasets: [
@@ -202,22 +198,17 @@ document.addEventListener("DOMContentLoaded", () => {
     trendChartInstance = new Chart(trendCtx, {
       type: "line",
       data: dummyTrendData,
-      options: {
-        maintainAspectRatio: false,
-        plugins: { legend: { position: "bottom" } },
-        scales: { y: { beginAtZero: true } }
-      }
+      options: { maintainAspectRatio: false, plugins: { legend: { position: "bottom" } }, scales: { y: { beginAtZero: true } } }
     });
 
-    // Update Customer Table
-    table.setFilter(getFilteredCustomers);
+    table.setFilter(getTableFiltered);
   }
 
   const table = renderSimpleTable({
     mountId: "customerTable",
     data: CUSTOMER_DATA,
     searchKeys: ["customer_name", "phone", "package", "pppoe_secret"],
-    filterFn: getFilteredCustomers,
+    filterFn: getTableFiltered,
     columns: [
       {label:"Branch", key:"branch"},
       {label:"Nama Customer", key:"customer_name"},
@@ -244,7 +235,6 @@ document.addEventListener("DOMContentLoaded", () => {
     updateDashboard();
   });
 
-  // Modal Detail Customer Logic
   let usageChartInstance = null;
   document.getElementById("customerTable").addEventListener("click", (e) => {
     const btn = e.target.closest(".btn-detail");
@@ -262,17 +252,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (usageChartInstance) usageChartInstance.destroy();
     usageChartInstance = new Chart(document.getElementById("custUsageChart"), {
       type: "line",
-      data: {
-        labels: ["Jan","Feb","Mar","Apr","Mei","Jun"],
-        // Dummy data for usage trend, replace with actual data if available
-        datasets: [{ label: "Pemakaian (GB)", data: [40,55,48,60,52,58], borderColor:"#2778c4", tension:.3 }]
-      },
+      data: { labels: ["Jan","Feb","Mar","Apr","Mei","Jun"], datasets: [{ label: "Pemakaian (GB)", data: [40,55,48,60,52,58], borderColor:"#2778c4", tension:.3 }] },
       options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
     });
     new bootstrap.Modal(document.getElementById("custModal")).show();
   });
 
-  updateDashboard(); // Initial load
+  updateDashboard();
 });
 </script>
 </body>
