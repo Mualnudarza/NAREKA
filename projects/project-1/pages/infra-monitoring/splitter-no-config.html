@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Splitter No Config | GriyaNet ERP</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+<div id="app-navbar"></div>
+<div class="container-fluid">
+  <div class="row">
+    <div id="app-sidebar"></div>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+      <div class="pt-3 pb-2 mb-3 border-bottom">
+        <div class="page-breadcrumb">
+          <a href="../../index.html">Dashboard</a><span class="sep">/</span>
+          <a href="./index.html">Monitoring Infrastruktur Jaringan</a><span class="sep">/</span>
+          <span class="text-dark">Splitter No Config</span>
+        </div>
+        <h1 class="h2 mb-0">Splitter No Config</h1>
+        <p class="text-muted mb-0">Daftar splitter yang belum terkonfigurasi.</p>
+      </div>
+
+      <div class="filter-bar">
+        <div class="row g-2 align-items-end">
+          <div class="col-6 col-md-3">
+            <label class="form-label mb-1">Branch</label>
+            <select id="filterBranch" class="form-select form-select-sm"></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-title d-flex justify-content-between align-items-center">
+          <span>Data Splitter No Config</span>
+          <span class="badge bg-secondary" id="totalSplitters" style="font-size:0.9rem;">Total: 0</span>
+        </div>
+        <div id="splitterNoConfigTable"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/js/data.js"></script>
+<script src="../../assets/js/common.js"></script>
+<script>
+  window.BASE = "../../";
+  window.ACTIVE_MENU = "infra-monitoring-splitter-noconfig";
+</script>
+<script src="../../assets/js/layout.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const filterBranch = document.getElementById("filterBranch");
+    fillBranchSelect(filterBranch);
+
+    const WAITLIST_MOCKS = WAITLIST_DISTRIBUTION.map((w, i) => ({
+      ...w,
+      number: i + 1,
+      area: w.area || `AR-${i}`,
+      typeSplitter: w.type_splitter || "1:8",
+      kode: w.kode || `SPL-NC-${100 + i}`
+    }));
+
+    const tableOpts = {
+      data: WAITLIST_MOCKS,
+      columns: [
+        { key: "number", label: "#" },
+        { key: "branch", label: "Branch" },
+        { key: "area", label: "Area" },
+        { key: "typeSplitter", label: "Type Splitter" },
+        { key: "kode", label: "Kode" }
+      ],
+      mountId: "splitterNoConfigTable"
+    };
+
+    let splitterNoConfigTable = renderSimpleTable(tableOpts);
+
+    function updateTable(){
+      const branch = filterBranch.value;
+      splitterNoConfigTable.setFilter(r => !branch || r.branch === branch);
+      
+      const filteredCount = WAITLIST_MOCKS.filter(r => !branch || r.branch === branch).length;
+      document.getElementById("totalSplitters").textContent = `Total: ${filteredCount}`;
+    }
+
+    filterBranch.addEventListener("change", updateTable);
+    updateTable();
+  });
+</script>
+</body>
+</html>

@@ -127,7 +127,6 @@ document.addEventListener("DOMContentLoaded", () => {
     distribution(){
       const wo = WO_DISTRIBUTION.filter(byBranch);
       viewMount.innerHTML = kpi([["Splitter Belum Terkonfigurasi",WAITLIST_DISTRIBUTION.length],["Progress Konfigurasi",wo.filter(r=>r.status==="Dalam Proses").length],["Splitter Ready To WO",wo.filter(r=>r.status==="Selesai").length],["WO Distribution",wo.length]]) +
-        `<div class="panel-card"><div class="panel-title">Card Menu Monitoring Infrastruktur</div><div class="row g-3">${["Monitor ODP","List Area Splitter","Splitter No Config","Progress Konfigurasi","Map Access"].map(n=>`<div class="col-6 col-md"><a href="#" class="infra-nav-card"><div class="infra-title">${n}</div><div class="infra-desc">Read-only ERP</div></a></div>`).join("")}</div></div>` +
         `<div class="panel-card" id="dt-wo"></div>` +
         `<div class="panel-card" id="dt-wl"></div>`;
       renderFilteredTable("dt-wo",{title:"Tabel WO Distribution Aktif",data:wo,statuses:["Dalam Proses","Selesai","Pending"],searchKeys:["area","kode","katim"],
