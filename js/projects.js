@@ -12,39 +12,14 @@
 	 * ========================================================================= */
 	window.projectsData = [
 		{
-			name: "Project One",
-			desc: "Deskripsi singkat mengenai project ini.",
-			path: "projects/project-1/index.html"
+			name: "AHP - Analytic Hierarchy Process",
+			desc: "Perhitungan AHP untuk menentukan prioritas alternatif berdasarkan kriteria yang telah ditentukan.",
+			path: "projects/AHP/index.html"
 		},
 		{
-			name: "Project Two",
-			desc: "Deskripsi singkat mengenai project ini.",
-			path: "projects/project-2/index.html"
-		},
-		{
-			name: "Project Three",
-			desc: "Deskripsi singkat mengenai project ini.",
-			path: "projects/project-3/index.html"
-		},
-		{
-			name: "Project Three",
-			desc: "Deskripsi singkat mengenai project ini.",
-			path: "projects/project-3/index.html"
-		},
-		{
-			name: "Project Three",
-			desc: "Deskripsi singkat mengenai project ini.",
-			path: "projects/project-3/index.html"
-		},
-		{
-			name: "Project Three",
-			desc: "Deskripsi singkat mengenai project ini.",
-			path: "projects/project-3/index.html"
-		},
-		{
-			name: "Project Three",
-			desc: "Deskripsi singkat mengenai project ini.",
-			path: "projects/project-3/index.html"
+			name: "ERP - SPVR",
+			desc: "Prototype ERP untuk SPVR (Supervisor Regional) yang digunakan untuk memantau kinerja dan laporan dari berbagai cabang.",
+			path: "projects/ERP-SPVR/index.html"
 		},
 	];
 	/* ========================================================================= */
