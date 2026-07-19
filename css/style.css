@@ -2,16 +2,18 @@
 /* ================= Projects Section (new, consistent with intro->main scroll mechanism) ================= */
 .content-projects{position:fixed;top:0;left:0;width:100%;height:100vh;background:#ffffff;color:#1a1a1a;z-index:2;display:flex;align-items:center;justify-content:center;transform:translateY(100vh);opacity:0;will-change:transform,opacity;overflow:hidden}
 .projects-inner{width:92%;max-width:1600px;padding:0 20px;text-align:center}
-.projects-heading{font-family:"Comic Sans MS","Helvetica Neue","Microsoft Yahei",-apple-system,sans-serif;font-size:2.4rem;font-weight:300;color:#1a1a1a;margin:0 0 2rem;letter-spacing:2px}
-.projects-viewport{width:100%;overflow:hidden;padding:20px 0;cursor:url(https://cdn.jsdelivr.net/gh/SimonAKing/images/blog/default.cur),auto!important;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 90px,#000 calc(100% - 90px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 90px,#000 calc(100% - 90px),transparent 100%)}
+.projects-heading{font-family:"Comic Sans MS","Helvetica Neue","Microsoft Yahei",-apple-system,sans-serif;font-size:2rem;font-weight:300;color:#1a1a1a;margin:0 0 1.8rem;letter-spacing:2px}
+.projects-groups{display:flex;flex-direction:column;gap:38px;width:100%}
+.projects-group-title{font-family:"Comic Sans MS","Helvetica Neue","Microsoft Yahei",-apple-system,sans-serif;font-size:.95rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#1a1a1a;margin:0 0 14px;padding-left:90px;text-align:left}
+.projects-viewport{width:100%;overflow:hidden;padding:14px 0;cursor:url(https://cdn.jsdelivr.net/gh/SimonAKing/images/blog/default.cur),auto!important;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 90px,#000 calc(100% - 90px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 90px,#000 calc(100% - 90px),transparent 100%)}
 .projects-track{display:flex;list-style:none;margin:0;padding:0 90px;transition:transform .18s ease-out;will-change:transform}
-.project-item{flex:0 0 260px;margin-right:26px;background:#f7f7f7;border:1px solid #e2e2e2;border-radius:12px;padding:30px 24px;text-align:left;transition:box-shadow .3s ease,transform .3s ease}
+.project-item{flex:0 0 260px;margin-right:26px;background:#f7f7f7;border:1px solid #e2e2e2;border-radius:12px;padding:24px 22px;text-align:left;transition:box-shadow .3s ease,transform .3s ease}
 .project-item:hover{box-shadow:0 10px 30px rgba(0,0,0,.08);transform:translateY(-4px)}
-.project-index{display:block;font-size:.75rem;letter-spacing:2px;color:#999;margin-bottom:12px}
-.project-name{font-size:1.2rem;font-weight:600;color:#1a1a1a;margin:0 0 10px}
-.project-desc{font-size:.85rem;color:#666;line-height:1.5;margin:0 0 18px;min-height:40px}
-.project-link{display:inline-block;font-size:.8rem;letter-spacing:1px;color:#1a1a1a;border-bottom:1px solid #1a1a1a;padding-bottom:2px;cursor:url(https://cdn.jsdelivr.net/gh/SimonAKing/images/blog/pointer.cur),auto!important}
+.project-index{display:block;font-size:.72rem;letter-spacing:2px;color:#999;margin-bottom:10px}
+.project-name{font-size:1.05rem;font-weight:600;color:#1a1a1a;margin:0 0 8px;line-height:1.3}
+.project-desc{font-size:.8rem;color:#666;line-height:1.5;margin:0 0 14px;min-height:34px}
+.project-link{display:inline-block;font-size:.78rem;letter-spacing:1px;color:#1a1a1a;border-bottom:1px solid #1a1a1a;padding-bottom:2px;cursor:url(https://cdn.jsdelivr.net/gh/SimonAKing/images/blog/pointer.cur),auto!important}
 .project-link:hover{color:#5f5f5f;border-color:#5f5f5f}
-.projects-hint{margin-top:2rem;font-size:.75rem;letter-spacing:3px;color:#999}
-@media screen and (max-width:900px){.projects-viewport{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 40px,#000 calc(100% - 40px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 40px,#000 calc(100% - 40px),transparent 100%)}.projects-track{padding:0 40px}}
-@media screen and (max-width:540px){.projects-heading{font-size:1.6rem}.project-item{flex:0 0 220px;padding:22px 18px}}
+.projects-hint{margin-top:1.5rem;font-size:.75rem;letter-spacing:3px;color:#999}
+@media screen and (max-width:900px){.projects-viewport{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 40px,#000 calc(100% - 40px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 40px,#000 calc(100% - 40px),transparent 100%)}.projects-track{padding:0 40px}.projects-group-title{padding-left:40px}}
+@media screen and (max-width:540px){.projects-heading{font-size:1.4rem}.projects-groups{gap:26px}.project-item{flex:0 0 220px;padding:18px 16px}.project-desc{min-height:0}}
