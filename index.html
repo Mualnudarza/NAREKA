@@ -105,6 +105,15 @@
 				</div>
 			</div><canvas class="grid-background" id="gridCanvas"></canvas>
 		</div>
+		<div class="content content-projects">
+			<div class="projects-inner">
+				<h2 class="projects-heading">Projects</h2>
+				<div class="projects-viewport">
+					<ul class="projects-track" id="projectsTrack"></ul>
+				</div>
+				<div class="projects-hint">scroll ↔</div>
+			</div>
+		</div>
 		<script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
 		<script>window.$ = selector => document.querySelector(selector)
 			const getOriginalContent = selector => $(selector).getAttribute("original-content")
@@ -140,6 +149,7 @@
 		</script>
 		<script src="js/main.js"></script>
 		<script src="js/background.js"></script>
+		<script src="js/projects.js"></script>
 		<!-- <script src="https://cdn.jsdelivr.net/gh/SimonAKing/js/log.min.js"></script> -->
 	</main>
 </body>
