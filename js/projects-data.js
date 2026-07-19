@@ -30,7 +30,7 @@ const PROJECTS = [
   },
   {
     code: "PRJ-02",
-    title: "Dashboard Analitik Sederhana",
+    title: "Perbandingan Kriteria",
     from: "Data",
     to: "Chart",
     badge: "JS · Chart.js",
@@ -38,7 +38,7 @@ const PROJECTS = [
     date: "03/08/2024",
     tools: "HTML, CSS, JavaScript",
     status: "Selesai",
-    link: "projects/project-2/index.html"
+    link: "projects/AHP/index.html"
   },
   {
     code: "PRJ-03",
