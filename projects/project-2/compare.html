@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AHP Decision Tool — Bandingkan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="shell shell--narrow">
+
+  <div class="topbar">
+    <div class="brand">
+      <span class="mark">λ</span>
+      <h1>AHP Decision Tool</h1>
+    </div>
+    <div class="steprail">
+      <div class="step is-done"><span class="num">✓</span> Setup</div>
+      <div class="connector"></div>
+      <div class="step is-active"><span class="num">2</span> Bandingkan</div>
+      <div class="connector"></div>
+      <div class="step"><span class="num">3</span> Hasil</div>
+    </div>
+  </div>
+
+  <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <p class="progress-label" id="progressLabel">Memuat…</p>
+
+  <div class="card">
+    <h2 id="taskTitle">—</h2>
+    <p class="hint" id="taskHint"></p>
+
+    <div id="widgetMount"></div>
+
+    <div class="consistency-box no-print" id="consistencyBox" style="display:none;">
+      <div class="metrics">
+        <span>λmax: <b id="metricLambda">–</b></span>
+        <span>CI: <b id="metricCI">–</b></span>
+        <span>CR: <b id="metricCR">–</b></span>
+      </div>
+      <span class="badge" id="consistencyBadge">–</span>
+    </div>
+  </div>
+
+  <div class="btn-row justify">
+    <button class="btn" id="prevBtn">← Sebelumnya</button>
+    <button class="btn btn-primary" id="nextBtn" style="padding:11px 22px;">Lanjut →</button>
+  </div>
+
+  <p class="foot-note">Tips: kalau CR di atas 0.1, hasil masih boleh dilanjutkan — tapi pertimbangkan untuk menyesuaikan lagi penilaiannya supaya lebih konsisten.</p>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/ahp-core.js"></script>
+<script src="js/polygon-widget.js"></script>
+<script src="js/matrix-widget.js"></script>
+<script src="js/compare.js"></script>
+</body>
+</html>
