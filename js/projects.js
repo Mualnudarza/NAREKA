@@ -26,6 +26,11 @@
 					name: "ERP - SPVR",
 					desc: "Prototype ERP untuk SPVR (Supervisor Regional) yang digunakan untuk memantau kinerja dan laporan dari berbagai cabang.",
 					path: "projects/ERP-SPVR/index.html"
+				},
+				{
+					name: "Gdevelop",
+					desc: "Game development project menggunakan Gdevelop.",
+					path: "projects/project-3/index.html"
 				}
 			]
 		},
