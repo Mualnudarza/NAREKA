@@ -5,13 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Customer Aktif | GriyaNet ERP</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../assets/css/style.css">
-<style>
-  .kpi-card.mono { background: linear-gradient(135deg, #1b1e21 0%, #343a40 100%); color: #fff; border-radius: .5rem; height: 100%; padding: 1rem; }
-  .kpi-card.mono .kpi-label { color: rgba(255,255,255,.7); font-size: .8rem; text-transform: uppercase; margin-bottom: .25rem; }
-  .kpi-card.mono .kpi-value { font-size: 1.8rem; font-weight: 700; }
-</style>
 </head>
 <body>
 <div id="app-navbar"></div>
@@ -20,22 +15,19 @@
     <div id="app-sidebar"></div>
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 
-      <div class="pt-3 pb-2 mb-3 border-bottom">
+      <div class="page-header">
         <div class="page-breadcrumb">
           <a href="../../index.html">Dashboard</a><span class="sep">/</span>
           <span>Sales</span><span class="sep">/</span>
           <span class="text-dark">Customer Aktif &amp; Fasum</span>
         </div>
-        <h1 class="h2 mb-0">Monitoring Customer Aktif &amp; Fasum</h1>
-        <p class="text-muted mb-0">Monitoring data Customer Aktif dan Fasilitas Umum (Fasum) pada seluruh branch regional.</p>
+        <h1 class="page-title">Monitoring Customer Aktif &amp; Fasum</h1>
+        <p class="page-description">Monitoring data Customer Aktif dan Fasilitas Umum (Fasum) pada seluruh branch regional.</p>
       </div>
 
       <div class="filter-bar">
         <div class="row g-2 align-items-end">
-          <div class="col-6 col-md-3">
-            <label class="form-label mb-1">Branch</label>
-            <select id="filterBranch" class="form-select form-select-sm"></select>
-          </div>
+
         </div>
       </div>
 
@@ -109,21 +101,20 @@
 <script src="../../assets/js/layout.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  fillBranchSelect(document.getElementById("filterBranch"));
 
   const aktifData = () => CUSTOMER_DATA.filter(c => {
-    if (document.getElementById("filterBranch").value && c.branch !== document.getElementById("filterBranch").value) return false;
+    if (getGlobalBranch() && c.branch !== getGlobalBranch()) return false;
     return c.status === "Aktif";
   });
 
   const fasumData = () => CUSTOMER_DATA.filter(c => {
-    if (document.getElementById("filterBranch").value && c.branch !== document.getElementById("filterBranch").value) return false;
+    if (getGlobalBranch() && c.branch !== getGlobalBranch()) return false;
     return c.status === "Fasum";
   });
 
   function update() {
-    const b = document.getElementById("filterBranch").value;
-    const af = a => !b || a.branch === b;
+    const b = getGlobalBranch();
+    const af = r => !b || r.branch === b;
 
     document.getElementById("kpiAktif").textContent = CUSTOMER_DATA.filter(a => af(a) && a.status === "Aktif").length;
     document.getElementById("kpiFasum").textContent = CUSTOMER_DATA.filter(a => af(a) && a.status === "Fasum").length;
@@ -144,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const aktifTbl = renderSimpleTable({mountId:"aktifTable", data:CUSTOMER_DATA, searchKeys:["customer_name","phone","package","pppoe_secret"], columns:colDefs});
   const fasumTbl = renderSimpleTable({mountId:"fasumTable", data:CUSTOMER_DATA, searchKeys:["customer_name","phone","package","pppoe_secret"], columns:colDefs});
 
-  document.getElementById("filterBranch").addEventListener("change", update);
+  window.addEventListener("globalBranchChange", update);
 
   let usageChartInstance = null;
   document.addEventListener("click", e => {

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Modul Operasional & Teknis | GriyaNet ERP</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body>
@@ -14,16 +14,16 @@
   <div class="row">
     <div id="app-sidebar"></div>
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-      <div class="pt-3 pb-2 mb-3 border-bottom">
+      <div class="page-header">
         <div class="page-breadcrumb"><a href="../../index.html">Dashboard</a><span class="sep">/</span><span>Operational &amp; Technical</span><span class="sep">/</span><span class="text-dark">Quality Control</span></div>
-        <h1 class="h2 mb-0">Modul Operasional &amp; Teknis</h1>
-        <p class="text-muted mb-0">Pusat monitoring read-only untuk PSB, TSO, Dismantle, dan Distribution regional.</p>
+        <h1 class="page-title">Modul Operasional &amp; Teknis</h1>
+        <p class="page-description">Pusat monitoring read-only untuk PSB, TSO, Dismantle, dan Distribution regional.</p>
       </div>
 
       <div class="filter-bar">
         <div class="row g-2 align-items-end">
-          <div class="col-6 col-md-3"><label class="form-label mb-1">Branch</label><select id="filterBranch" class="form-select form-select-sm"></select></div>
-          <div class="col-6 col-md-3"><label class="form-label mb-1">Tanggal</label><input type="date" class="form-control form-control-sm" id="filterTanggal" value="2026-07-13"></div>
+
+          <div class="col-6 col-md-3"><label>Tanggal</label><input type="date" class="form-control form-control-sm" id="filterTanggal" value="2026-07-13"></div>
         </div>
       </div>
 
@@ -56,11 +56,10 @@
 <script src="../../assets/js/layout.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const state = { view:"psb", branch:"" };
-  fillBranchSelect(document.getElementById("filterBranch"));
+  const state = { view:"psb" };
   const viewMount = document.getElementById("viewMount");
 
-  function byBranch(r){ return !state.branch || !r.branch || r.branch === state.branch; }
+  function byBranch(r){ const b = getGlobalBranch(); return !b || !r.branch || r.branch === b; }
   function showDetail(title, rows){
     document.getElementById("detailTitle").textContent = title;
     document.getElementById("detailRows").innerHTML = rows.map(r=>`<div class="detail-row"><div class="detail-label">${r[0]}</div><div class="detail-value">${r[1]}</div></div>`).join("");
@@ -140,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function render(){ views[state.view](); }
   render();
   document.getElementById("opsTabs").addEventListener("click", e => { const b=e.target.closest("button"); if(!b) return; document.querySelectorAll(".ops-tab").forEach(x=>x.classList.remove("active")); b.classList.add("active"); state.view=b.dataset.view; render(); });
-  document.getElementById("filterBranch").addEventListener("change", e => { state.branch=e.target.value; render(); });
+  window.addEventListener("globalBranchChange", render);
   document.getElementById("viewMount").addEventListener("click", e => {
     const b=e.target.closest("button[data-id]"); if(!b) return;
     const map = {"d-psb":[WO_INSTALASI,"Detail Pemasangan"],"d-psb-wl":[WAITLIST_PSB,"Detail Pemasangan"],"d-tso":[WO_TSO,"Detail Troubleshoot"],"d-tso-wl":[WAITLIST_TSO,"Detail Troubleshoot"],"d-dis":[WO_DISMANTLE,"Detail WO Terminate"],"d-dist":[WO_DISTRIBUTION,"Detail WO Distribution"]};

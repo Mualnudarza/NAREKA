@@ -1,30 +1,27 @@
-/* =========================================================
-   ERP SPVR - SHARED LAYOUT (Navbar + Sidebar)
-   Mengikuti struktur & style navbar/sidebar template ERP asli.
-   Setiap halaman cukup menset:
-     window.BASE        -> path relatif ke root ("" atau "../../")
-     window.ACTIVE_MENU  -> key menu yang sedang aktif
-   ========================================================= */
-
 function renderLayout() {
   const BASE = window.BASE || "";
   const ACTIVE = window.ACTIVE_MENU || "";
 
   const isActive = (key) => (ACTIVE === key ? "active" : "");
 
+  const spvrHref = BASE + "index.html";
+
   const navbarHtml = `
-    <header class="navbar navbar-dark sticky-top bg-dark shadow px-3 d-flex justify-content-between align-items-center">
-        <a class="navbar-brand fw-bold mb-0 ms-2" href="${BASE}index.html" style="background:none;">
-            GriyaNet - Hei, SPVR
+    <header class="navbar navbar-dark sticky-top shadow px-3 d-flex justify-content-between align-items-center" style="background:#1a1a2e;">
+        <a class="navbar-brand fw-bold mb-0 ms-2" href="${BASE}index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+            GriyaNet ERP
         </a>
-        <button class="navbar-toggler d-md-none small-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
+        <button class="navbar-toggler d-md-none small-toggle border-0" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" style="color:rgba(255,255,255,.7);">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="bg-dark py-1 px-2 header-scroll">
-            <span class="mode-dev">MODE PROTOTYPE - Supervisor Regional</span>
-            <a href="#" class="menu-link active">Regional Malang Raya</a>
+        <div class="d-flex align-items-center gap-2 header-scroll">
+            <div class="branch-filter-group d-flex align-items-center gap-1">
+                <label class="form-label mb-0 small text-white" for="globalBranchFilter">Branch</label>
+                <select id="globalBranchFilter" class="form-select form-select-sm" style="width:auto;min-width:160px;"></select>
+            </div>
             <button type="button" class="logout-btn" disabled title="Non-fungsional pada prototype">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out me-1"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg> Logout
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg> Logout
             </button>
         </div>
     </header>`;
@@ -32,59 +29,56 @@ function renderLayout() {
   const item = (href, key, icon, label) => `
     <li class="nav-item">
         <a href="${BASE}${href}" class="nav-link ${isActive(key)}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-${icon}" aria-hidden="true">${ICONS[icon] || ""}</svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[icon] || ""}</svg>
             ${label}
         </a>
     </li>`;
 
   const heading = (label) => `
-    <div class="border-bottom my-2"></div>
-    <h6 class="sidebar-heading px-3 mt-2 mb-1 text-muted">${label}</h6>`;
+    <h6 class="sidebar-heading">${label}</h6>`;
 
-  const sidebarHtml = `
+  const spvrSidebar = `
     <nav id="sidebarMenu" class="col-md-2 col-lg-2 d-md-block sidebar collapse sidebar-admin">
-        <div class="position-sticky">
-            <ul class="nav flex-column">
-                ${item("index.html", "dashboard", "home", "Dashboard")}
-                ${heading("Area")}
-                ${item("pages/area/open-area.html", "area-open", "map", "Open Area &amp; Overlay")}
-                ${heading("Sales")}
-                <div class="ms-3">
-                  ${item("pages/sales/retention.html", "sales-retention", "users", "Customer Isolir & Terminate")}
-                  ${item("pages/sales/customer-aktif.html", "sales-customer-aktif", "star", "Customer Aktif & Fasum")}
-                </div>
-                ${heading("Operational &amp; Technical")}
-                ${item("pages/operational/psb.html", "op-psb", "chevrons-right", "Modul Operasional &amp; Teknis")}
-                ${heading("Monitoring Infrastruktur")}
-                <div class="ms-3">
-                  ${item("pages/infra-monitoring/monitor-odp.html", "infra-monitoring-odp", "monitor", "Monitor ODP")}
-                  ${item("pages/infra-monitoring/list-area-splitter.html", "infra-monitoring-splitter-area", "list", "List Area Splitter")}
-                  ${item("pages/infra-monitoring/splitter-no-config.html", "infra-monitoring-splitter-noconfig", "settings", "Splitter No Config")}
-                  ${item("pages/infra-monitoring/progress-konfigurasi.html", "infra-monitoring-progress", "activity", "Progress Konfigurasi")}
-                  ${item("pages/infra-monitoring/map-access.html", "infra-monitoring-map-access", "map", "Map Access")}
-                </div>
-                ${heading("Implementasi Asset")}
-                <div class="ms-3">
-                  ${item("pages/asset-monitoring/perangkat.html", "asset-perangkat", "cpu", "Monitoring Perangkat")}
-                  ${item("pages/asset-monitoring/kabel.html", "asset-kabel", "zap", "Monitoring Kabel")}
-                  ${item("pages/asset-monitoring/modem.html", "asset-modem", "box", "Monitoring Modem")}
-                </div>
-                ${heading("Man Power Planning")}
-                ${item("pages/manpower/mpp.html", "mpp-main", "users", "Modul Man Power Planning")}
-            </ul>
-        </div>
+        <ul class="nav flex-column">
+            ${item("index.html", "dashboard", "home", "Dashboard")}
+            ${heading("Area")}
+            ${item("pages/area/open-area.html", "area-open", "map", "Coverage Area")}
+            ${item("pages/area/analisa-area-branch.html", "area-analisa-branch", "bar-chart", "Analisa Area Branch")}
+            ${item("pages/area/performance-ae.html", "area-performance-ae", "activity", "Performance AE")}
+            ${item("pages/area/dismantle-performance.html", "area-dismantle-performance", "tool", "Dismantle Performance")}
+            ${heading("Sales")}
+            ${item("pages/sales/retention.html", "sales-retention", "users", "Customer Isolir & Terminate")}
+            ${item("pages/sales/customer-aktif.html", "sales-customer-aktif", "star", "Customer Aktif & Fasum")}
+            ${heading("Operational & Technical")}
+            ${item("pages/operational/psb.html", "op-psb", "chevrons-right", "Modul Operasional & Teknis")}
+            ${heading("Monitoring Infrastruktur")}
+            ${item("pages/infra-monitoring/monitor-odp.html", "infra-monitoring-odp", "monitor", "Monitor ODP")}
+            ${item("pages/infra-monitoring/list-area-splitter.html", "infra-monitoring-splitter-area", "list", "List Area Splitter")}
+            ${item("pages/infra-monitoring/splitter-no-config.html", "infra-monitoring-splitter-noconfig", "settings", "Splitter No Config")}
+            ${item("pages/infra-monitoring/progress-konfigurasi.html", "infra-monitoring-progress", "activity", "Progress Konfigurasi")}
+            ${item("pages/infra-monitoring/map-access.html", "infra-monitoring-map-access", "map", "Map Access")}
+            ${heading("Implementasi Asset")}
+            ${item("pages/asset-monitoring/perangkat.html", "asset-perangkat", "cpu", "Monitoring Perangkat")}
+            ${item("pages/asset-monitoring/kabel.html", "asset-kabel", "zap", "Monitoring Kabel")}
+            ${item("pages/asset-monitoring/modem.html", "asset-modem", "box", "Monitoring Modem")}
+            ${heading("Man Power Planning")}
+            ${item("pages/manpower/mpp.html", "mpp-main", "users", "Modul Man Power Planning")}
+        </ul>
     </nav>`;
 
-  // IMPORTANT: use outerHTML (not innerHTML) so the real elements with the
-  // Bootstrap column classes (col-md-2, etc.) become direct children of
-  // .row. If we only injected innerHTML into the placeholder <div>, the
-  // wrapper <div> itself (which has no column class) would be the flex
-  // item, causing the sidebar/main content to stack instead of sitting
-  // side-by-side.
   const navbarEl = document.getElementById("app-navbar");
   const sidebarEl = document.getElementById("app-sidebar");
   if (navbarEl) navbarEl.outerHTML = navbarHtml;
-  if (sidebarEl) sidebarEl.outerHTML = sidebarHtml;
+  if (sidebarEl) sidebarEl.outerHTML = spvrSidebar;
+
+  const globalBranchFilter = document.getElementById("globalBranchFilter");
+  if (globalBranchFilter) {
+    fillBranchSelect(globalBranchFilter);
+    globalBranchFilter.value = getGlobalBranch();
+    globalBranchFilter.addEventListener("change", (e) => {
+      setGlobalBranch(e.target.value);
+    });
+  }
 }
 
 const ICONS = {
@@ -103,7 +97,8 @@ const ICONS = {
   "cpu": '<rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line>',
   "zap": '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>',
   "box": '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line>',
-  "star": '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>'
+  "star": '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>',
+  "bar-chart": '<line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line>'
 };
 
 document.addEventListener("DOMContentLoaded", renderLayout);

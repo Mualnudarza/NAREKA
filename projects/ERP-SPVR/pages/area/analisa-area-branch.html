@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Analisa Area Branch | GriyaNet ERP</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="app-navbar"></div>
+<div class="container-fluid">
+  <div class="row">
+    <div id="app-sidebar"></div>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="page-header">
+        <div class="page-breadcrumb mt-1">Area <span class="sep">/</span> Analisa Area Branch</div>
+        <h1 class="page-title">Analisa Area Branch</h1>
+        <p class="page-description">Monitoring pertumbuhan pelanggan, perkembangan area, status layanan, dan tren closing harian.</p>
+      </div>
+
+      <div class="filter-bar">
+        <div class="row g-3 align-items-end">
+
+          <div class="col-md-4">
+            <label for="global-month">Bulan</label>
+            <select id="global-month" class="form-select form-select-sm"></select>
+          </div>
+          <div class="col-md-4">
+            <label for="global-year">Tahun</label>
+            <select id="global-year" class="form-select form-select-sm"></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-6 col-md-4 col-xl-2"><div class="kpi-card mono"><div class="kpi-label">Total Area</div><div class="kpi-value" id="kpi-total-area">0</div></div></div>
+        <div class="col-6 col-md-4 col-xl-2"><div class="kpi-card mono"><div class="kpi-label">Total Growth Customer</div><div class="kpi-value" id="kpi-growth-customer">0</div></div></div>
+        <div class="col-6 col-md-4 col-xl-2"><div class="kpi-card mono"><div class="kpi-label">Total Customer Aktif</div><div class="kpi-value" id="kpi-customer-aktif">0</div></div></div>
+        <div class="col-6 col-md-4 col-xl-2"><div class="kpi-card mono"><div class="kpi-label">Total Customer Isolir</div><div class="kpi-value" id="kpi-customer-isolir">0</div></div></div>
+        <div class="col-6 col-md-4 col-xl-2"><div class="kpi-card mono"><div class="kpi-label">Total Customer Terminate</div><div class="kpi-value" id="kpi-customer-terminate">0</div></div></div>
+        <div class="col-6 col-md-4 col-xl-2"><div class="kpi-card mono"><div class="kpi-label">Total Fasum</div><div class="kpi-value" id="kpi-fasum">0</div></div></div>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-lg-4">
+          <div class="panel-card h-100 mb-0">
+            <div class="panel-title">
+              <span>Growth Area</span>
+              <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#growthModal">Detail</button>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-12">
+                <select id="growth-area-type" class="form-select form-select-sm">
+                  <option value="all">Semua Jenis Area</option>
+                  <option value="1">Primary</option>
+                  <option value="0">Overlay</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <select id="growth-area-name" class="form-select form-select-sm"></select>
+              </div>
+              <div class="col-6">
+                <select id="growth-sort-dir" class="form-select form-select-sm">
+                  <option value="desc">Descending</option>
+                  <option value="asc">Ascending</option>
+                </select>
+              </div>
+            </div>
+            <div id="chart-growth-area" class="bar-chart-panel"></div>
+          </div>
+        </div>
+
+        <div class="col-lg-8">
+          <div class="panel-card h-100 mb-0">
+            <div class="panel-title">Tren Closing Harian</div>
+            <div class="row g-3 mb-3">
+              <div class="col-md-5">
+                <select id="closing-area-name" class="form-select form-select-sm"></select>
+              </div>
+            </div>
+            <div id="chart-closing-trend" class="line-chart-panel"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-title">Data Area</div>
+        <div class="row g-3 mb-3 align-items-end">
+          <div class="col-md-3">
+            <label for="table-month" class="form-label small">Bulan Tabel</label>
+            <select id="table-month" class="form-select form-select-sm"></select>
+          </div>
+          <div class="col-md-3">
+            <label for="table-year" class="form-label small">Tahun Tabel</label>
+            <select id="table-year" class="form-select form-select-sm"></select>
+          </div>
+          <div class="col-md-3">
+            <label for="table-area-type" class="form-label small">Jenis Area</label>
+            <select id="table-area-type" class="form-select form-select-sm">
+              <option value="all">Semua</option>
+              <option value="1">Primary</option>
+              <option value="0">Overlay</option>
+            </select>
+          </div>
+        </div>
+        <div id="area-table-container"></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="modal fade" id="growthModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Detail Growth Area</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3 mb-3 align-items-end">
+          <div class="col-md-3">
+            <label for="modal-growth-type" class="form-label small">Jenis Area</label>
+            <select id="modal-growth-type" class="form-select form-select-sm">
+              <option value="all">Semua</option>
+              <option value="1">Primary</option>
+              <option value="0">Overlay</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label for="modal-growth-area" class="form-label small">Area</label>
+            <select id="modal-growth-area" class="form-select form-select-sm"></select>
+          </div>
+          <div class="col-md-4">
+            <label for="modal-growth-sort-dir" class="form-label small">Urutan</label>
+            <select id="modal-growth-sort-dir" class="form-select form-select-sm">
+              <option value="desc">Descending</option>
+              <option value="asc">Ascending</option>
+            </select>
+          </div>
+        </div>
+        <div id="chart-growth-area-full" class="bar-chart-panel"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/js/data.js"></script>
+<script src="../../assets/js/common.js"></script>
+<script>
+  window.BASE = "../../";
+  window.ACTIVE_MENU = "area-analisa-branch";
+</script>
+<script src="../../assets/js/layout.js"></script>
+<script src="../../assets/js/branch-leader-analytics.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  initializeBranchLeaderAnalytics();
+});
+</script>
+</body>
+</html>

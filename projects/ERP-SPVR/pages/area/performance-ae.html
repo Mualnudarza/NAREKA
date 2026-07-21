@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Performance AE | GriyaNet ERP</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div id="app-navbar"></div>
+<div class="container-fluid">
+  <div class="row">
+    <div id="app-sidebar"></div>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="page-header">
+        <div class="page-breadcrumb"><a href="../../index.html">Dashboard</a><span class="sep">/</span><span>Area</span><span class="sep">/</span><span class="text-dark">Performance AE</span></div>
+        <h1 class="page-title">Performance Cold Prospect</h1>
+        <p class="page-description">Monitoring read-only performa Account Executive berdasarkan Cold Prospect mingguan.</p>
+      </div>
+
+      <div class="filter-bar">
+        <div class="row g-2 align-items-end">
+          <div class="col-6 col-md-3"><label>Bulan</label><select id="filterMonth" class="form-select form-select-sm"></select></div>
+          <div class="col-6 col-md-2"><label>Tahun</label><select id="filterYear" class="form-select form-select-sm"></select></div>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-6 col-md-3"><div class="kpi-card mono"><div class="kpi-label">Total Sales</div><div class="kpi-value" id="kpi-sales">0</div></div></div>
+        <div class="col-6 col-md-3"><div class="kpi-card mono"><div class="kpi-label">Sales Mencapai Target CP</div><div class="kpi-value" id="kpi-target">0</div></div></div>
+        <div class="col-6 col-md-3"><div class="kpi-card mono"><div class="kpi-label">Total Hot Prospect</div><div class="kpi-value" id="kpi-hot">0</div></div></div>
+        <div class="col-6 col-md-3"><div class="kpi-card mono"><div class="kpi-label">Total Lost Prospect</div><div class="kpi-value" id="kpi-lost">0</div></div></div>
+      </div>
+
+      <div class="panel-card mb-3">
+        <div class="panel-title d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <span>Komposisi Cold Prospect AE</span>
+          <select id="chartSort" class="form-select form-select-sm" style="width:auto;"><option value="desc">Descending</option><option value="asc">Ascending</option></select>
+        </div>
+        <div style="height:340px;position:relative;"><canvas id="cpChart"></canvas></div>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-title">Tabel Performance AE</div>
+        <div class="row g-2 align-items-end mb-3">
+          <div class="col-6 col-md-3"><label class="form-label small">Periode Minggu</label><select id="filterWeek" class="form-select form-select-sm"></select></div>
+          <div class="col-6 col-md-4"><label class="form-label small">Cari Nama Sales</label><input id="searchSales" class="form-control form-control-sm" placeholder="Cari sales..."></div>
+        </div>
+        <div id="aeTable"></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="modal fade" id="detailModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Performance AE Detail — <span id="detailName"></span></h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body"><div id="detailRows"></div><div id="detailWeekTable" class="mt-3"></div></div>
+      <div class="modal-footer"><span class="text-muted small me-auto">Mode read-only sesuai ERP.</span><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/js/data.js"></script>
+<script src="../../assets/js/common.js"></script>
+<script>window.BASE="../../"; window.ACTIVE_MENU="area-performance-ae";</script>
+<script src="../../assets/js/layout.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const monthNames = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+  const currentYear = new Date().getFullYear();
+  let selectedMonth = new Date().getMonth();
+  let selectedYear = currentYear;
+  let chartInstance = null;
+  let sortState = { key: null, dir: "asc" };
+
+  filterMonth.innerHTML = monthNames.map((m,i)=>`<option value="${i}" ${i===selectedMonth?"selected":""}>${m}</option>`).join("");
+  filterYear.innerHTML = [currentYear-1,currentYear,currentYear+1].map(y=>`<option value="${y}" ${y===selectedYear?"selected":""}>${y}</option>`).join("");
+  filterWeek.innerHTML = '<option value="all">Semua Minggu</option>' + [1,2,3,4,5].map(w=>`<option value="${w}">Minggu ke-${w}</option>`).join("");
+
+  function seeded(ae, week) {
+    const seed = selectedYear + selectedMonth + week + ae.nip.split('').reduce((n,c)=>n+c.charCodeAt(0),0);
+    const target_cp = 40 + (seed % 25);
+    const hot = 5 + (seed % 18);
+    const lost = 2 + (seed % 9);
+    const lost_system = 1 + (seed % 7);
+    const no_action = Math.max(0, target_cp - hot - lost - lost_system - (seed % 8));
+    const total_cp = no_action + lost_system + lost + hot;
+    const offside = seed % 6;
+    return { sales_name: ae.fullname, nip: ae.nip, branch: ae.branch, week, no_action, lost_system, lost, hot, total_cp, target_cp, offside };
+  }
+
+  function rows() {
+    const branch = getGlobalBranch();
+    const week = filterWeek.value;
+    const aes = AE_DATA.filter(ae => !branch || ae.branch === branch);
+    return aes.flatMap(ae => [1,2,3,4,5].map(w => seeded(ae,w)))
+      .filter(r => week === "all" || String(r.week) === week);
+  }
+
+  function aeSummary() {
+    const map = {};
+    rows().forEach(r => {
+      if (!map[r.nip]) map[r.nip] = {...r, week:"all", no_action:0,lost_system:0,lost:0,hot:0,total_cp:0,offside:0};
+      map[r.nip].no_action += r.no_action;
+      map[r.nip].lost_system += r.lost_system;
+      map[r.nip].lost += r.lost;
+      map[r.nip].hot += r.hot;
+      map[r.nip].total_cp += r.total_cp;
+      map[r.nip].offside += r.offside;
+    });
+    return Object.values(map);
+  }
+
+  function pct(n,d){ return d ? Math.round((n/d)*100) : 0; }
+  function metric(v,t){ return `${v}<div class="text-muted small">${pct(v,t)}%</div>`; }
+
+  function updateKpis(data) {
+    document.getElementById("kpi-sales").textContent = data.length;
+    document.getElementById("kpi-target").textContent = data.filter(r => r.total_cp >= r.target_cp).length;
+    document.getElementById("kpi-hot").textContent = data.reduce((n,r)=>n+r.hot,0);
+    document.getElementById("kpi-lost").textContent = data.reduce((n,r)=>n+r.lost,0);
+  }
+
+  function updateChart(data) {
+    const dir = chartSort.value === "asc" ? 1 : -1;
+    const chartRows = [...data].sort((a,b)=>(a.total_cp-b.total_cp)*dir);
+    if (chartInstance) chartInstance.destroy();
+    chartInstance = new Chart(document.getElementById("cpChart"), {
+      type: "bar",
+      data: {
+        labels: chartRows.map(r=>r.sales_name),
+        datasets: [
+          {label:"Hot", data:chartRows.map(r=>r.hot), backgroundColor:"#22c55e"},
+          {label:"Lost", data:chartRows.map(r=>r.lost), backgroundColor:"#ef4444"},
+          {label:"No Action", data:chartRows.map(r=>r.no_action), backgroundColor:"#9ca3af"},
+          {label:"Lost by System", data:chartRows.map(r=>r.lost_system), backgroundColor:"#f59e0b"}
+        ]
+      },
+      options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom"}},scales:{x:{stacked:true,beginAtZero:true,grid:{display:true},title:{display:true,text:"Jumlah Cold Prospect"}},y:{stacked:true,grid:{display:true}}}}
+    });
+  }
+
+  function renderTable(data) {
+    const q = searchSales.value.toLowerCase();
+    let tableRows = data.filter(r => r.sales_name.toLowerCase().includes(q));
+    if (sortState.key) tableRows.sort((a,b)=>((a[sortState.key] > b[sortState.key]) ? 1 : -1) * (sortState.dir === "asc" ? 1 : -1));
+    const cols = [
+      ["sales_name","Sales"],["nip","NIP"],["no_action","No Action"],["lost_system","Lost by System"],["lost","Lost"],["hot","Hot"],["total_cp","Total"],["target_cp","Target CP"],["offside","Offside"]
+    ];
+    aeTable.innerHTML = `<div class="table-responsive"><table class="table table-hover align-middle"><thead><tr>${cols.map(c=>`<th class="sortable" data-key="${c[0]}">${c[1]}</th>`).join("")}<th>Detail</th></tr></thead><tbody>${tableRows.map(r=>`<tr><td>${r.sales_name}</td><td>${r.nip}</td><td>${metric(r.no_action,r.total_cp)}</td><td>${metric(r.lost_system,r.total_cp)}</td><td>${metric(r.lost,r.total_cp)}</td><td>${metric(r.hot,r.total_cp)}</td><td>${metric(r.total_cp,r.target_cp)}</td><td>${r.target_cp}</td><td>${r.offside}</td><td><button class="btn btn-sm btn-outline-primary btn-detail" data-nip="${r.nip}">Detail</button></td></tr>`).join("")}</tbody></table></div>`;
+    aeTable.querySelectorAll("th.sortable").forEach(th => th.addEventListener("click",()=>{ sortState.dir = sortState.key === th.dataset.key && sortState.dir === "asc" ? "desc" : "asc"; sortState.key = th.dataset.key; render(); }));
+  }
+
+  function render() {
+    const data = aeSummary();
+    updateKpis(data);
+    updateChart(data);
+    renderTable(data);
+  }
+
+  document.addEventListener("click", e => {
+    const btn = e.target.closest(".btn-detail");
+    if (!btn) return;
+    const r = aeSummary().find(x => x.nip === btn.dataset.nip);
+    document.getElementById("detailName").textContent = r.sales_name;
+    detailRows.innerHTML = [["Nama Sales",r.sales_name],["NIP",r.nip],["Branch",r.branch],["Total CP",metric(r.total_cp,r.target_cp)],["Target CP",r.target_cp],["Offside",r.offside]].map(x=>`<div class="detail-row"><div class="detail-label">${x[0]}</div><div class="detail-value">${x[1]}</div></div>`).join("");
+    const weeks = [1,2,3,4,5].map(w => seeded(AE_DATA.find(a=>a.nip===r.nip), w));
+    detailWeekTable.innerHTML = `<div class="table-responsive"><table class="table table-sm"><thead><tr><th>Minggu</th><th>No Action</th><th>Lost by System</th><th>Lost</th><th>Hot</th><th>Total</th></tr></thead><tbody>${weeks.map(w=>`<tr><td>Minggu ke-${w.week}</td><td>${metric(w.no_action,w.total_cp)}</td><td>${metric(w.lost_system,w.total_cp)}</td><td>${metric(w.lost,w.total_cp)}</td><td>${metric(w.hot,w.total_cp)}</td><td>${metric(w.total_cp,w.target_cp)}</td></tr>`).join("")}</tbody></table></div>`;
+    new bootstrap.Modal(document.getElementById("detailModal")).show();
+  });
+
+  filterMonth.addEventListener("change", e => { selectedMonth = Number(e.target.value); render(); });
+  filterYear.addEventListener("change", e => { selectedYear = Number(e.target.value); render(); });
+  filterWeek.addEventListener("change", render);
+  searchSales.addEventListener("input", render);
+  chartSort.addEventListener("change", render);
+  window.addEventListener("globalBranchChange", render);
+  render();
+});
+</script>
+</body>
+</html>

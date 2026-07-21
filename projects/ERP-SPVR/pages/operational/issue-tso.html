@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Issue & TSO | GriyaNet ERP</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../assets/css/style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
@@ -16,24 +16,21 @@
     <div id="app-sidebar"></div>
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 
-      <div class="pt-3 pb-2 mb-3 border-bottom">
+      <div class="page-header">
         <div class="page-breadcrumb">
           <a href="../../index.html">Dashboard</a><span class="sep">/</span>
           <span>Operational &amp; Technical</span><span class="sep">/</span>
           <span class="text-dark">Issue &amp; TSO</span>
         </div>
-        <h1 class="h2 mb-0">Issue &amp; TSO</h1>
-        <p class="text-muted mb-0">Monitoring proses penyelesaian gangguan layanan pelanggan (troubleshoot) pada tingkat regional.</p>
+        <h1 class="page-title">Issue &amp; TSO</h1>
+        <p class="page-description">Monitoring proses penyelesaian gangguan layanan pelanggan (troubleshoot) pada tingkat regional.</p>
       </div>
 
       <div class="filter-bar">
         <div class="row g-2 align-items-end">
+
           <div class="col-6 col-md-3">
-            <label class="form-label mb-1">Branch</label>
-            <select id="filterBranch" class="form-select form-select-sm"></select>
-          </div>
-          <div class="col-6 col-md-3">
-            <label class="form-label mb-1">Tanggal</label>
+            <label>Tanggal</label>
             <input type="date" class="form-control form-control-sm" id="filterTanggal" value="2026-07-13">
           </div>
         </div>
@@ -89,7 +86,6 @@
 <script src="../../assets/js/layout.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  fillBranchSelect(document.getElementById("filterBranch"));
 
   document.getElementById("kpiWaitlist").textContent = WO_TSO.filter(w=>w.status==="Wait List").length;
   document.getElementById("kpiSchedule").textContent = WO_TSO.filter(w=>w.status==="Penjadwalan").length;
@@ -109,8 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
     options: { plugins: { legend: { position:"bottom" } } }
   });
 
-  let filters = { branch: "" };
-  function filterFn(r){ return !filters.branch || r.branch === filters.branch; }
+  function filterFn(r){ const branch = getGlobalBranch(); return !branch || r.branch === branch; }
   const table = renderSimpleTable({
     mountId: "tsoTable", data: WO_TSO, filterFn: filterFn,
     searchKeys: ["customer_name","pppoe_secret","team_katim"],
@@ -122,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ]
   });
 
-  document.getElementById("filterBranch").addEventListener("change", e => { filters.branch = e.target.value; table.setFilter(filterFn); });
+  window.addEventListener("globalBranchChange", () => table.setFilter(filterFn));
 
   document.getElementById("tsoTable").addEventListener("click", e => {
     const btn = e.target.closest(".btn-tso-detail"); if(!btn) return;

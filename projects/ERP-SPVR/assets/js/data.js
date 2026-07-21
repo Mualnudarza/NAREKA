@@ -86,6 +86,27 @@
   w.AE_DATA = typed('ae_data', []);
   w.TIM_TEKNISI_DATA = w.TEAM_MONITORING;
 
+  // Mock data untuk Analisa Branch (BL)
+  // Data Growth per Area (Mock)
+  w.AREA_GROWTH = w.AREA_DATA.map(function(a) {
+    return {
+      area_id: a.id,
+      growth: Math.floor(Math.random() * 25) + 5
+    };
+  });
+
+  // Data Closing Harian (Mock 30 Hari Terakhir)
+  w.DAILY_CLOSING = (function() {
+    var out = [];
+    for(var i=1; i<=30; i++) {
+      out.push({
+        day: i,
+        count: Math.floor(Math.random() * 15)
+      });
+    }
+    return out;
+  })();
+
   w.ROUTERS = loadCSV('routers.csv');
   w.VLANS = loadCSV('vlans.csv');
   w.OLTS = loadCSV('olts.csv');

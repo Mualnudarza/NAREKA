@@ -1,9 +1,3 @@
-/* =========================================================
-   ERP SPVR - common.js
-   Helper umum: pagination sederhana, search, badge status,
-   bullet chart (progress bar), populate select branch.
-   ========================================================= */
-
 const BADGE_MAP = {
   "Aktif": "bg-success", "Active": "bg-success", "Selesai": "bg-success",
   "Complete": "bg-success", "Terjadwal Hari Ini": "bg-info", "Primary": "bg-primary",
@@ -14,7 +8,8 @@ const BADGE_MAP = {
   "Gagal Instalasi": "bg-danger", "Non Aktif": "bg-secondary", "Off": "bg-secondary",
   "Training": "bg-info", "Pegawai": "bg-success", "Overlay": "bg-secondary",
   "Perangkat Kembali Lengkap": "bg-success", "Perangkat Sebagian": "bg-warning text-dark",
-  "Tidak Ditemukan": "bg-danger", "Waiting": "bg-warning text-dark"
+  "Tidak Ditemukan": "bg-danger", "Waiting": "bg-warning text-dark",
+  "Available": "bg-success", "Printed": "bg-info"
 };
 
 function badge(status){
@@ -22,9 +17,6 @@ function badge(status){
   return `<span class="badge ${cls}">${status}</span>`;
 }
 
-/**
- * Isi <select> dengan daftar branch (mengikuti regional SPVR).
- */
 function fillBranchSelect(selectEl, includeAll = true){
   if (!selectEl) return;
   let html = includeAll ? `<option value="">Semua Branch</option>` : "";
@@ -32,15 +24,39 @@ function fillBranchSelect(selectEl, includeAll = true){
   selectEl.innerHTML = html;
 }
 
-/**
- * DataTable sederhana: search + pagination di sisi client.
- * opts = { data, columns:[{key,label,render}], pageSize, mountId, searchKeys, filterFn }
- */
+function getGlobalBranch() {
+  return localStorage.getItem("globalBranch") || "";
+}
+
+function setGlobalBranch(branch) {
+  localStorage.setItem("globalBranch", branch);
+  window.dispatchEvent(new CustomEvent("globalBranchChange", { detail: { branch } }));
+}
+
+function sortCompare(a, b, type) {
+  if (type === "number") return (Number(a) || 0) - (Number(b) || 0);
+  if (type === "date") return new Date(a).getTime() - new Date(b).getTime();
+  return String(a ?? "").localeCompare(String(b ?? ""), "id", { sensitivity: "base" });
+}
+
+function getSortType(val) {
+  if (val === null || val === undefined || val === "") return "string";
+  if (typeof val === "number") return "number";
+  if (typeof val === "string") {
+    if (/^\d+$/.test(val)) return "number";
+    if (/^\d{1,2}[-/]\w{3}[-/]\d{2,4}$/.test(val) || /^\d{4}-\d{2}-\d{2}/.test(val)) return "date";
+    if (/^Rp\s?[\d.,]+/.test(val) || /^[\d.,]+$/.test(val.replace(/\./g, "").replace(/,/g, "."))) return "number";
+  }
+  return "string";
+}
+
 function renderSimpleTable(opts){
   const mount = document.getElementById(opts.mountId);
   if (!mount) return;
   const pageSize = opts.pageSize || 8;
-  let state = { page: 1, keyword: "" };
+  let state = { page: 1, keyword: "", sortKey: null, sortDir: "asc" };
+
+  const getCellValue = (row, col) => col.render ? col.render(row) : (row[col.key] ?? "");
 
   function getFiltered(){
     let rows = opts.data;
@@ -50,6 +66,20 @@ function renderSimpleTable(opts){
       rows = rows.filter(r => (opts.searchKeys || Object.keys(r)).some(k =>
         String(r[k] ?? "").toLowerCase().includes(kw)
       ));
+    }
+    if (state.sortKey !== null) {
+      const col = opts.columns[state.sortKey];
+      const dir = state.sortDir === "asc" ? 1 : -1;
+      const type = col.sortType || (col.key ? getSortType(opts.data[0]?.[col.key]) : "string");
+      rows.sort((a, b) => {
+        const va = getCellValue(a, col);
+        const vb = getCellValue(b, col);
+        return sortCompare(
+          col.key ? (a[col.key] ?? "") : va,
+          col.key ? (b[col.key] ?? "") : vb,
+          type
+        ) * dir;
+      });
     }
     return rows;
   }
@@ -61,7 +91,17 @@ function renderSimpleTable(opts){
     const start = (state.page - 1) * pageSize;
     const pageRows = rows.slice(start, start + pageSize);
 
-    let thead = "<tr>" + opts.columns.map(c => `<th class="text-nowrap">${c.label}</th>`).join("") + "</tr>";
+    const noSortLabels = new Set(["aksi", "detail", "print", "action"]);
+    const thead = "<tr>" + opts.columns.map((c, i) => {
+      const sortable = !noSortLabels.has((c.label || "").toLowerCase());
+      const active = state.sortKey === i;
+      const arrow = active
+        ? `<span class="sort-arrow ${state.sortDir}"></span>`
+        : `<span class="sort-arrow"></span>`;
+      const cls = `text-nowrap${active ? " sort-active" : ""}${sortable ? " sortable" : ""}`;
+      return `<th class="${cls}" data-col="${i}" tabindex="${sortable ? "0" : "-1"}">${c.label}${sortable ? arrow : ""}</th>`;
+    }).join("") + "</tr>";
+
     let tbody = "";
     if (pageRows.length === 0){
       tbody = `<tr><td colspan="${opts.columns.length}"><div class="table-empty">Tidak ada data yang sesuai.</div></td></tr>`;
@@ -80,33 +120,35 @@ function renderSimpleTable(opts){
       </div>
       <div class="table-responsive">
         <table class="table table-hover align-middle">
-          <thead class="thead-light">${thead}</thead>
+          <thead>${thead}</thead>
           <tbody>${tbody}</tbody>
         </table>
       </div>
-      <div class="d-flex justify-content-between align-items-center">
+      ${totalPages > 1 ? `
+      <div class="d-flex justify-content-between align-items-center mt-2">
         <div class="pagination-info">Halaman ${state.page} dari ${totalPages}</div>
         <nav>
           <ul class="pagination pagination-sm mb-0" id="${opts.mountId}-pagination"></ul>
         </nav>
-      </div>
+      </div>` : ""}
     `;
 
-    // pagination controls
     const pag = document.getElementById(opts.mountId + "-pagination");
-    let pagHtml = `<li class="page-item ${state.page===1?'disabled':''}"><a class="page-link" href="#" data-page="${state.page-1}">&laquo;</a></li>`;
-    for (let p = 1; p <= totalPages; p++){
-      pagHtml += `<li class="page-item ${p===state.page?'active':''}"><a class="page-link" href="#" data-page="${p}">${p}</a></li>`;
-    }
-    pagHtml += `<li class="page-item ${state.page===totalPages?'disabled':''}"><a class="page-link" href="#" data-page="${state.page+1}">&raquo;</a></li>`;
-    pag.innerHTML = pagHtml;
-    pag.querySelectorAll("a.page-link").forEach(a => {
-      a.addEventListener("click", (e) => {
-        e.preventDefault();
-        const p = parseInt(a.dataset.page, 10);
-        if (p >= 1 && p <= totalPages){ state.page = p; draw(); }
+    if (pag) {
+      let pagHtml = `<li class="page-item ${state.page===1?'disabled':''}"><a class="page-link" href="#" data-page="${state.page-1}">&laquo;</a></li>`;
+      for (let p = 1; p <= totalPages; p++){
+        pagHtml += `<li class="page-item ${p===state.page?'active':''}"><a class="page-link" href="#" data-page="${p}">${p}</a></li>`;
+      }
+      pagHtml += `<li class="page-item ${state.page===totalPages?'disabled':''}"><a class="page-link" href="#" data-page="${state.page+1}">&raquo;</a></li>`;
+      pag.innerHTML = pagHtml;
+      pag.querySelectorAll("a.page-link").forEach(a => {
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          const p = parseInt(a.dataset.page, 10);
+          if (p >= 1 && p <= totalPages){ state.page = p; draw(); }
+        });
       });
-    });
+    }
 
     const searchInput = document.getElementById(opts.mountId + "-search");
     searchInput.addEventListener("input", (e) => {
@@ -114,18 +156,28 @@ function renderSimpleTable(opts){
       state.page = 1;
       draw();
     });
-    searchInput.focus();
-    searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
+
+    mount.querySelectorAll("th.sortable").forEach(th => {
+      const handler = (e) => {
+        const i = parseInt(th.dataset.col, 10);
+        if (state.sortKey === i) {
+          state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
+        } else {
+          state.sortKey = i;
+          state.sortDir = "asc";
+        }
+        state.page = 1;
+        draw();
+      };
+      th.addEventListener("click", handler);
+      th.addEventListener("keydown", e => { if (e.key === "Enter") handler(e); });
+    });
   }
 
   draw();
   return { redraw: draw, setFilter(fn){ opts.filterFn = fn; state.page = 1; draw(); } };
 }
 
-/**
- * Render kumpulan bullet chart (progress bar) target vs realisasi.
- * items = [{label, target, value}]
- */
 function renderBulletCharts(mountId, items, opts = {}){
   const mount = document.getElementById(mountId);
   if (!mount) return;
