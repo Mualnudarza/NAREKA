@@ -1,0 +1,12 @@
+{
+  "name": "Weak Bone (Simple platformer)",
+  "short_name": "Weak Bone (Simple platformer)",
+  "id": "com.example.simpleplatformer",
+  "description": "A simple platformer example game where the player can pick up coins to improve their score and die to an enemy character and falling off of platforms.\n\nThis example features:\n-Platformer behavior\n-Smooth camera behavior\n-Mobile controls\n-Various types of platforms\n-Basic enemy movement",
+  "orientation": "landscape",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "black",
+  "categories": ["games", "entertainment"],
+  "icons": []
+}
