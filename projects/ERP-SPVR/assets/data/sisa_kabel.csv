@@ -1,5 +1,0 @@
-id,branch,teknisi,kode,merek,core,start_meter,end_meter,panjang,status_print,created_at
-1,Temas,Andi,KBL-FO-001-A,Furukawa,12,0,500,500,Printed,2026-01-10
-2,Bumiaji,Budi,KBL-FO-003-A,Fiberhome,6,0,200,200,Printed,2026-01-15
-3,Temas,Andi,KBL-UTP-002-B,Belden,4,50,100,50,Pending,2026-02-20
-4,Dau,Galih,KBL-UTP-004-C,Panduit,8,10,30,20,Pending,2026-03-25

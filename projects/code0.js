@@ -95,13 +95,13 @@ if (isConditionTrue_0) {
 
 };gdjs.Game_32SceneCode.mapOfGDgdjs_9546Game_959532SceneCode_9546GDPlayerObjects2Objects = Hashtable.newFrom({"Player": gdjs.Game_32SceneCode.GDPlayerObjects2});
 gdjs.Game_32SceneCode.mapOfGDgdjs_9546Game_959532SceneCode_9546GDEnemyObjects2Objects = Hashtable.newFrom({"Enemy": gdjs.Game_32SceneCode.GDEnemyObjects2});
-gdjs.Game_32SceneCode.asyncCallback10046572 = function (runtimeScene, asyncObjectsList) {
+gdjs.Game_32SceneCode.asyncCallback12989884 = function (runtimeScene, asyncObjectsList) {
 asyncObjectsList.restoreLocalVariablesContainers(gdjs.Game_32SceneCode.localVariables);
 {gdjs.evtTools.runtimeScene.replaceScene(runtimeScene, "Game Scene", false);
 }
 gdjs.Game_32SceneCode.localVariables.length = 0;
 }
-gdjs.Game_32SceneCode.idToCallbackMap.set(10046572, gdjs.Game_32SceneCode.asyncCallback10046572);
+gdjs.Game_32SceneCode.idToCallbackMap.set(12989884, gdjs.Game_32SceneCode.asyncCallback12989884);
 gdjs.Game_32SceneCode.eventsList2 = function(runtimeScene) {
 
 {
@@ -111,7 +111,7 @@ gdjs.Game_32SceneCode.eventsList2 = function(runtimeScene) {
 {
 const asyncObjectsList = new gdjs.LongLivedObjectsList();
 asyncObjectsList.backupLocalVariablesContainers(gdjs.Game_32SceneCode.localVariables);
-runtimeScene.getAsyncTasksManager().addTask(gdjs.evtTools.runtimeScene.wait(2), (runtimeScene) => (gdjs.Game_32SceneCode.asyncCallback10046572(runtimeScene, asyncObjectsList)), 10046572, asyncObjectsList);
+runtimeScene.getAsyncTasksManager().addTask(gdjs.evtTools.runtimeScene.wait(2), (runtimeScene) => (gdjs.Game_32SceneCode.asyncCallback12989884(runtimeScene, asyncObjectsList)), 12989884, asyncObjectsList);
 }
 }
 
@@ -325,7 +325,7 @@ for (var i = 0, k = 0, l = gdjs.Game_32SceneCode.GDPlayerObjects1.length;i<l;++i
 gdjs.Game_32SceneCode.GDPlayerObjects1.length = k;
 if (isConditionTrue_0) {
 isConditionTrue_0 = false;
-{isConditionTrue_0 = runtimeScene.getOnceTriggers().triggerOnce(10043796);
+{isConditionTrue_0 = runtimeScene.getOnceTriggers().triggerOnce(12990324);
 }
 }
 if (isConditionTrue_0) {
