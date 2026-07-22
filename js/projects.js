@@ -2,17 +2,54 @@
 	"use strict";
 
 	/* =========================================================================
-	 * KELOLA PROJECT DI SINI
-	 * Kelompokkan project ke dalam beberapa kategori. Tiap kategori akan
-	 * tampil sebagai barisnya sendiri dengan judul dan scroll horizontal
-	 * masing-masing (tidak perlu sentuh HTML/CSS untuk nambah project).
-	 *
-	 * category : nama kategori/bagian yang ditampilkan sebagai judul baris
-	 * items    : daftar project di kategori tsb
-	 *   name  : nama project
-	 *   desc  : deskripsi singkat (opsional)
-	 *   path  : path folder project, contoh "projects/AHP/index.html"
+	 * DATA — EDIT DI SINI SAJA
+	 * Semua isi popup "About" dan "Project" diambil dari sini. Tidak perlu
+	 * menyentuh HTML/CSS untuk mengganti teks, menambah/menghapus skill,
+	 * atau menambah/menghapus project.
 	 * ========================================================================= */
+
+	/* ---- Palet warna, dipakai bergiliran (cycle) untuk elemen interaktif ---- */
+	var PALETTE = [
+		"#6c5ce7", // ungu
+		"#00b894", // hijau
+		"#0984e3", // biru
+		"#e17055", // oranye
+		"#e84393", // pink
+		"#fdcb6e", // kuning
+		"#00cec9", // teal
+		"#d63031"  // merah
+	];
+
+	window.aboutData = {
+		greeting: "Halo, saya Mualnudarza \uD83D\uDC4B",
+		tagline: "Business Analyst & Frontend Enthusiast \u2014 suka merapikan proses bisnis sekaligus mengutak-atik interface.",
+		heroColors: ["#6c5ce7", "#00cec9"], // gradient hero, boleh diganti 2 warna hex apa saja
+
+		/* kotak statistik kecil di bawah hero, boleh ditambah/dikurangi bebas */
+		stats: [
+			{ value: "BRD/SRA", label: "ERP Documentation" },
+			{ value: "AHP App", label: "Decision Tool" },
+			{ value: "S2", label: "Management" }
+		],
+
+		/* daftar skill/minat, tiap item otomatis dapat warna dari PALETTE */
+		skills: [
+			"Business Analysis",
+			"ERP Documentation",
+			"Frontend Dev",
+			"JavaScript",
+			"WebGL",
+			"UI/UX Prototyping",
+			"Personal Finance Systems",
+			"Academic Writing"
+		],
+
+		/* tombol/link di bagian bawah about, boleh ditambah/dikurangi bebas */
+		links: [
+			{ label: "Github", url: "https://github.com/Mualnudarza", color: "#24292e" }
+		]
+	};
+
 	window.projectsData = [
 		{
 			category: "Project Web (Prototype)",
@@ -45,317 +82,164 @@
 			]
 		}
 	];
+
+	/* ========================================================================= */
+	/* ================= DI BAWAH INI LOGIC, TIDAK PERLU DIUBAH ================= */
 	/* ========================================================================= */
 
-	var GESTURE_GAP = 260; // ms jeda dianggap sesi scroll baru
-
-	/* state per kategori: offset scroll, dan info sesi scroll (gesture) */
-	var groupState = [];
-
-	function buildGroupState() {
-		groupState = window.projectsData.map(function () {
-			return { offset: 0, lastWheelTime: 0, gestureStartedAtEdge: false };
-		});
+	function colorAt(i) {
+		return PALETTE[i % PALETTE.length];
 	}
 
-	function renderProjects() {
-		var container = document.getElementById("projectsGroups");
-		if (!container) return;
+	function el(tag, className, html) {
+		var e = document.createElement(tag);
+		if (className) e.className = className;
+		if (html !== undefined) e.innerHTML = html;
+		return e;
+	}
+
+	/* ---- render: About ---- */
+	function renderAbout(container) {
 		container.innerHTML = "";
-		buildGroupState();
+
+		var hero = el("div", "about-hero");
+		hero.style.setProperty("--about-c1", aboutData.heroColors[0] || "#6c5ce7");
+		hero.style.setProperty("--about-c2", aboutData.heroColors[1] || "#00cec9");
+		hero.appendChild(el("h3", null, aboutData.greeting));
+		hero.appendChild(el("p", null, aboutData.tagline));
+		container.appendChild(hero);
+
+		if (aboutData.stats && aboutData.stats.length) {
+			var stats = el("div", "about-stats");
+			aboutData.stats.forEach(function (s, i) {
+				var box = el("div", "about-stat");
+				box.style.background = colorAt(i);
+				box.appendChild(el("span", "about-stat-value", s.value));
+				box.appendChild(el("span", "about-stat-label", s.label));
+				stats.appendChild(box);
+			});
+			container.appendChild(stats);
+		}
+
+		if (aboutData.skills && aboutData.skills.length) {
+			container.appendChild(el("h4", "about-section-title", "Fokus & Minat"));
+			var skillsWrap = el("div", "about-skills");
+			aboutData.skills.forEach(function (skill, i) {
+				var chip = el("span", "about-skill", skill);
+				chip.style.background = colorAt(i + 3);
+				skillsWrap.appendChild(chip);
+			});
+			container.appendChild(skillsWrap);
+		}
+
+		if (aboutData.links && aboutData.links.length) {
+			container.appendChild(el("h4", "about-section-title", "Terhubung"));
+			var linksWrap = el("div", "about-links");
+			aboutData.links.forEach(function (link, i) {
+				var a = el("a", "about-link-btn", link.label);
+				a.href = link.url;
+				a.target = "_blank";
+				a.rel = "noopener noreferrer";
+				a.style.background = link.color || colorAt(i);
+				linksWrap.appendChild(a);
+			});
+			container.appendChild(linksWrap);
+		}
+	}
+
+	/* ---- render: Projects ---- */
+	function renderProjects(container) {
+		container.innerHTML = "";
+		container.appendChild(el("h3", "projects-modal-heading", "Projects"));
+		container.appendChild(el("p", "projects-modal-sub", "Kumpulan prototype & dokumen kerja. Klik salah satu untuk membuka."));
 
 		window.projectsData.forEach(function (group, groupIndex) {
-			var groupEl = document.createElement("div");
-			groupEl.className = "projects-group";
+			var groupColor = colorAt(groupIndex * 2);
+			var groupEl = el("div", "pj-group");
 
-			var title = document.createElement("h3");
-			title.className = "projects-group-title";
-			title.textContent = group.category;
+			var title = el("span", "pj-group-title", group.category);
+			title.style.background = groupColor;
+			groupEl.appendChild(title);
 
-			var viewport = document.createElement("div");
-			viewport.className = "projects-viewport";
-			viewport.setAttribute("data-group-index", String(groupIndex));
-
-			var track = document.createElement("ul");
-			track.className = "projects-track";
-			track.setAttribute("data-group-index", String(groupIndex));
-
+			var grid = el("div", "pj-grid");
 			group.items.forEach(function (p, i) {
-				var li = document.createElement("li");
-				li.className = "project-item";
+				var cardColor = colorAt(groupIndex * 2 + i + 1);
+				var card = el("div", "pj-card");
+				card.style.setProperty("--pj-color", cardColor);
 
-				var idx = document.createElement("span");
-				idx.className = "project-index";
-				idx.textContent = String(i + 1).padStart(2, "0");
+				card.appendChild(el("span", "pj-card-index", String(i + 1).padStart(2, "0")));
+				card.appendChild(el("h4", "pj-card-name", p.name));
+				card.appendChild(el("p", "pj-card-desc", p.desc || ""));
 
-				var name = document.createElement("h3");
-				name.className = "project-name";
-				name.textContent = p.name;
-
-				var desc = document.createElement("p");
-				desc.className = "project-desc";
-				desc.textContent = p.desc || "";
-
-				var link = document.createElement("a");
-				link.className = "project-link";
+				var link = el("a", "pj-card-link", "Buka Project \u2192");
 				link.href = p.path;
 				link.target = "_blank";
 				link.rel = "noopener noreferrer";
-				link.textContent = "Open Project \u2192";
+				card.appendChild(link);
 
-				li.appendChild(idx);
-				li.appendChild(name);
-				li.appendChild(desc);
-				li.appendChild(link);
-				track.appendChild(li);
+				grid.appendChild(card);
 			});
 
-			viewport.appendChild(track);
-			groupEl.appendChild(title);
-			groupEl.appendChild(viewport);
+			groupEl.appendChild(grid);
 			container.appendChild(groupEl);
-
-			attachViewportWheel(viewport, groupIndex);
 		});
 	}
 
-	/* ---- state: 0 = intro, 1 = main (card), 2 = projects ---- */
-	var stage = 0;
-	var isAnimatingStage = false;
+	/* ---- modal open/close plumbing ---- */
+	var overlay, box, content, closeBtn;
+	var lastFocused = null;
 
-	function getTrack(groupIndex) {
-		return document.querySelector('.projects-track[data-group-index="' + groupIndex + '"]');
+	function openModal(renderFn) {
+		if (!overlay) return;
+		lastFocused = document.activeElement;
+		renderFn(content);
+		overlay.classList.add("open");
+		document.body.style.overflow = "hidden";
 	}
 
-	function getViewport(groupIndex) {
-		return document.querySelector('.projects-viewport[data-group-index="' + groupIndex + '"]');
+	function closeModal() {
+		if (!overlay || !overlay.classList.contains("open")) return;
+		overlay.classList.remove("open");
+		document.body.style.overflow = "";
+		if (lastFocused && typeof lastFocused.focus === "function") lastFocused.focus();
 	}
 
-	function maxTrackOffset(groupIndex) {
-		var track = getTrack(groupIndex);
-		var wrap = getViewport(groupIndex);
-		if (!track || !wrap) return 0;
-		return Math.max(0, track.scrollWidth - wrap.clientWidth);
-	}
+	function init() {
+		overlay = document.getElementById("modal-overlay");
+		box = document.getElementById("modal-box");
+		content = document.getElementById("modal-content");
+		closeBtn = document.getElementById("modal-close");
+		if (!overlay || !box || !content || !closeBtn) return;
 
-	function applyGroupOffset(groupIndex) {
-		var track = getTrack(groupIndex);
-		var st = groupState[groupIndex];
-		if (!track || !st) return;
-		var max = maxTrackOffset(groupIndex);
-		st.offset = Math.min(Math.max(st.offset, 0), max);
-		track.style.transform = "translateX(-" + st.offset + "px)";
-	}
+		var aboutTrigger = document.getElementById("about-trigger");
+		var projectTrigger = document.getElementById("project-trigger");
 
-	function applyAllGroupOffsets() {
-		groupState.forEach(function (_, groupIndex) {
-			applyGroupOffset(groupIndex);
-		});
-	}
-
-	function resetAllGroupGestures() {
-		groupState.forEach(function (st) {
-			st.lastWheelTime = 0;
-			st.gestureStartedAtEdge = false;
-		});
-	}
-
-	function goToProjects() {
-		if (isAnimatingStage || stage !== 1 || typeof anime === "undefined") return;
-		isAnimatingStage = true;
-		var main = document.querySelector(".content-main");
-		var projects = document.querySelector(".content-projects");
-		var TOTAL_DURATION = 1100; // sama seperti durasi transisi section 1 -> 2 (switchPage)
-
-		// meniru persis gerakan .content-intro pada transisi section 1 -> 2:
-		// translateY polos + fade, tanpa scaleY -- squash/stretch di versi
-		// asli hanya dipakai untuk elemen dekoratif kecil (svg.shape), bukan
-		// panel selebar layar, jadi tidak dipakai di sini supaya tetap mulus
-		anime({
-			targets: main,
-			duration: TOTAL_DURATION,
-			easing: "easeInOutSine",
-			translateY: "-100vh",
-			opacity: [1, 0.5]
-		});
-
-		anime({
-			targets: projects,
-			duration: TOTAL_DURATION,
-			easing: "easeInOutSine",
-			translateY: ["100vh", "0vh"],
-			opacity: [0, 1],
-			complete: function () {
-				stage = 2;
-				resetAllGroupGestures();
-				isAnimatingStage = false;
-			}
-		});
-	}
-
-	function backToMain() {
-		if (isAnimatingStage || stage !== 2 || typeof anime === "undefined") return;
-		isAnimatingStage = true;
-		var main = document.querySelector(".content-main");
-		var projects = document.querySelector(".content-projects");
-		var TOTAL_DURATION = 1100;
-
-		// persis transisi section 1 -> 2, dibalik: translateY polos + fade
-		anime({
-			targets: main,
-			duration: TOTAL_DURATION,
-			easing: "easeInOutSine",
-			translateY: "0vh",
-			opacity: [0.5, 1]
-		});
-
-		anime({
-			targets: projects,
-			duration: TOTAL_DURATION,
-			easing: "easeInOutSine",
-			translateY: "100vh",
-			opacity: [1, 0],
-			complete: function () {
-				stage = 1;
-				isAnimatingStage = false;
-			}
-		});
-	}
-
-	/* ---- scroll horizontal per kategori (dipasang langsung di tiap .projects-viewport) ---- */
-	function handleGroupWheel(groupIndex, e) {
-		var st = groupState[groupIndex];
-		if (!st) return;
-
-		var now = Date.now();
-		var isNewGesture = now - st.lastWheelTime > GESTURE_GAP;
-		st.lastWheelTime = now;
-
-		if (isNewGesture) {
-			// sesi scroll baru dimulai: catat apakah baris ini memang sudah
-			// mentok di posisi awal SEBELUM sesi ini bergerak sama sekali
-			st.gestureStartedAtEdge = st.offset <= 0;
-		}
-
-		var atStart = st.offset <= 0;
-
-		if (e.deltaY < 0 && atStart) {
-			if (isNewGesture && st.gestureStartedAtEdge) {
-				// sesi scroll baru yang murni dimulai saat baris ini sudah
-				// habis/mentok di kiri -> baru dianggap niat balik ke section 2
-				backToMain();
-			}
-			// selama masih dalam sesi scroll yang sama, sisa momentum di
-			// posisi mentok cukup diserap saja, tidak memicu apa pun
-			return;
-		}
-
-		st.offset += e.deltaY;
-		applyGroupOffset(groupIndex);
-	}
-
-	function attachViewportWheel(viewportEl, groupIndex) {
-		viewportEl.addEventListener("wheel", function (e) {
-			if (stage !== 2) return;
-			e.preventDefault();
-			e.stopPropagation();
-			handleGroupWheel(groupIndex, e);
-		}, { passive: false });
-	}
-
-	/* ---- listener level halaman: hanya untuk trigger section 1->2, dan
-	 * area putih di luar baris project (mis. judul/gap) saat di section 3 ---- */
-	function handlePageWheel(e) {
-		if (stage === 1) {
-			if (e.deltaY > 0) goToProjects();
-			return;
-		}
-		if (stage === 2) {
-			var overViewport = e.target.closest && e.target.closest(".projects-viewport");
-			if (!overViewport) {
+		if (aboutTrigger) {
+			aboutTrigger.addEventListener("click", function (e) {
 				e.preventDefault();
-				if (e.deltaY < 0) backToMain();
-			}
-			// kalau di atas salah satu baris project, biarkan listener
-			// khusus viewport itu yang menangani (attachViewportWheel)
+				openModal(renderAbout);
+			});
 		}
-	}
 
-	document.body.addEventListener("wheel", handlePageWheel, { passive: false });
-	window.addEventListener("resize", applyAllGroupOffsets);
-
-	/* ---- dukungan sentuh (mobile) ---- */
-	if (window.isPhone) {
-		var pStartX = 0, pStartY = 0, dragging = false, activeGroupIndex = -1;
-
-		document.addEventListener("touchstart", function (t) {
-			pStartX = t.touches[0].pageX;
-			pStartY = t.touches[0].pageY;
-			dragging = true;
-			var el = t.target.closest && t.target.closest(".projects-viewport");
-			activeGroupIndex = el ? parseInt(el.getAttribute("data-group-index"), 10) : -1;
-		}, { passive: true });
-
-		document.addEventListener("touchmove", function (t) {
-			if (!dragging) return;
-			if (stage === 2 && activeGroupIndex > -1) {
-				var dx = pStartX - t.touches[0].pageX;
-				pStartX = t.touches[0].pageX;
-				groupState[activeGroupIndex].offset += dx * 2;
-				applyGroupOffset(activeGroupIndex);
-			}
-		}, { passive: true });
-
-		document.addEventListener("touchend", function (t) {
-			dragging = false;
-			if (stage === 1 && typeof getMoveDirection === "function") {
-				var endX = t.changedTouches[0].pageX;
-				var endY = t.changedTouches[0].pageY;
-				if (getMoveDirection(pStartX, pStartY, endX, endY) === window.DIRECTIONS.UP) {
-					goToProjects();
-				}
-			}
-			activeGroupIndex = -1;
-		}, { passive: true });
-	}
-
-	/* -------------------------------------------------------------------
-	 * Stage baru boleh berpindah ke 1 HANYA setelah transisi section 1 -> 2
-	 * benar-benar selesai secara visual (bukan begitu fungsinya dipanggil).
-	 * loadMain.loaded di main.js di-set true secara instan saat dipanggil,
-	 * jauh sebelum animasinya kelar, jadi tidak dipakai sebagai patokan
-	 * langsung. Sebagai gantinya kita amati class "in" pada .card-inner
-	 * (ditambahkan oleh loadMain setelah delay) lalu tunggu durasi fade-nya
-	 * (1s, sesuai .fade{transition:all 1s} di CSS) supaya benar-benar tuntas
-	 * sebelum scroll boleh lanjut ke section project.
-	 * ------------------------------------------------------------------- */
-	var cardInner = document.querySelector(".card-inner");
-	var FADE_TRANSITION_BUFFER = 1000; // ms, samakan dengan durasi .fade
-
-	function armMainStageWhenReady() {
-		if (!cardInner) {
-			// fallback kalau elemen tak ditemukan: jangan pernah macet di stage 0
-			setTimeout(function () { stage = 1; }, 1800);
-			return;
+		if (projectTrigger) {
+			projectTrigger.addEventListener("click", function (e) {
+				e.preventDefault();
+				openModal(renderProjects);
+			});
 		}
-		if (cardInner.classList.contains("in")) {
-			setTimeout(function () { stage = 1; }, FADE_TRANSITION_BUFFER);
-			return;
-		}
-		var observer = new MutationObserver(function () {
-			if (cardInner.classList.contains("in")) {
-				observer.disconnect();
-				setTimeout(function () { stage = 1; }, FADE_TRANSITION_BUFFER);
-			}
+
+		closeBtn.addEventListener("click", closeModal);
+		overlay.addEventListener("click", function (e) {
+			if (e.target === overlay) closeModal();
 		});
-		observer.observe(cardInner, { attributes: true, attributeFilter: ["class"] });
+		document.addEventListener("keydown", function (e) {
+			if (e.key === "Escape") closeModal();
+		});
 	}
-
-	armMainStageWhenReady();
 
 	if (document.readyState === "loading") {
-		document.addEventListener("DOMContentLoaded", renderProjects);
+		document.addEventListener("DOMContentLoaded", init);
 	} else {
-		renderProjects();
+		init();
 	}
 })();
