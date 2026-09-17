@@ -495,7 +495,7 @@
 
   <!-- CANVAS VIEWPORT -->
   <div class="viewport-container" id="viewport">
-    <svg id="roadmap-svg" viewBox="0 0 1260 2120" preserveAspectRatio="xMidYMin meet">
+    <svg id="roadmap-svg" viewBox="0 0 1340 2120" preserveAspectRatio="xMidYMin meet">
       <defs>
         <!-- Marker Panah Biru -->
         <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -513,12 +513,14 @@
 
       <g id="canvas-content">
 
+
+
         <!-- ============================================== -->
         <!-- GARIS PENGHUBUNG ORTHOGONAL / ZIGZAG (NO CURVES) -->
         <!-- ============================================== -->
 
         <!-- Top Title -> Background Knowledge -->
-        <path class="line-spine" d="M 280 75 L 280 110" marker-end="url(#arrow-blue)" />
+        <path class="line-spine" d="M 385 78 L 385 95 L 280 95 L 280 110" marker-end="url(#arrow-blue)" />
 
         <!-- Background Knowledge -> Container Komponen Pengetahuan (Orthogonal) -->
         <path class="line-branch" d="M 450 135 L 535 135" marker-end="url(#arrow-blue)" />
@@ -528,9 +530,9 @@
 
         <!-- Jalur Keahlian Bawaan: Dari Container Background Knowledge -> Jalur Bebas Luar Kanan -> Knowledge Job -->
         <!-- Rute orthogonal zigzag lewat margin kanan luar (X=1215), bebas tabrakan/tanpa overlap -->
-        <path class="line-branch" style="stroke:#2563eb; stroke-dasharray:4 4;" d="M 1180 135 L 1215 135 L 1215 480 L 1025 480 L 1025 520" marker-end="url(#arrow-blue)" />
-        <rect x="1155" y="270" width="120" height="22" rx="4" fill="#eff6ff" stroke="#93c5fd" stroke-width="1" />
-        <text x="1215" y="281" font-family="sans-serif" font-size="10" font-weight="700" fill="#1d4ed8" text-anchor="middle">Keahlian Bawaan</text>
+        <path class="line-branch" style="stroke:#2563eb; stroke-dasharray:4 4;" d="M 1180 135 L 1295 135 L 1295 480 L 1075 480 L 1075 520" marker-end="url(#arrow-blue)" />
+        <rect x="1235" y="270" width="120" height="22" rx="4" fill="#eff6ff" stroke="#93c5fd" stroke-width="1" />
+        <text x="1295" y="281" font-family="sans-serif" font-size="10" font-weight="700" fill="#1d4ed8" text-anchor="middle">Keahlian Bawaan</text>
 
         <!-- Requirement Organization -> 2 Cabang Mandiri (Orthogonal Fork) -->
         <path class="line-branch" d="M 450 240 L 495 240 L 495 206 L 540 206" marker-end="url(#arrow-blue)" />
@@ -546,7 +548,7 @@
         <path class="line-spine" d="M 280 495 L 280 520" marker-end="url(#arrow-blue)" />
         <path class="line-spine" d="M 860 495 L 860 520" marker-end="url(#arrow-blue)" />
 
-        <!-- ALUR DARI KONTAINER ORGANIZATION KNOWLEDGE KE JOB FAMILY -->
+        <!-- ALUR DARI KONTAINER DIRECTORATE KNOWLEDGE KE JOB FAMILY -->
         <path class="line-spine" d="M 280 788 L 280 820" marker-end="url(#arrow-blue)" />
 
         <!-- FORK 2 CABANG KNOWLEDGE JOB (Orthogonal Fork):
@@ -554,34 +556,25 @@
              Cabang 1: Knowledge Managerial (Kiri)
              Cabang 2: Knowledge Fungsional (Kanan) -->
         <path class="line-branch" d="M 860 570 L 860 595 L 695 595 L 695 620" marker-end="url(#arrow-blue)" />
-        <path class="line-branch" d="M 860 595 L 1025 595 L 1025 620" marker-end="url(#arrow-blue)" />
+        <path class="line-branch" d="M 860 595 L 1075 595 L 1075 620" marker-end="url(#arrow-blue)" />
 
         <!-- KONVERGENSI DWP KE LMS (Orthogonal Bus):
              Setelah bagian Job Family, Managerial, dan Fungsional selesai,
              ketiganya mengalir lanjut ke Learning Requirement di Domain LMS -->
         <path class="line-spine" d="M 280 960 L 280 985" />
         <path class="line-spine" d="M 695 825 L 695 985" />
-        <path class="line-spine" d="M 1025 825 L 1025 985" />
+        <path class="line-spine" d="M 1075 825 L 1075 985" />
         <!-- Garis Bus Horizontal Konvergensi -->
-        <path class="line-spine" d="M 280 985 L 1025 985" />
+        <path class="line-spine" d="M 280 985 L 1075 985" />
         <!-- Alur Bersama Masuk ke Header LMS -->
-        <path class="line-spine" d="M 600 985 L 600 1015" marker-end="url(#arrow-blue)" />
+        <path class="line-spine" d="M 672 985 L 672 1015" marker-end="url(#arrow-blue)" />
 
-        <!-- Header LMS -> Learning Requirement -->
-        <path class="line-spine" d="M 600 1049 L 600 1070 L 280 1070 L 280 1095" marker-end="url(#arrow-blue)" />
+        <!-- Alur Keluar Kontainer Domain LMS Menuju Header Domain Uji Kompetensi -->
+        <!-- Dari dasar Content di Y=1425 menembus keluar dasar kontainer LMS (Y=1480), lalu berbelok ke header Uji Kompetensi -->
+        <path class="line-spine" d="M 250 1425 L 250 1490 L 280 1490 L 280 1505" marker-end="url(#arrow-blue)" />
 
-        <!-- Learning Requirement -> Cabang Kanan (Bedah 9 Elemen Silabus) -->
-        <path class="line-branch" d="M 450 1120 L 540 1120" />
-
-        <!-- Learning Requirement -> Content -->
-        <path class="line-spine" d="M 280 1145 L 280 1415" marker-end="url(#arrow-blue)" />
-
-        <!-- Content -> Cabang Kanan (Content Assets) -->
-        <path class="line-branch" d="M 450 1440 L 540 1440" />
-
-        <!-- Content -> Domain Uji Kompetensi Header -->
-        <path class="line-spine" d="M 280 1465 L 280 1505" />
-        <path class="line-spine" d="M 280 1539 L 280 1570" marker-end="url(#arrow-blue)" />
+        <!-- Dari Header Domain Uji Kompetensi (Y=1539) Menuju Learning Assignment (Y=1565) -->
+        <path class="line-spine" d="M 280 1539 L 280 1565" marker-end="url(#arrow-blue)" />
 
         <!-- Learning Assignment -> 5 Standalone Branch Nodes (Orthogonal, No Container) -->
         <path class="line-branch" d="M 450 1590 L 495 1590 L 495 1571 L 540 1571" marker-end="url(#arrow-blue)" />
@@ -606,15 +599,37 @@
         <!-- HEADER UTAMA & RELATED TOPICS BOX              -->
         <!-- ============================================== -->
 
-        <!-- Root Spine Node: Roadmap Manajemen Pengetahuan (Sesuai Konsep TOP Root) -->
+        <!-- Panduan Simbol (Pojok Kiri Atas, Sejajar Rapi Tanpa Overlap) -->
+        <g id="box-canvas-legend">
+          <rect x="60" y="20" width="175" height="60" rx="6" fill="#ffffff" stroke="#18181b" stroke-width="1.5" />
+          <rect x="60" y="20" width="175" height="18" rx="6" fill="#f4f4f5" stroke="#18181b" stroke-width="1.5" />
+          <text x="147" y="31" font-family="sans-serif" font-size="9.5" font-weight="800" fill="#18181b" text-anchor="middle">PANDUAN SIMBOL</text>
+
+          <rect x="68" y="44" width="12" height="10" rx="2" fill="#facc15" stroke="#18181b" stroke-width="1" />
+          <text x="84" y="52" font-family="sans-serif" font-size="8.5" font-weight="600" fill="#27272a">Spine</text>
+
+          <rect x="118" y="44" width="12" height="10" rx="2" fill="#fef08a" stroke="#18181b" stroke-width="1" />
+          <text x="134" y="52" font-family="sans-serif" font-size="8.5" font-weight="600" fill="#27272a">Cabang</text>
+
+          <rect x="172" y="44" width="12" height="10" rx="2" fill="#2563eb" stroke="#2563eb" stroke-width="1" />
+          <text x="188" y="52" font-family="sans-serif" font-size="8.5" font-weight="600" fill="#27272a">Domain</text>
+
+          <line x1="68" y1="68" x2="82" y2="68" stroke="#16a34a" stroke-width="2" stroke-dasharray="3 2" />
+          <text x="88" y="70" font-family="sans-serif" font-size="8.5" font-weight="600" fill="#16a34a">Loop Re-Assign Gap</text>
+        </g>
+
+        <!-- Root Spine Node: Roadmap Manajemen Pengetahuan -->
         <g id="node-root-title">
-          <rect x="110" y="25" width="340" height="50" rx="25" fill="#0f172a" stroke="#38bdf8" stroke-width="2.5" />
-          <text x="280" y="50" font-family="sans-serif" font-size="14.5" font-weight="800" fill="#ffffff" text-anchor="middle">
-            Roadmap Manajemen Pengetahuan
+          <rect x="250" y="22" width="270" height="56" rx="28" fill="#0f172a" stroke="#38bdf8" stroke-width="2.5" />
+          <text x="385" y="44" font-family="sans-serif" font-size="13" font-weight="800" fill="#ffffff" text-anchor="middle">
+            Roadmap Manajemen
+          </text>
+          <text x="385" y="62" font-family="sans-serif" font-size="13" font-weight="800" fill="#ffffff" text-anchor="middle">
+            Pengetahuan
           </text>
         </g>
 
-        <!-- Arsitektur Terkait Box (Sisi Kanan, Sejajar Rapi) -->
+        <!-- Arsitektur Terkait Box -->
         <g id="box-related">
           <rect x="540" y="22" width="190" height="56" rx="6" fill="#ffffff" stroke="#18181b" stroke-width="1.5" />
           <text x="555" y="38" font-family="sans-serif" font-size="11" font-weight="800" fill="#18181b">Arsitektur Terkait</text>
@@ -624,12 +639,12 @@
 
         <!-- Brand Card Kanan Atas -->
         <g id="box-brand">
-          <rect x="745" y="22" width="435" height="56" rx="6" fill="#f4f4f5" stroke="#e4e4e7" stroke-width="1.5" />
-          <text x="962" y="42" font-family="sans-serif" font-size="12" font-weight="700" fill="#18181b" text-anchor="middle">
+          <rect x="745" y="22" width="535" height="56" rx="6" fill="#f4f4f5" stroke="#e4e4e7" stroke-width="1.5" />
+          <text x="1012" y="42" font-family="sans-serif" font-size="12" font-weight="700" fill="#18181b" text-anchor="middle">
             Model Arsitektur Kompetensi Organisasi
           </text>
-          <text x="962" y="60" font-family="sans-serif" font-size="10.5" font-weight="500" fill="#71717a" text-anchor="middle">
-            Penyelarasan Modal Bawaan, DWP Direktorat, & Kurikulum LMS
+          <text x="1012" y="60" font-family="sans-serif" font-size="10.5" font-weight="500" fill="#71717a" text-anchor="middle">
+            Penyelarasan Modal Bawaan, DWP Direktorat, &amp; Kurikulum LMS
           </text>
         </g>
 
@@ -769,7 +784,7 @@
         <!-- & TURUNANNYA KE JOB FAMILY                                  -->
         <!-- ------------------------------------------------------------ -->
 
-        <!-- SATU KONTAINER UTAMA: ORGANIZATION KNOWLEDGE TREE -->
+        <!-- SATU KONTAINER UTAMA: DIRECTORATE KNOWLEDGE TREE -->
         <g id="group-ORG">
           <!-- Kotak Kontainer Pembungkus Seluruh Tree -->
           <rect x="60" y="520" width="440" height="268" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="2" />
@@ -777,7 +792,7 @@
           <!-- Header Kontainer (Clickable Organization Knowledge) -->
           <g class="node-elem" id="node-ORG" onclick="openDrawer('ORG')">
             <rect x="60" y="520" width="440" height="34" rx="8" fill="#facc15" stroke="#18181b" stroke-width="2" />
-            <text class="txt-title" x="280" y="537" font-size="13.5">Organization Knowledge</text>
+            <text class="txt-title" x="280" y="537" font-size="13.5">Directorate Knowledge</text>
           </g>
 
           <!-- Tree Step 1: Penjelasan Direktorat -->
@@ -842,11 +857,11 @@
 
           <g class="node-elem" id="node-JF_1" onclick="openDrawer('JF_1')">
             <rect x="70" y="900" width="205" height="24" rx="4" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="172" y="912" font-size="10">Kelompok Skill Bersama</text>
+            <text class="txt-sub" x="172" y="912" font-size="10">Kelompok KSAO Bersama</text>
           </g>
           <g class="node-elem" id="node-JF_2" onclick="openDrawer('JF_2')">
             <rect x="285" y="900" width="205" height="24" rx="4" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="387" y="912" font-size="10">Kelompok Kegiatan Kerja</text>
+            <text class="txt-sub" x="387" y="912" font-size="10">Kelompok Interaksi Kerja</text>
           </g>
 
           <g class="node-elem" id="node-JF_3" onclick="openDrawer('JF_3')">
@@ -905,141 +920,194 @@
           </g>
         </g>
 
-        <!-- CABANG 2 KNOWLEDGE JOB: Knowledge Fungsional -->
+        <!-- CABANG 2 KNOWLEDGE JOB: Knowledge Fungsional (16 Elemen DWP dalam 2 Kolom) -->
         <g id="group-KF">
-          <rect x="870" y="620" width="310" height="205" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
+          <rect x="870" y="620" width="410" height="205" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
 
           <g class="node-elem" id="node-KF" onclick="openDrawer('KF')">
-            <rect x="870" y="620" width="310" height="28" rx="8" fill="#fef08a" stroke="#18181b" stroke-width="1.8" />
-            <text class="txt-group-header" x="1025" y="634" font-size="11.5">Knowledge Fungsional</text>
+            <rect x="870" y="620" width="410" height="28" rx="8" fill="#fef08a" stroke="#18181b" stroke-width="1.8" />
+            <text class="txt-group-header" x="1075" y="634" font-size="11.5">Knowledge Fungsional (16 Elemen Informasi DWP)</text>
           </g>
 
-          <text x="1025" y="656" font-family="sans-serif" font-size="9" font-style="italic" fill="#71717a" text-anchor="middle">
-            (Output spesifik bidang kerjanya)
-          </text>
-
+          <!-- Kolom A (Elemen 1 s.d 8) -->
           <g class="node-elem" id="node-KF_1" onclick="openDrawer('KF_1')">
-            <rect x="882" y="668" width="286" height="23" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="1025" y="680" font-size="10">SOP Teknis Pekerjaan</text>
+            <rect x="878" y="654" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
+            <text class="txt-sub" x="975" y="662" font-size="8.5">1. Nama &amp; Tujuan Jabatan</text>
           </g>
           <g class="node-elem" id="node-KF_2" onclick="openDrawer('KF_2')">
-            <rect x="882" y="696" width="286" height="23" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="1025" y="708" font-size="10">Pengoperasian Tools Kerja</text>
+            <rect x="878" y="674" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
+            <text class="txt-sub" x="975" y="682" font-size="8.5">2. Tanggung Jawab Utama</text>
           </g>
           <g class="node-elem" id="node-KF_3" onclick="openDrawer('KF_3')">
-            <rect x="882" y="724" width="286" height="23" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="1025" y="736" font-size="10">Metode Troubleshooting</text>
+            <rect x="878" y="694" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
+            <text class="txt-sub" x="975" y="702" font-size="8.5">3. Output/Deliverable</text>
           </g>
           <g class="node-elem" id="node-KF_4" onclick="openDrawer('KF_4')">
-            <rect x="882" y="752" width="286" height="23" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="1025" y="764" font-size="10">Standar Mutu Output</text>
+            <rect x="878" y="714" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
+            <text class="txt-sub" x="975" y="722" font-size="8.5">4. Standar Kinerja/KPI/SLA</text>
           </g>
           <g class="node-elem" id="node-KF_5" onclick="openDrawer('KF_5')">
-            <rect x="882" y="780" width="286" height="23" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="1025" y="792" font-size="10">Regulasi Teknis Lapangan</text>
+            <rect x="878" y="734" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
+            <text class="txt-sub" x="975" y="742" font-size="8.5">5. Pengetahuan yang Dipersyaratkan</text>
+          </g>
+          <g class="node-elem" id="node-KF_6" onclick="openDrawer('KF_6')">
+            <rect x="878" y="754" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
+            <text class="txt-sub" x="975" y="762" font-size="8.5">6. Aktivitas/Metode Kerja</text>
+          </g>
+          <g class="node-elem" id="node-KF_7" onclick="openDrawer('KF_7')">
+            <rect x="878" y="774" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
+            <text class="txt-sub" x="975" y="782" font-size="8.5">7. Masalah yang Harus Diselesaikan</text>
+          </g>
+          <g class="node-elem" id="node-KF_8" onclick="openDrawer('KF_8')">
+            <rect x="878" y="794" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
+            <text class="txt-sub" x="975" y="802" font-size="8.5">8. Orientasi / Karakteristik</text>
+          </g>
+
+          <!-- Kolom B (Elemen 9 s.d 16) -->
+          <g class="node-elem" id="node-KF_9" onclick="openDrawer('KF_9')">
+            <rect x="1078" y="654" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
+            <text class="txt-sub" x="1175" y="662" font-size="8.5">9. Wewenang Keputusan</text>
+          </g>
+          <g class="node-elem" id="node-KF_10" onclick="openDrawer('KF_10')">
+            <rect x="1078" y="674" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
+            <text class="txt-sub" x="1175" y="682" font-size="8.5">10. Hubungan Kerja</text>
+          </g>
+          <g class="node-elem" id="node-KF_11" onclick="openDrawer('KF_11')">
+            <rect x="1078" y="694" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
+            <text class="txt-sub" x="1175" y="702" font-size="8.5">11. Tools, System &amp; Peralatan</text>
+          </g>
+          <g class="node-elem" id="node-KF_12" onclick="openDrawer('KF_12')">
+            <rect x="1078" y="714" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
+            <text class="txt-sub" x="1175" y="722" font-size="8.5">12. Risiko Pekerjaan</text>
+          </g>
+          <g class="node-elem" id="node-KF_13" onclick="openDrawer('KF_13')">
+            <rect x="1078" y="734" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
+            <text class="txt-sub" x="1175" y="742" font-size="8.5">13. Regulasi/Standar</text>
+          </g>
+          <g class="node-elem" id="node-KF_14" onclick="openDrawer('KF_14')">
+            <rect x="1078" y="754" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
+            <text class="txt-sub" x="1175" y="762" font-size="8.5">14. Tanggung Jawab Pemimpin</text>
+          </g>
+          <g class="node-elem" id="node-KF_15" onclick="openDrawer('KF_15')">
+            <rect x="1078" y="774" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
+            <text class="txt-sub" x="1175" y="782" font-size="8.5">15. Kriteria Penguasaan</text>
+          </g>
+          <g class="node-elem" id="node-KF_16" onclick="openDrawer('KF_16')">
+            <rect x="1078" y="794" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
+            <text class="txt-sub" x="1175" y="802" font-size="8.5">16. Pendidikan/Pengalaman</text>
           </g>
         </g>
 
 
         <!-- ============================================================== -->
-        <!-- DOMAIN 2: LMS (KURIKULUM & MEDIA BELAJAR)                       -->
+        <!-- DOMAIN LMS (SATU KONTAINER PEMBUNGKUS UTAMA)                   -->
         <!-- ============================================================== -->
-        <!-- Section Header Pill Biru -->
-        <g id="section-lms">
-          <rect x="475" y="1015" width="250" height="34" rx="17" fill="#2563eb" />
-          <text x="600" y="1032" font-family="sans-serif" font-size="12.5" font-weight="800" fill="#ffffff" text-anchor="middle">
-            DOMAIN LMS — KURIKULUM
+        <g id="container-DOMAIN-LMS">
+          <!-- Kotak Kontainer Besar Pembungkus Seluruh Domain LMS -->
+          <rect x="60" y="1015" width="1225" height="465" rx="12" fill="#ffffff" stroke="#2563eb" stroke-width="2.5" />
+
+          <!-- Header Kontainer Domain LMS -->
+          <rect x="60" y="1015" width="1225" height="36" rx="12" fill="#2563eb" />
+          <text x="672" y="1033" font-family="sans-serif" font-size="13.5" font-weight="800" fill="#ffffff" text-anchor="middle">
+            DOMAIN LMS
           </text>
-        </g>
 
-        <!-- Learning Requirement Node (Silabus) -->
-        <g class="node-elem" id="node-LR" onclick="openDrawer('LR')">
-          <rect x="110" y="1095" width="340" height="50" rx="8" fill="#facc15" stroke="#18181b" stroke-width="2" />
-          <text class="txt-title" x="280" y="1120" font-size="14">Learning Requirement</text>
-        </g>
-
-        <!-- Container Box Rincian Silabus Hasil Bedah (A s.d I) di Kanan -->
-        <g id="group-LR">
-          <rect x="540" y="1085" width="640" height="295" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="2" />
-          <rect x="540" y="1085" width="640" height="26" rx="8" fill="#fef08a" stroke="#18181b" stroke-width="2" />
-          <text class="txt-group-header" x="860" y="1098" font-size="12">Bedah 9 Elemen Standar Silabus Program Pelatihan</text>
-
-          <!-- Baris 1: A, B -->
-          <g class="node-elem" id="node-LR_A" onclick="openDrawer('LR_A')">
-            <rect x="552" y="1119" width="305" height="36" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="704" y="1137" font-size="11">A. Header Program (Profil, Kategori, Prasyarat)</text>
-          </g>
-          <g class="node-elem" id="node-LR_B" onclick="openDrawer('LR_B')">
-            <rect x="865" y="1119" width="305" height="36" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="1017" y="1137" font-size="11">B. Tujuan Pelatihan (Performance Objective)</text>
+          <!-- 1. Learning Requirement Node (Spine Kiri di dalam kontainer LMS) -->
+          <g class="node-elem" id="node-LR" onclick="openDrawer('LR')">
+            <rect x="80" y="1075" width="340" height="50" rx="8" fill="#facc15" stroke="#18181b" stroke-width="2" />
+            <text class="txt-title" x="250" y="1100" font-size="14">Learning Requirement</text>
           </g>
 
-          <!-- Baris 2: C, D -->
-          <g class="node-elem" id="node-LR_C" onclick="openDrawer('LR_C')">
-            <rect x="552" y="1163" width="305" height="36" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="704" y="1181" font-size="11">C. Materi Pelatihan & Referensi SOP</text>
-          </g>
-          <g class="node-elem" id="node-LR_D" onclick="openDrawer('LR_D')">
-            <rect x="865" y="1163" width="305" height="36" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="1017" y="1181" font-size="11">D. Metode Pelatihan (Model 70:20:10)</text>
+          <!-- Sub-Kontainer Rincian Silabus Hasil Bedah (A s.d I) di Kanan -->
+          <g id="group-LR">
+            <rect x="460" y="1065" width="810" height="270" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
+            <rect x="460" y="1065" width="810" height="24" rx="8" fill="#fef08a" stroke="#18181b" stroke-width="1.8" />
+            <text class="txt-group-header" x="865" y="1077" font-size="11.5">Bedah 9 Elemen Standar Silabus Program Pelatihan</text>
+
+            <!-- Baris 1: A, B -->
+            <g class="node-elem" id="node-LR_A" onclick="openDrawer('LR_A')">
+              <rect x="472" y="1097" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="666" y="1113" font-size="10.5">A. Header Program (Profil, Kategori, Prasyarat)</text>
+            </g>
+            <g class="node-elem" id="node-LR_B" onclick="openDrawer('LR_B')">
+              <rect x="868" y="1097" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="1062" y="1113" font-size="10.5">B. Tujuan Pelatihan (Performance Objective)</text>
+            </g>
+
+            <!-- Baris 2: C, D -->
+            <g class="node-elem" id="node-LR_C" onclick="openDrawer('LR_C')">
+              <rect x="472" y="1136" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="666" y="1152" font-size="10.5">C. Materi Pelatihan &amp; Referensi SOP</text>
+            </g>
+            <g class="node-elem" id="node-LR_D" onclick="openDrawer('LR_D')">
+              <rect x="868" y="1136" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="1062" y="1152" font-size="10.5">D. Metode Pelatihan (Model 70:20:10)</text>
+            </g>
+
+            <!-- Baris 3: E, F -->
+            <g class="node-elem" id="node-LR_E" onclick="openDrawer('LR_E')">
+              <rect x="472" y="1175" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="666" y="1191" font-size="10.5">E. Alur Kegiatan (Pre-Test s.d RTL)</text>
+            </g>
+            <g class="node-elem" id="node-LR_F" onclick="openDrawer('LR_F')">
+              <rect x="868" y="1175" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="1062" y="1191" font-size="10.5">F. Media, Alat &amp; Sumber Pelatihan</text>
+            </g>
+
+            <!-- Baris 4: G, H -->
+            <g class="node-elem" id="node-LR_G" onclick="openDrawer('LR_G')">
+              <rect x="472" y="1214" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="666" y="1230" font-size="10.5">G. Skema Penilaian &amp; Kelulusan (≥ 80%)</text>
+            </g>
+            <g class="node-elem" id="node-LR_H" onclick="openDrawer('LR_H')">
+              <rect x="868" y="1214" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="1062" y="1230" font-size="10.5">H. Evaluasi 4 Level Kirkpatrick</text>
+            </g>
+
+            <!-- Baris 5: I (Full Width) -->
+            <g class="node-elem" id="node-LR_I" onclick="openDrawer('LR_I')">
+              <rect x="472" y="1253" width="784" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="864" y="1269" font-size="10.5">I. Catatan Coaching &amp; Pengamatan Jurnal Naratif Pengembangan</text>
+            </g>
+
+            <!-- Footer Box Explanatory -->
+            <text x="864" y="1312" font-family="sans-serif" font-size="10.5" font-weight="600" fill="#71717a" text-anchor="middle">
+              Standarisasi blueprint kurikulum sebelum materi modul diproduksi atau ditugaskan.
+            </text>
           </g>
 
-          <!-- Baris 3: E, F -->
-          <g class="node-elem" id="node-LR_E" onclick="openDrawer('LR_E')">
-            <rect x="552" y="1207" width="305" height="36" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="704" y="1225" font-size="11">E. Alur Kegiatan (Pre-Test s.d RTL)</text>
-          </g>
-          <g class="node-elem" id="node-LR_F" onclick="openDrawer('LR_F')">
-            <rect x="865" y="1207" width="305" height="36" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="1017" y="1225" font-size="11">F. Media, Alat & Sumber Pelatihan</text>
+          <!-- 2. Content (Modul & Media Belajar) Node di dalam kontainer LMS -->
+          <g class="node-elem" id="node-CT" onclick="openDrawer('CT')">
+            <rect x="80" y="1375" width="340" height="50" rx="8" fill="#facc15" stroke="#18181b" stroke-width="2" />
+            <text class="txt-title" x="250" y="1400" font-size="14">Content</text>
           </g>
 
-          <!-- Baris 4: G, H -->
-          <g class="node-elem" id="node-LR_G" onclick="openDrawer('LR_G')">
-            <rect x="552" y="1251" width="305" height="36" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="704" y="1269" font-size="11">G. Skema Penilaian & Kelulusan (≥ 80%)</text>
-          </g>
-          <g class="node-elem" id="node-LR_H" onclick="openDrawer('LR_H')">
-            <rect x="865" y="1251" width="305" height="36" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="1017" y="1269" font-size="11">H. Evaluasi 4 Level Kirkpatrick</text>
+          <!-- Sub-Kontainer Rincian Content di Kanan di dalam kontainer LMS -->
+          <g id="group-CT">
+            <rect x="460" y="1365" width="810" height="70" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
+            <rect x="460" y="1365" width="810" height="22" rx="8" fill="#fef08a" stroke="#18181b" stroke-width="1.8" />
+            <text class="txt-group-header" x="865" y="1376" font-size="11">Aset Media &amp; Penyedia Konten Pembelajaran</text>
+
+            <g class="node-elem" id="node-CT_1" onclick="openDrawer('CT_1')">
+              <rect x="472" y="1395" width="250" height="30" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="597" y="1410" font-size="10.5">Modul SCORM / Video</text>
+            </g>
+            <g class="node-elem" id="node-CT_2" onclick="openDrawer('CT_2')">
+              <rect x="738" y="1395" width="254" height="30" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="865" y="1410" font-size="10.5">SOP &amp; Job-Aid Lapangan</text>
+            </g>
+            <g class="node-elem" id="node-CT_3" onclick="openDrawer('CT_3')">
+              <rect x="1008" y="1395" width="248" height="30" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="1132" y="1410" font-size="10.5">Pelatihan Mitra Pihak Ketiga</text>
+            </g>
           </g>
 
-          <!-- Baris 5: I (Full Width) -->
-          <g class="node-elem" id="node-LR_I" onclick="openDrawer('LR_I')">
-            <rect x="552" y="1295" width="618" height="36" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="860" y="1313" font-size="11">I. Catatan Coaching & Pengamatan Jurnal Naratif Pengembangan</text>
-          </g>
-
-          <!-- Footer Box Explanatory -->
-          <text x="860" y="1355" font-family="sans-serif" font-size="11" font-weight="600" fill="#71717a" text-anchor="middle">
-            Standarisasi blueprint kurikulum sebelum materi modul diproduksi atau ditugaskan.
-          </text>
-        </g>
-
-        <!-- Content (Modul & Media Belajar) Node -->
-        <g class="node-elem" id="node-CT" onclick="openDrawer('CT')">
-          <rect x="110" y="1415" width="340" height="50" rx="8" fill="#facc15" stroke="#18181b" stroke-width="2" />
-          <text class="txt-title" x="280" y="1440" font-size="14">Content</text>
-        </g>
-
-        <!-- Container Box Rincian Content di Kanan -->
-        <g id="group-CT">
-          <rect x="540" y="1405" width="640" height="70" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="2" />
-          <rect x="540" y="1405" width="640" height="22" rx="8" fill="#fef08a" stroke="#18181b" stroke-width="2" />
-          <text class="txt-group-header" x="860" y="1416" font-size="11.5">Aset Media & Penyedia Konten Pembelajaran</text>
-
-          <g class="node-elem" id="node-CT_1" onclick="openDrawer('CT_1')">
-            <rect x="552" y="1433" width="195" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="649" y="1449" font-size="10.5">Modul SCORM / Video</text>
-          </g>
-          <g class="node-elem" id="node-CT_2" onclick="openDrawer('CT_2')">
-            <rect x="757" y="1433" width="205" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="859" y="1449" font-size="10.5">SOP & Job-Aid Lapangan</text>
-          </g>
-          <g class="node-elem" id="node-CT_3" onclick="openDrawer('CT_3')">
-            <rect x="972" y="1433" width="198" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="1071" y="1449" font-size="10.5">Pelatihan Mitra Pihak Ketiga</text>
-          </g>
+          <!-- Garis internal di dalam kontainer LMS: LR -> Content -->
+          <path class="line-spine" d="M 250 1125 L 250 1375" marker-end="url(#arrow-blue)" />
+          <!-- Garis internal: LR -> Sub-kontainer Silabus -->
+          <path class="line-branch" d="M 420 1100 L 460 1100" marker-end="url(#arrow-blue)" />
+          <!-- Garis internal: Content -> Sub-kontainer Content Assets -->
+          <path class="line-branch" d="M 420 1400 L 460 1400" marker-end="url(#arrow-blue)" />
         </g>
 
 
@@ -1202,26 +1270,7 @@
         </g>
 
 
-    <!-- FLOATING LEGEND -->
-    <div class="floating-legend">
-      <div style="font-weight:800; font-size:11px; text-transform:uppercase; margin-bottom:2px; color:#18181b;">Panduan Simbol</div>
-      <div class="legend-row">
-        <div class="legend-color" style="background:#facc15;"></div>
-        <span>Tulang Punggung Utama (Spine)</span>
-      </div>
-      <div class="legend-row">
-        <div class="legend-color" style="background:#fef08a;"></div>
-        <span>Cabang & Grup Rincian Terstruktur</span>
-      </div>
-      <div class="legend-row">
-        <div class="legend-color" style="background:#2563eb; border-color:#2563eb;"></div>
-        <span>Kelompok Domain Alur</span>
-      </div>
-      <div class="legend-row">
-        <div style="width:16px; height:2px; background:#16a34a;"></div>
-        <span>Loop Penugasan Ulang Gap Kinerja</span>
-      </div>
-    </div>
+
 
     <!-- ZOOM CONTROLS -->
     <div class="floating-controls">
@@ -1486,7 +1535,7 @@
       // DOMAIN 1: DWP — PENGETAHUAN DIREKTORAT (PARALEL)
       // -------------------------------------------------------------
       "ORG": {
-        title: "Organization Knowledge",
+        title: "Directorate Knowledge",
         category: "DWP Direktorat (Paralel)",
         hakikat: "Pengetahuan sistemik mengenai kelembagaan direktorat tempat peran berada. Menjelaskan mandat direktorat, hierarki divisi & departemen, manual mutu, serta SOP resmi unit.",
         sumber: "Pedoman Tata Kerja Direktorat, SK Struktur Organisasi, Manual Sistem Manajemen Mutu.",
@@ -1496,7 +1545,7 @@
       },
       "ORG_1": {
         title: "Penjelasan Direktorat",
-        category: "Organization Knowledge",
+        category: "Directorate Knowledge",
         hakikat: "Definisi, visi operasional, mandat strategis, dan ruang lingkup tanggung jawab direktorat dalam rantai nilai bisnis korporat.",
         sumber: "Buku Pedoman Tata Kerja & Mandat Direktorat.",
         turunan: "Mandat bisnis direktorat, target tahunan direktorat, cakupan wewenang makro.",
@@ -1505,7 +1554,7 @@
       },
       "ORG_2": {
         title: "Divisi & Departemen",
-        category: "Organization Knowledge",
+        category: "Directorate Knowledge",
         hakikat: "Struktur pecahan organisasi direktorat: apa saja divisi dan departemen yang ada, fungsi masing-masing, serta relasi timbal balik antar-unit.",
         sumber: "Bagan Struktur Organisasi & Job Mapping HR.",
         turunan: "Struktur hierarki, batas tanggung jawab departemen, titik serah-terima tugas (handover).",
@@ -1514,7 +1563,7 @@
       },
       "ORG_3": {
         title: "Kebijakan & Manual Mutu",
-        category: "Organization Knowledge",
+        category: "Directorate Knowledge",
         hakikat: "Pedoman mutu internal, sasaran kualitas kerja, batas toleransi kegagalan, dan kebijakan kepatuhan yang berlaku di lingkungan direktorat.",
         sumber: "Manual Sistem Manajemen Mutu (ISO 9001) Direktorat.",
         turunan: "Sasaran Mutu (Quality Objectives), toleransi loss redaman < 0.2 dB per sambungan, audit kepatuhan.",
@@ -1523,7 +1572,7 @@
       },
       "ORG_4": {
         title: "SOP Resmi Direktorat",
-        category: "Organization Knowledge",
+        category: "Directorate Knowledge",
         hakikat: "Kompilasi Standar Operasional Prosedur (SOP) baku yang mengatur mekanisme pelaksanaan seluruh pekerjaan rutin di direktorat.",
         sumber: "Katalog SOP Terkendali Direktorat.",
         turunan: "Kodefikasi SOP, diagram alir proses, dokumen input-output baku.",
@@ -1533,7 +1582,7 @@
 
       "ORG_5": {
         title: "Base Knowledge (Pengetahuan Dasar Direktorat)",
-        category: "Organization Knowledge",
+        category: "Directorate Knowledge",
         hakikat: "Kumpulan pengetahuan dasar, prinsip fundamental, terminologi institusional, dan dokumen acuan primer yang menjadi basis operasional seluruh fungsi di lingkungan direktorat.",
         sumber: "Pedoman Pokok Operasional, Whitepaper Teknis Internal, dan Master Repository Direktorat.",
         turunan: "Standar terminologi direktorat, referensi arsitektur dasar, repositori pedoman kerja, basis data pengetahuan internal.",
@@ -1542,7 +1591,7 @@
       },
       "ORG_6": {
         title: "Technical Handbook (Buku Panduan Teknis)",
-        category: "Organization Knowledge",
+        category: "Directorate Knowledge",
         hakikat: "Dokumen panduan teknis operasional terperinci yang memuat spesifikasi perangkat, manual kerja teknis, diagram pengkabelan, dan instruksi teknis mendalam unit kerja.",
         sumber: "Manual Book Prinsipal/Vendor, Standar Keteknikan Internal, dan Best Practices Engineering.",
         turunan: "Spesifikasi teknis perangkat keras/lunak, panduan instalasi mendalam, batasan teknis perangkat, diagram skematik.",
@@ -1554,12 +1603,12 @@
         category: "DWP Direktorat (Turunan Org)",
         hakikat: "Pengelompokan jabatan-jabatan yang memiliki rumpun tugas sejenis (Common-Functional Professional). Merupakan turunan langsung dari Organization Knowledge yang berisi kelompok skill dan kelompok kegiatan kerja bersama.",
         sumber: "Arsitektur Job Family HR & Deskripsi Wewenang dan Pekerjaan (DWP).",
-        turunan: "• Kelompok 'Skill' (kompetensi teknis bersama lintas kluster sejenis)<br>• Kelompok Kegiatan/Pekerjaan (aktivitas tugas beririsan)<br>• Batas Wewenang DWP (otoritas keputusan mandiri vs eskalasi)<br>• Target Profisiensi Level 1–5 (Awareness hingga Master/SME)",
+        turunan: "• Kelompok KSAO Bersama (kompetensi terintegrasi lintas kluster sejenis)<br>• Kelompok Interaksi Kerja (alur koordinasi tugas beririsan)<br>• Batas Wewenang DWP (otoritas keputusan mandiri vs eskalasi)<br>• Target Profisiensi Level 1–5 (Awareness hingga Master/SME)",
         example: "Rumpun 'Network Engineering' mencakup teknisi OSP, engineer transmisi, dan admin NOC. Mereka berbagi skill dasar pengukuran optik dan kegiatan troubleshooting jaringan yang sama.",
         dependensi: "Diturunkan dari Organization Knowledge, menyuplai standar profisiensi ke Learning Requirement dan Learning Assignment."
       },
       "JF_1": {
-        title: "Kelompok Skill Bersama",
+        title: "Kelompok KSAO Bersama",
         category: "Job Family (Rincian)",
         hakikat: "Himpunan keterampilan profesional yang dipakai bersama oleh beberapa kluster atau unit yang saling berinteraksi (Common-Functional).",
         sumber: "Job Family Matrix & Competency Profiling.",
@@ -1568,7 +1617,7 @@
         dependensi: "Menjadi kurikulum mata ajar bersama di Learning Requirement."
       },
       "JF_2": {
-        title: "Kelompok Kegiatan & Pekerjaan",
+        title: "Kelompok Interaksi Kerja",
         category: "Job Family (Rincian)",
         hakikat: "Pengelompokan aktivitas kerja nyata, tanggung jawab harian, dan siklus proyek yang memiliki karakteristik serumpun.",
         sumber: "Analisis Aktivitas Kerja DWP.",
@@ -1659,58 +1708,157 @@
         dependensi: "Penyelarasan sasaran tim di Learning Assignment dan KPI."
       },
       "KF": {
-        title: "Knowledge Fungsional",
+        title: "Knowledge Fungsional (16 Elemen DWP)",
         category: "Knowledge Job (Pilar Spesialisasi)",
-        hakikat: "Pengetahuan pelaksana peran untuk menghasilkan output spesifik bidang kerjanya. Bersifat teknis, aplikatif, dan tidak dapat dipertukarkan antarperan.",
-        sumber: "DWP Jabatan Fungsional, Katalog SOP Teknis, dan Manual Alat Kerja.",
-        turunan: "1. SOP Teknis Pekerjaan (urutan langkah baku)<br>2. Pengoperasian Tools Kerja (sistem, software, instrumen)<br>3. Metode Troubleshooting (pelacakan anomali)<br>4. Standar Mutu Output (batas toleransi error)<br>5. Regulasi Teknis Lapangan (K3 & baku proses)",
-        example: "Teknisi jaringan menguasai SOP splicing, mengoperasikan fusion splicer & OTDR, melacak titik putus kabel, memastikan redaman < 0.2 dB, dan mematuhi K3 panjat tiang.",
+        hakikat: "Pengetahuan pelaksana peran untuk menghasilkan output spesifik bidang kerjanya, dibedah utuh dari 16 elemen informasi Deskripsi Wewenang dan Pekerjaan (DWP).",
+        sumber: "Tabel Transformasi Data DWP (Enterprise Competency Dictionary) & Dokumen Resmi Jabatan.",
+        turunan: "1. Nama & Tujuan Jabatan<br>2. Tanggung Jawab Utama<br>3. Output/Deliverable<br>4. Standar Kinerja/KPI/SLA<br>5. Pengetahuan yang Dipersyaratkan<br>6. Aktivitas/Metode Kerja<br>7. Masalah yang Harus Diselesaikan<br>8. Orientasi/Karakteristik<br>9. Wewenang Keputusan<br>10. Hubungan Kerja<br>11. Tools, System & Peralatan<br>12. Risiko Pekerjaan<br>13. Regulasi/Standar<br>14. Tanggung Jawab Kepemimpinan<br>15. Kriteria Penguasaan<br>16. Pendidikan/Pengalaman",
+        example: "Dekomposisi DWP Teknisi Jaringan: tujuan peran menjaga konektivitas, output terminasi kabel < 0.2 dB, tools fusion splicer & OTDR, risiko bahaya jatuh tiang K3.",
         dependensi: "Diturunkan dari Knowledge Job, mengalir langsung ke silabus teknis di Learning Requirement."
       },
       "KF_1": {
-        title: "SOP Teknis Pekerjaan",
-        category: "Knowledge Fungsional",
-        hakikat: "Urutan langkah baku pelaksanaan tugas untuk menjamin proses kerja berjalan konsisten dan benar.",
-        sumber: "Katalog SOP Teknis Terkendali Direktorat.",
-        turunan: "Tahapan instalasi fisik, prosedur penggelaran kabel, langkah terminasi perangkat.",
-        example: "Menjalankan 7 langkah baku penarikan kabel drop core dari tiang distribusi ke pelanggan.",
-        dependensi: "Bahan penyusun materi ajar utama di Content."
+        title: "1. Nama dan Tujuan Jabatan",
+        category: "Knowledge Fungsional (Elemen DWP)",
+        hakikat: "Alasan mendasar eksistensi peran dalam organisasi dan kontribusinya terhadap pencapaian sasaran unit kerja.",
+        sumber: "DWP Bagian 1 — Identitas & Tujuan Jabatan.",
+        turunan: "Konteks peran, ruang lingkup mandat kerja, batas akuntabilitas fungsi.",
+        example: "Tujuan jabatan Network Maintenance Technician: menjamin ketersediaan fisik jaringan akses broadband di area operasional cabang.",
+        dependensi: "Menentukan batasan kompetensi teknis di silabus LMS."
       },
       "KF_2": {
-        title: "Pengoperasian Tools Kerja",
-        category: "Knowledge Fungsional",
-        hakikat: "Cara kerja sistem, perangkat lunak, instrumen tugas, dan alat ukur spesifik yang digunakan dalam eksekusi pekerjaan.",
-        sumber: "Manual Book Prinsipal, Panduan Software, dan Pelatihan Alat.",
-        turunan: "Operasional fusion splicer, Optical Time-Domain Reflectometer (OTDR), Optical Power Meter (OPM), software konfigurasi.",
-        example: "Mengoperasikan mesin splicer untuk menyambung core optik dan mengkalibrasi OTDR sebelum pengukuran jarak.",
-        dependensi: "Tolok ukur keterampilan praktik di Assessment."
+        title: "2. Tanggung Jawab Utama",
+        category: "Knowledge Fungsional (Elemen DWP)",
+        hakikat: "Himpunan tindakan kunci yang dilakukan pemegang jabatan secara rutin maupun berkala.",
+        sumber: "DWP Bagian 2 — Uraian Tugas Pokok.",
+        turunan: "Daftar tindakan kerja utama, siklus tugas harian/mingguan, kandidat indikator perilaku teramati.",
+        example: "Melakukan inspeksi berkala kotak ODC, menyambung kabel drop core yang putus, dan memperbarui status tiket di CRM.",
+        dependensi: "Mendasari penyusunan indikator kinerja di silabus pelatihan."
       },
       "KF_3": {
-        title: "Metode Troubleshooting",
-        category: "Knowledge Fungsional",
-        hakikat: "Teknik pelacakan sumber anomali teknis, degradasi performa, atau gangguan sistemik secara presisi.",
-        sumber: "Log Insiden Lapangan & Troubleshooting Guide.",
-        turunan: "Analisis event pantulan grafis OTDR, penelusuran loss sambungan, isolasi segmen kabel putus.",
-        example: "Mendiagnosis apakah redaman tinggi disebabkan oleh tekukan kabel (macrobending) atau sambungan kotor.",
-        dependensi: "Objek uji utama pada evaluasi unjuk kerja di Assessment."
+        title: "3. Output / Deliverable",
+        category: "Knowledge Fungsional (Elemen DWP)",
+        hakikat: "Produk fisik, layanan, atau dokumen akhir yang dihasilkan dari pelaksanaan pekerjaan.",
+        sumber: "DWP Bagian 3 — Deliverable Matrix.",
+        turunan: "Spesifikasi hasil kerja nyata, kriteria deliverable terukur, format bukti berita acara.",
+        example: "Sambungan kabel optik pada tray closure, laporan hasil ukur OTDR, dan berita acara aktivasi pelanggan.",
+        dependensi: "Menjadi objek pengujian pada Work Sample Test di Assessment."
       },
       "KF_4": {
-        title: "Standar Mutu Output",
-        category: "Knowledge Fungsional",
-        hakikat: "Batas toleransi error, spesifikasi hasil kerja, dan parameter kualitas yang wajib dipenuhi sebelum pekerjaan diserahterimakan.",
-        sumber: "Manual Mutu Direktorat & Service Level Agreement (SLA).",
-        turunan: "Batas toleransi redaman loss optik (maksimal 0.2 dB per splice), kerapian instalasi kabel, verifikasi foto geotagged.",
-        example: "Memastikan hasil terminasi menghasilkan redaman < 0.05 dB sebelum menutup kotak ODP dan menerbitkan berita acara.",
-        dependensi: "Indikator keberhasilan kelulusan (passing criteria) di Assessment."
+        title: "4. Standar Kinerja / KPI / SLA",
+        category: "Knowledge Fungsional (Elemen DWP)",
+        hakikat: "Ukuran kuantitatif dan kualitatif keberhasilan pelaksanaan tugas mencakup mutu, waktu, dan kepatuhan.",
+        sumber: "DWP Bagian 4 — Sasaran Kinerja & Service Level Agreement.",
+        turunan: "Target MTTR (Mean Time to Repair < 2 jam), tingkat repeat incident < 2%, SLA kepatuhan jadwal.",
+        example: "Penyelesaian gangguan pelanggan dalam waktu maksimal 120 menit sejak tiket diterbitkan.",
+        dependensi: "Tolok ukur batas kelulusan kinerja pada tahap evaluasi kerja."
       },
       "KF_5": {
-        title: "Regulasi Teknis Lapangan",
-        category: "Knowledge Fungsional",
-        hakikat: "Aturan keselamatan K3, kepatuhan baku proses, dan standar teknis kerja di lapangan.",
-        sumber: "Pedoman K3LH Telekomunikasi & Standar Teknis Industri.",
-        turunan: "Kepatuhan APD lengkap (helm, sabuk pengaman tiang, rompi, sepatu safety), protokol izin kerja di ketinggian.",
-        example: "Wajib memasang tanda pengaman lalu lintas dan mengenakan harness keselamatan sebelum menaiki tiang optik di pinggir jalan raya.",
-        dependensi: "Kriteria mutlak kepatuhan kerja di Assessment observasi lapangan."
+        title: "5. Pengetahuan yang Dipersyaratkan",
+        category: "Knowledge Fungsional (Elemen DWP)",
+        hakikat: "Konsep teoritis, prinsip ilmiah, dan regulasi industri yang wajib diketahui sebelum mengeksekusi tugas.",
+        sumber: "DWP Bagian 5 — Domain Knowledge Requirement.",
+        turunan: "Teori transmisi cahaya, prinsip dasar redaman dB, kodefikasi warna kabel optik.",
+        example: "Memahami hubungan panjang gelombang 1310/1550 nm dengan dispersi sinyal pada serat optik.",
+        dependensi: "Bahan materi ajar utama pada modul teori di LMS."
+      },
+      "KF_6": {
+        title: "6. Aktivitas / Metode Kerja",
+        category: "Knowledge Fungsional (Elemen DWP)",
+        hakikat: "Prosedur, teknik aplikasi, dan metodologi baku yang digunakan saat mengeksekusi tugas.",
+        sumber: "DWP Bagian 6 — Standard Operating Procedure (SOP).",
+        turunan: "Teknik pemotongan fiber cleaver, teknik alignment core, prosedur penggelaran kabel udara.",
+        example: "Metode kupas kabel drop core menggunakan stripper khusus tanpa melukai lapisan cladding kaca.",
+        dependensi: "Materi demonstrasi video praktik dan simulasi laboratorium."
+      },
+      "KF_7": {
+        title: "7. Masalah yang Harus Diselesaikan",
+        category: "Knowledge Fungsional (Elemen DWP)",
+        hakikat: "Tingkat kompleksitas masalah operasional dan pola pemecahan kendala (cognitive problem solving) yang dihadapi.",
+        sumber: "DWP Bagian 7 — Problem Solving Context.",
+        turunan: "Identifikasi anomali grafis OTDR, pelacakan kabel terjepit, pemecahan gangguan intermiten.",
+        example: "Menemukan lokasi kabel optik putus akibat gigitan tikus di plafon pelanggan yang jalurnya tidak beraturan.",
+        dependensi: "Materi skenario kasus pada Situational Judgement Task."
+      },
+      "KF_8": {
+        title: "8. Orientasi / Karakteristik",
+        category: "Knowledge Fungsional (Elemen DWP)",
+        hakikat: "Karakteristik sikap kerja dan fokus perhatian yang dibutuhkan agar pekerjaan terlaksana dengan selamat dan berkualitas.",
+        sumber: "DWP Bagian 8 — Work Attitude & Behavioral Traits.",
+        turunan: "Ketelitian mikro, kesabaran menghadapi pekerjaan presisi, kehati-hatian terhadap aset bernilai tinggi.",
+        example: "Sikap teliti membersihkan ujung konektor optik menggunakan alkohol isopropil sebelum dicolokkan ke port OLT.",
+        dependensi: "Diukur melalui instrumen asesmen perilaku dan karakter (DISC/PAPI)."
+      },
+      "KF_9": {
+        title: "9. Wewenang Keputusan",
+        category: "Knowledge Fungsional (Elemen DWP)",
+        hakikat: "Besaran otonomi dan limitasi wewenang yang boleh diputuskan mandiri tanpa meminta persetujuan atasan.",
+        sumber: "DWP Bagian 9 — Decision Authority Matrix.",
+        turunan: "Batas wewenang penggantian suku cadang di lokasi, wewenang pembongkaran perangkat, batas eskalasi atasan.",
+        example: "Teknisi mandiri memutuskan mengganti patchcord pelanggan, namun wajib izin SPV bila harus membongkar ODC utama.",
+        dependensi: "Kriteria kepatuhan wewenang operasional di Assessment."
+      },
+      "KF_10": {
+        title: "10. Hubungan Kerja",
+        category: "Knowledge Fungsional (Elemen DWP)",
+        hakikat: "Pihak internal dan eksternal yang dihadapi dalam koordinasi kerja serta etika komunikasi yang dipersyaratkan.",
+        sumber: "DWP Bagian 10 — Stakeholder & Work Interface.",
+        turunan: "Koordinasi dengan helpdesk cabang, komunikasi dengan pelanggan residensial, relasi dengan teknisi vendor mitra.",
+        example: "Menjelaskan kendala teknis secara sopan dan menenangkan pelanggan saat melakukan perbaikan di rumah.",
+        dependensi: "Bahan uji role-play komunikasi pada tahap penugasan dan asesmen."
+      },
+      "KF_11": {
+        title: "11. Tools, System & Peralatan",
+        category: "Knowledge Fungsional (Elemen DWP)",
+        hakikat: "Daftar perangkat keras, perangkat lunak, sistem operasional, dan instrumen kerja yang wajib dikuasai pengoperasiannya.",
+        sumber: "DWP Bagian 11 — Tool & System Inventory.",
+        turunan: "Mesin Fusion Splicer, Optical Time-Domain Reflectometer (OTDR), Optical Power Meter (OPM), aplikasi tiket CRM.",
+        example: "Mengoperasikan menu kalibrasi arc fusion splicer dan mengekspor file log trace hasil ukur OTDR ke aplikasi cloud.",
+        dependensi: "Objek uji kepenguasaan alat pada evaluasi unjuk kerja."
+      },
+      "KF_12": {
+        title: "12. Risiko Pekerjaan",
+        category: "Knowledge Fungsional (Elemen DWP)",
+        hakikat: "Potensi bahaya fisik, risiko keselamatan kerja, dan dampak finansial yang melekat pada objek pekerjaan.",
+        sumber: "DWP Bagian 12 — Hazard Identification & Risk Assessment (HIRA).",
+        turunan: "Risiko jatuh dari ketinggian tiang, risiko serpihan kaca fiber menusuk kulit, bahaya radiasi laser optik tidak terlihat.",
+        example: "Mengetahui bahaya menatap langsung ujung kabel fiber yang aktif karena radiasi laser inframerah dapat merusak retina.",
+        dependensi: "Materi wajib regulasi K3 dan checklist observasi lapangan."
+      },
+      "KF_13": {
+        title: "13. Regulasi / Standar",
+        category: "Knowledge Fungsional (Elemen DWP)",
+        hakikat: "Ketentuan hukum, peraturan perundang-undangan, dan standar baku industri telekomunikasi yang mengikat pelaksanaan tugas.",
+        sumber: "DWP Bagian 13 — Statutory & Industry Standards.",
+        turunan: "Standar ITU-T kabel serat optik, regulasi Kemnaker keselamatan kerja di ketinggian, standar ISO 9001 unit.",
+        example: "Mematuhi standar batas radius tekukan kabel (minimum bending radius) agar serat kaca tidak retak permanen.",
+        dependensi: "Bahan uji kepatuhan regulasi pada kuis objektif LMS."
+      },
+      "KF_14": {
+        title: "14. Tanggung Jawab Kepemimpinan",
+        category: "Knowledge Fungsional (Elemen DWP)",
+        hakikat: "Tanggung jawab membimbing rekan kerja junior, mengarahkan helper lapangan, dan memimpin regu kerja teknis.",
+        sumber: "DWP Bagian 14 — Team Leadership & Peer Mentoring.",
+        turunan: "Briefing keselamatan kerja sebelum naik tiang, pembagian tugas asisten teknisi, mentoring teknisi baru.",
+        example: "Senior teknisi memimpin briefing pembagian rute dan memastikan helper telah mengenakan APD lengkap sebelum berangkat.",
+        dependensi: "Indikator kesiapan promosi menuju jenjang Principal/Team Leader."
+      },
+      "KF_15": {
+        title: "15. Kriteria Penguasaan",
+        category: "Knowledge Fungsional (Elemen DWP)",
+        hakikat: "Bukti konkret yang membuktikan bahwa pemegang jabatan telah benar-benar menguasai kompetensi tugasnya.",
+        sumber: "DWP Bagian 15 — Competency Verification Evidence.",
+        turunan: "Sertifikasi internal penanganan fiber optik, kelulusan uji unjuk kerja terobservasi, catatan nir-insiden mutu.",
+        example: "Dinyatakan lulus verifikasi setelah berhasil menyambung kabel dengan redaman < 0.05 dB sebanyak 10 kali berturut-turut tanpa gagal.",
+        dependensi: "Menjadi dasar penerbitan surat izin wewenang mandiri dari SME."
+      },
+      "KF_16": {
+        title: "16. Pendidikan / Pengalaman",
+        category: "Knowledge Fungsional (Elemen DWP)",
+        hakikat: "Persyaratan kualifikasi minimum latar belakang pendidikan dan jam terbang kerja yang dibutuhkan untuk memegang peran.",
+        sumber: "DWP Bagian 16 — Minimum Entry Qualification.",
+        turunan: "Jenjang pendidikan vokasi/teknik elektro/telekomunikasi, batas minimum pengalaman kerja di industri sejenis.",
+        example: "Minimal SMK Telekomunikasi / D3 Teknik Elektro dengan pengalaman kerja minimal 1 tahun di bidang jaringan akses optik.",
+        dependensi: "Filter awal seleksi penerimaan dan penempatan jabatan."
       },
 
       // -------------------------------------------------------------
