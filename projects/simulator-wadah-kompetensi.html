@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulator Penempatan Pengetahuan — Single-Home Method</title>
+
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --canvas-bg: #f8fafc;
+      --dot-color: #cbd5e1;
+      --border: #18181b;
+      --text-main: #09090b;
+      --text-muted: #71717a;
+      --yellow-main: #facc15;
+      --yellow-light: #fef08a;
+      --blue-main: #2563eb;
+      --green-main: #16a34a;
+      --green-light: #dcfce7;
+      --purple-main: #7e22ce;
+      --purple-light: #f3e8ff;
+      --sky-light: #e0f2fe;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--canvas-bg);
+      background-image: radial-gradient(var(--dot-color) 1.2px, transparent 1.2px);
+      background-size: 24px 24px;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navbar */
+    header.roadmap-nav {
+      height: 56px;
+      background: #ffffff;
+      color: #09090b;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      border-bottom: 1.5px solid var(--border);
+      z-index: 30;
+      flex-shrink: 0;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-badge {
+      background: #09090b;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #27272a;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      background: #ffffff;
+      color: #18181b;
+      border: 1.5px solid #18181b;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+      box-shadow: 2px 2px 0px #18181b;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #f4f4f5;
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0px #18181b;
+    }
+
+    .btn:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0px #18181b;
+    }
+
+    .btn-yellow {
+      background: var(--yellow-main);
+    }
+    .btn-yellow:hover {
+      background: #eab308;
+    }
+
+    /* Layout Container */
+    .main-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px 24px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex: 1;
+    }
+
+    /* Subheader Hero */
+    .hero-card {
+      background: #ffffff;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 20px;
+      box-shadow: 3px 3px 0px var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .hero-title {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      margin-bottom: 3px;
+    }
+
+    .hero-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 9px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      border: 1px solid #e4e4e7;
+      background: #f4f4f5;
+    }
+
+    /* Preset Scenarios */
+    .preset-bar {
+      background: #ffffff;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 16px;
+      box-shadow: 2px 2px 0px var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .preset-label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #52525b;
+      margin-right: 4px;
+    }
+
+    .preset-btn {
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1.2px solid var(--border);
+      background: #f8fafc;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .preset-btn:hover {
+      background: var(--yellow-light);
+    }
+    .preset-btn.active {
+      background: var(--yellow-main);
+      box-shadow: 2px 2px 0px var(--border);
+    }
+
+    /* Grid Layout: Form Wizard (Kiri) & Decision Tree Visual (Kanan) */
+    .simulator-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    @media (max-width: 960px) {
+      .simulator-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Card Panels */
+    .panel {
+      background: #ffffff;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 3px 3px 0px var(--border);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 10px 16px;
+      background: #f4f4f5;
+      border-bottom: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .panel-title {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #18181b;
+    }
+
+    .panel-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* Form Fields */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #27272a;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      font-family: inherit;
+      font-size: 12.5px;
+      padding: 7px 11px;
+      border: 1.5px solid #d4d4d8;
+      border-radius: 6px;
+      outline: none;
+      background: #fafafa;
+      transition: all 0.15s;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      background: #ffffff;
+      border-color: var(--border);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 48px;
+    }
+
+    /* Stepper Wizard Question Box */
+    .wizard-step-box {
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: #fafafa;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .step-badge {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 800;
+      color: var(--blue-main);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .step-question {
+      font-size: 13.5px;
+      font-weight: 700;
+      line-height: 1.35;
+      color: #09090b;
+    }
+
+    .step-context {
+      font-size: 11.5px;
+      color: #52525b;
+      line-height: 1.35;
+      background: #ffffff;
+      border-left: 3px solid var(--blue-main);
+      padding: 6px 10px;
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* Choice Options */
+    .choice-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .choice-card {
+      border: 1.5px solid #d4d4d8;
+      border-radius: 6px;
+      padding: 10px;
+      background: #ffffff;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      transition: all 0.15s;
+    }
+
+    .choice-card:hover {
+      border-color: var(--border);
+      background: #fdfdfd;
+      transform: translateY(-1px);
+    }
+
+    .choice-card.selected {
+      border-color: var(--border);
+      background: var(--yellow-light);
+      box-shadow: 2px 2px 0px var(--border);
+    }
+
+    .choice-title {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #18181b;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .choice-desc {
+      font-size: 10.5px;
+      color: #52525b;
+      line-height: 1.25;
+    }
+
+    /* Audit Confirmation Checklist */
+    .audit-box {
+      background: #f8fafc;
+      border: 1.2px dashed #cbd5e1;
+      border-radius: 6px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .audit-title {
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #475569;
+      letter-spacing: 0.4px;
+    }
+
+    .audit-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: #334155;
+    }
+
+    .audit-item input[type="checkbox"] {
+      width: 14px;
+      height: 14px;
+      accent-color: var(--border);
+      cursor: pointer;
+    }
+
+    /* Stepper Controls */
+    .wizard-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 4px;
+    }
+
+    /* Output Recommendation Card */
+    .result-card {
+      border: 1.8px solid var(--border);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 14px 16px;
+      box-shadow: 3px 3px 0px var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .result-badge-target {
+      align-self: flex-start;
+      font-size: 12.5px;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1.5px solid var(--border);
+      box-shadow: 2px 2px 0px var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-wadah-1 { background: #fef08a; color: #854d0e; }
+    .badge-wadah-2 { background: #fef08a; color: #854d0e; }
+    .badge-wadah-3 { background: #fef08a; color: #854d0e; }
+    .badge-wadah-4 { background: #dcfce7; color: #166534; border-color: #16a34a; }
+
+    .result-detail-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .result-field {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .result-label {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .result-val {
+      font-size: 11.5px;
+      color: #18181b;
+      line-height: 1.4;
+    }
+
+    /* SVG Decision Tree Visualizer */
+    .tree-visual-container {
+      width: 100%;
+      height: 100%;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 12px;
+      background: #ffffff;
+    }
+
+    #decision-tree-svg {
+      width: 100%;
+      height: auto;
+      max-height: 560px;
+    }
+
+    .dt-node rect {
+      transition: all 0.2s ease;
+    }
+    .dt-node.active rect {
+      stroke: #2563eb !important;
+      stroke-width: 2.5px !important;
+      filter: drop-shadow(0 2px 4px rgba(37,99,235,0.25));
+    }
+    .dt-node.terminal-active rect {
+      stroke: #16a34a !important;
+      stroke-width: 3px !important;
+      fill: #bbf7d0 !important;
+    }
+    .dt-line {
+      transition: stroke 0.2s ease, stroke-width 0.2s ease;
+    }
+    .dt-line.active {
+      stroke: #2563eb !important;
+      stroke-width: 2.5px !important;
+    }
+
+    /* Legend Bar under Tree */
+    .tree-legend-box {
+      width: 100%;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 10.5px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
+      color: #334155;
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      border: 1px solid #18181b;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVBAR -->
+  <header class="roadmap-nav">
+    <div class="brand-group">
+      <div class="brand-badge">roadmap.sh</div>
+      <div class="brand-title">Simulator Penempatan Pengetahuan (Single-Home Method)</div>
+    </div>
+
+    <div class="nav-actions">
+      <a href="roadmap-kompetensi-organisasi.html" class="btn btn-yellow" title="Kembali ke halaman peta jalan utama arsitektur kompetensi">
+        ← Kembali ke Roadmap
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN WRAPPER -->
+  <div class="main-container">
+
+    <!-- SUBHEADER HERO CARD -->
+    <div class="hero-card">
+      <div>
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+          <span class="pill-badge" style="background:#fef08a; color:#854d0e; border-color:#ca8a04;">Decision Tree Prototype</span>
+          <span class="pill-badge" style="background:#dcfce7; color:#166534; border-color:#86efac;">Anti-Redundancy Single-Home</span>
+        </div>
+        <h1 class="hero-title">Simulator Penempatan Pengetahuan</h1>
+        <p class="hero-desc">
+          Uji materi baru melalui 3 filter uji bertingkat untuk menguncinya ke <strong>satu wadah tunggal</strong>. <em>Core Values &amp; Expected Behaviour</em> dikecualikan karena merupakan fondasi baku organisasi.
+        </p>
+      </div>
+
+      <button class="btn" onclick="resetSimulator()" title="Kosongkan formulir dan mulai uji dari langkah awal">
+        ⤾ Reset Simulasi
+      </button>
+    </div>
+
+    <!-- PRESET TEST SCENARIOS -->
+    <div class="preset-bar">
+      <span class="preset-label">Skenario Siap Pakai:</span>
+      <button class="preset-btn" onclick="loadScenario('SIM-01', this)" title="Uji materi pengenalan proyek FTTH untuk seluruh karyawan (Wadah 1)">
+        SIM-01: 5 Fase DPMF (Wadah 1)
+      </button>
+      <button class="preset-btn" onclick="loadScenario('SIM-02', this)" title="Uji materi wewenang pengeluaran kas bagi pimpinan (Wadah 2)">
+        SIM-02: Kas Darurat (Wadah 2)
+      </button>
+      <button class="preset-btn" onclick="loadScenario('SIM-03', this)" title="Uji protokol koordinasi handoff antar-unit kerja (Wadah 3)">
+        SIM-03: Handoff Dokumen (Wadah 3)
+      </button>
+      <button class="preset-btn" onclick="loadScenario('SIM-04', this)" title="Uji keterampilan teknis spesifik teknisi lapangan (Wadah 4)">
+        SIM-04: Splicing ODC (Wadah 4)
+      </button>
+    </div>
+
+    <!-- SIMULATOR GRID -->
+    <div class="simulator-grid">
+
+      <!-- LEFT COLUMN: FORM & STEPPER WIZARD -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">1. Panel Input &amp; Langkah Pengujian</span>
+          <span id="step-counter-badge" class="pill-badge" style="background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe;">Langkah 1 dari 3</span>
+        </div>
+
+        <div class="panel-body">
+
+          <!-- INPUT FORM -->
+          <div style="display:grid; grid-template-columns: 2fr 1fr; gap:10px;">
+            <div class="form-group">
+              <label class="form-label" for="inputTopicName" title="Ketik judul usulan materi yang ingin dipetakan">Nama Materi Pengetahuan</label>
+              <input type="text" id="inputTopicName" class="form-input" placeholder="Contoh: Protokol Handoff & Versioning Dokumen" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="inputUnit" title="Pilih unit kerja atau fungsi pengusul materi">Unit Pengusul</label>
+              <select id="inputUnit" class="form-select">
+                <option value="Direktorat Operasi FTTH">Direktorat Operasi FTTH</option>
+                <option value="Direktorat Teknik & Jaringan">Direktorat Teknik & Jaringan</option>
+                <option value="Direktorat Keuangan & SDM">Direktorat Keuangan & SDM</option>
+                <option value="PMO & Governance">PMO & Governance</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="inputTopicDesc" title="Tuliskan output konkret dari penguasaan materi ini">Deliverable / Output Materi</label>
+            <textarea id="inputTopicDesc" class="form-textarea" placeholder="Ringkasan deliverable fisik atau indikator hasil yang teramati..."></textarea>
+          </div>
+
+          <hr style="border:none; border-top:1.5px solid #e4e4e7;" />
+
+          <!-- STEP WIZARD CONTAINER -->
+          <div id="wizard-container" class="wizard-step-box">
+            <!-- Dynamic Content injected via JS -->
+          </div>
+
+          <!-- CONFIRMATION CHECKLIST -->
+          <div class="audit-box" title="Verifikasi akuntabilitas sebelum hasil wadah dikunci">
+            <span class="audit-title">Checklist Akuntabilitas (RACI Test):</span>
+            <label class="audit-item">
+              <input type="checkbox" id="chk-raci-1" checked onchange="updateAuditState()" />
+              <span>Menghasilkan deliverable resmi pada deskripsi jabatan DWP.</span>
+            </label>
+            <label class="audit-item">
+              <input type="checkbox" id="chk-raci-2" checked onchange="updateAuditState()" />
+              <span>Kegagalan pemahaman materi berdampak langsung pada KPI pengusul.</span>
+            </label>
+          </div>
+
+          <!-- ACTIONS -->
+          <div class="wizard-actions">
+            <button class="btn" id="btn-prev" onclick="handlePrevStep()" disabled title="Kembali ke pertanyaan sebelumnya">
+              ← Kembali
+            </button>
+            <div style="display:flex; gap:8px;">
+              <button class="btn" onclick="resetSimulator()" title="Batalkan pengujian">Batal</button>
+              <button class="btn btn-yellow" id="btn-next" onclick="handleNextStep()" title="Lanjut ke langkah berikutnya berdasarkan jawaban">
+                Lanjut Uji →
+              </button>
+            </div>
+          </div>
+
+          <!-- RESULT OUTPUT PANEL -->
+          <div id="output-panel" style="display:none; margin-top:6px;">
+            <div class="result-card">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:11px; font-weight:800; color:#71717a; text-transform:uppercase;">Rekomendasi Wadah Tunggal</span>
+                <span class="pill-badge" style="background:#18181b; color:#ffffff;">Terkunci</span>
+              </div>
+
+              <div id="result-badge-container">
+                <!-- Injected via JS -->
+              </div>
+
+              <div class="result-detail-grid">
+                <div class="result-field">
+                  <span class="result-label">Alasan Lolos Audit:</span>
+                  <p class="result-val" id="result-reason"></p>
+                </div>
+                <div class="result-field">
+                  <span class="result-label">Justifikasi Eliminasi Wadah Lain:</span>
+                  <p class="result-val" id="result-elimination"></p>
+                </div>
+                <div class="result-field">
+                  <span class="result-label">Metode Asesmen Rekomendasi:</span>
+                  <p class="result-val" id="result-assessment" style="font-weight:700; color:#1d4ed8;"></p>
+                </div>
+              </div>
+
+              <div style="padding-top:8px; border-top:1px solid #e4e4e7; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:11px; color:#52525b;">Wadah siap dipetakan ke silabus kurikulum LMS.</span>
+                <a href="roadmap-kompetensi-organisasi.html" class="btn btn-yellow" style="font-size:11px;" title="Buka peta jalan organisasi untuk melihat posisi wadah ini">
+                  Lihat di Roadmap →
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- RIGHT COLUMN: DECISION TREE DIAGRAM VISUALIZER -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">2. Visualisasi Pohon Keputusan (Decision Tree)</span>
+          <span class="pill-badge" style="background:#ffffff; border-color:#cbd5e1;">Live Interactive</span>
+        </div>
+
+        <div class="panel-body tree-visual-container">
+          <!-- SVG DECISION TREE (TIDAK TUMPANG TINDIH, VIEWBOX 560 x 500) -->
+          <svg id="decision-tree-svg" viewBox="0 0 560 500" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <marker id="dt-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#18181b" />
+              </marker>
+            </defs>
+
+            <!-- START NODE -->
+            <g id="dt-node-start" class="dt-node active">
+              <rect x="200" y="15" width="160" height="34" rx="17" fill="#0f172a" stroke="#18181b" stroke-width="1.8" />
+              <text x="280" y="32" font-family="sans-serif" font-size="10.5" font-weight="700" fill="#ffffff" text-anchor="middle" dominant-baseline="central">Usulan Topik / Materi</text>
+            </g>
+
+            <!-- Line: Start -> Q1 -->
+            <path id="dt-line-start-q1" class="dt-line active" d="M 280 49 L 280 80" stroke="#18181b" stroke-width="1.5" marker-end="url(#dt-arrow)" />
+
+            <!-- Q1: Universalitas (Y=80..128) -->
+            <g id="dt-node-q1" class="dt-node">
+              <rect x="140" y="80" width="280" height="48" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
+              <text x="280" y="98" font-family="sans-serif" font-size="10" font-weight="800" fill="#18181b" text-anchor="middle">Q1: Filter Universalitas</text>
+              <text x="280" y="114" font-family="sans-serif" font-size="8.5" fill="#52525b" text-anchor="middle">Wajib 100% karyawan sejak onboarding?</text>
+            </g>
+
+            <!-- Branch Q1 -> YA -> Wadah 1 (Kiri) -->
+            <path id="dt-line-q1-ya" class="dt-line" d="M 140 104 L 75 104 L 75 180" stroke="#18181b" stroke-width="1.5" fill="none" marker-end="url(#dt-arrow)" />
+            <text id="dt-text-q1-ya" x="100" y="97" font-family="sans-serif" font-size="9" font-weight="800" fill="#16a34a">YA</text>
+
+            <g id="dt-node-w1" class="dt-node">
+              <rect x="10" y="180" width="130" height="46" rx="6" fill="#fef08a" stroke="#ca8a04" stroke-width="1.8" />
+              <text x="75" y="198" font-family="sans-serif" font-size="9.5" font-weight="800" fill="#854d0e" text-anchor="middle">Wadah 1: Core Business</text>
+              <text x="75" y="213" font-family="sans-serif" font-size="8.5" fill="#713f12" text-anchor="middle">Literacy L0</text>
+            </g>
+
+            <!-- Branch Q1 -> TIDAK -> Q2 (Tengah) -->
+            <path id="dt-line-q1-tidak" class="dt-line" d="M 280 128 L 280 175" stroke="#18181b" stroke-width="1.5" fill="none" marker-end="url(#dt-arrow)" />
+            <text id="dt-text-q1-tidak" x="290" y="150" font-family="sans-serif" font-size="9" font-weight="800" fill="#dc2626">TIDAK</text>
+
+            <!-- Q2: Mandat Otoritas (Y=175..223) -->
+            <g id="dt-node-q2" class="dt-node">
+              <rect x="150" y="175" width="260" height="48" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
+              <text x="280" y="193" font-family="sans-serif" font-size="10" font-weight="800" fill="#18181b" text-anchor="middle">Q2: Mandat Otoritas</text>
+              <text x="280" y="209" font-family="sans-serif" font-size="8.5" fill="#52525b" text-anchor="middle">Wewenang pimpinan / anggaran / tim?</text>
+            </g>
+
+            <!-- Branch Q2 -> YA -> Wadah 2 (Kanan Atas, X=420..550, Y=175) -->
+            <path id="dt-line-q2-ya" class="dt-line" d="M 410 199 L 435 199" stroke="#18181b" stroke-width="1.5" fill="none" marker-end="url(#dt-arrow)" />
+            <text id="dt-text-q2-ya" x="420" y="192" font-family="sans-serif" font-size="9" font-weight="800" fill="#16a34a">YA</text>
+
+            <g id="dt-node-w2" class="dt-node">
+              <rect x="435" y="176" width="115" height="46" rx="6" fill="#fef08a" stroke="#ca8a04" stroke-width="1.8" />
+              <text x="492" y="194" font-family="sans-serif" font-size="9.5" font-weight="800" fill="#854d0e" text-anchor="middle">Wadah 2: Managerial</text>
+              <text x="492" y="209" font-family="sans-serif" font-size="8.5" fill="#713f12" text-anchor="middle">Kepemimpinan Tim</text>
+            </g>
+
+            <!-- Branch Q2 -> TIDAK -> Q3 (Tengah Bawah) -->
+            <path id="dt-line-q2-tidak" class="dt-line" d="M 280 223 L 280 280" stroke="#18181b" stroke-width="1.5" fill="none" marker-end="url(#dt-arrow)" />
+            <text id="dt-text-q2-tidak" x="290" y="250" font-family="sans-serif" font-size="9" font-weight="800" fill="#dc2626">TIDAK</text>
+
+            <!-- Q3: Sinergi Multi-Peran (Y=280..328) -->
+            <g id="dt-node-q3" class="dt-node">
+              <rect x="150" y="280" width="260" height="48" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
+              <text x="280" y="298" font-family="sans-serif" font-size="10" font-weight="800" fill="#18181b" text-anchor="middle">Q3: Sinergi Multi-Peran</text>
+              <text x="280" y="314" font-family="sans-serif" font-size="8.5" fill="#52525b" text-anchor="middle">Digunakan bersama multi-peran / handoff?</text>
+            </g>
+
+            <!-- Branch Q3 -> YA -> Wadah 3 (Kiri Bawah) -->
+            <path id="dt-line-q3-ya" class="dt-line" d="M 150 304 L 85 304 L 85 380" stroke="#18181b" stroke-width="1.5" fill="none" marker-end="url(#dt-arrow)" />
+            <text id="dt-text-q3-ya" x="110" y="297" font-family="sans-serif" font-size="9" font-weight="800" fill="#16a34a">YA</text>
+
+            <g id="dt-node-w3" class="dt-node">
+              <rect x="15" y="380" width="140" height="46" rx="6" fill="#fef08a" stroke="#ca8a04" stroke-width="1.8" />
+              <text x="85" y="398" font-family="sans-serif" font-size="9.5" font-weight="800" fill="#854d0e" text-anchor="middle">Wadah 3: Job Family</text>
+              <text x="85" y="413" font-family="sans-serif" font-size="8.5" fill="#713f12" text-anchor="middle">Common-Functional</text>
+            </g>
+
+            <!-- Branch Q3 -> TIDAK -> Wadah 4 (Kanan Bawah) -->
+            <path id="dt-line-q3-tidak" class="dt-line" d="M 410 304 L 475 304 L 475 380" stroke="#18181b" stroke-width="1.5" fill="none" marker-end="url(#dt-arrow)" />
+            <text id="dt-text-q3-tidak" x="435" y="297" font-family="sans-serif" font-size="9" font-weight="800" fill="#dc2626">TIDAK</text>
+
+            <g id="dt-node-w4" class="dt-node">
+              <rect x="405" y="380" width="140" height="46" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1.8" />
+              <text x="475" y="398" font-family="sans-serif" font-size="9.5" font-weight="800" fill="#166534" text-anchor="middle">Wadah 4: Fungsional</text>
+              <text x="475" y="413" font-family="sans-serif" font-size="8.5" fill="#15803d" text-anchor="middle">Role Teknis Spesifik</text>
+            </g>
+          </svg>
+
+          <!-- LEGEND BAR -->
+          <div class="tree-legend-box">
+            <div class="legend-item" title="Kategori parameter nilai, literasi korporat, kepemimpinan, dan rumpun tugas bersama">
+              <span class="legend-dot" style="background:#fef08a; border-color:#ca8a04;"></span>
+              <span>Wadah 1–3: Parameter Standar</span>
+            </div>
+            <div class="legend-item" title="Kategori keahlian spesifik fungsional berbasis 16 elemen DWP peran teknis">
+              <span class="legend-dot" style="background:#dcfce7; border-color:#16a34a;"></span>
+              <span>Wadah 4: Fungsional Spesifik</span>
+            </div>
+            <div class="legend-item" title="Node atau jalur percabangan yang aktif sesuai pilihan saat ini">
+              <span class="legend-dot" style="background:#eff6ff; border-color:#2563eb;"></span>
+              <span>Jalur Aktif</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    // DATA TAHAPAN STEPPER WIZARD
+    const stepsData = [
+      {
+        id: "Q1",
+        stepNum: 1,
+        totalSteps: 3,
+        title: "Pertanyaan 1: Filter Universalitas 100% Karyawan",
+        question: "Apakah materi ini menjadi kewajiban mutlak seluruh (100%) karyawan di seluruh divisi & cabang sejak masa onboarding?",
+        context: "Kriteria: Pengenalan dasar holding, produk FTTH Level 0, model operasi DPMF, jam kerja, atau kebijakan umum perusahaan. (Catatan: Saringan nilai etika/Core Values sudah otomatis terkunci).",
+        yesLabel: "YA, 100% Wajib",
+        yesDesc: "Wajib bagi seluruh karyawan tanpa terkecuali, tanpa memandang divisi & level.",
+        noLabel: "TIDAK, Peran Tertentu",
+        noDesc: "Hanya relevan bagi kluster divisi, pemegang jabatan pimpinan, atau fungsi teknis tertentu."
+      },
+      {
+        id: "Q2",
+        stepNum: 2,
+        totalSteps: 3,
+        title: "Pertanyaan 2: Filter Mandat Otoritas & Kepemimpinan",
+        question: "Apakah materi ini hanya bisa dieksekusi oleh pemegang wewenang struktural, persetujuan anggaran, atau pembinaan tim?",
+        context: "Kriteria: Menuntut hak legal otorisasi pengeluaran dana unit (cost center), pemberian evaluasi KPI bawahan, penyelesaian krisis tim, atau keputusan arah kerja manajerial.",
+        yesLabel: "YA, Wewenang Pimpinan",
+        yesDesc: "Hanya sah dijalankan oleh pemegang jabatan supervisor / manajerial ke atas.",
+        noLabel: "TIDAK, Staf Spesialis Mandiri",
+        noDesc: "Dapat dieksekusi oleh staf fungsional mandiri tanpa wewenang kepemimpinan orang."
+      },
+      {
+        id: "Q3",
+        stepNum: 3,
+        totalSteps: 3,
+        title: "Pertanyaan 3: Filter Sinergi Multi-Peran vs Spesialisasi (RACI Test)",
+        question: "Apakah metode, sistem, atau instrumen kerja ini digunakan bersama lintas peran sebagai protokol handoff bersama?",
+        context: "Kriteria: Menjadi bahasa kerja umum antardepartemen (seperti format pelaporan PMO, standar SLA bersama, koordinasi tiket), BUKAN keterampilan teknis eksklusif satu peran.",
+        yesLabel: "YA, Praktik Bersama (Shared)",
+        yesDesc: "Dipakai multi-peran untuk serah terima (handoff) dan kolaborasi lintas fungsi.",
+        noLabel: "TIDAK, Spesialis Peran Tertentu",
+        noDesc: "Prosedur operasional teknis yang hanya dijalankan oleh satu nama jabatan spesifik."
+      }
+    ];
+
+    // DEFINISI WADAH HASIL AKHIR
+    const containersResult = {
+      "WADAH_1": {
+        code: "Wadah 1: Core Business & Industry Literacy (L0)",
+        badgeClass: "badge-wadah-1",
+        reason: "Materi lolos uji universalitas Q1 (YA). Merupakan fondasi pengetahuan wajib yang mendasari literasi bisnis seluruh insan organisasi sejak hari pertama.",
+        elimination: "Dieliminasi dari Wadah Manajerial dan Fungsional karena tidak menuntut wewenang kepemimpinan dan tidak terbatas pada peran teknis tertentu.",
+        assessment: "Kuis Objektif Pilihan Ganda (PG) di LMS (Taksonomi C1–C2, Passing Grade ≥ 80%)",
+        svgTerminalNode: "dt-node-w1"
+      },
+      "WADAH_2": {
+        code: "Wadah 2: Managerial Competencies",
+        badgeClass: "badge-wadah-2",
+        reason: "Materi lolos filter wewenang kepemimpinan Q2 (YA). Hanya dapat dieksekusi oleh karyawan yang memegang mandat mengelola orang dan otorisasi sumber daya.",
+        elimination: "Gugur dari Core Literacy (karena tidak untuk seluruh staf) dan gugur dari Fungsional (karena bersifat mengarahkan orang/proses, bukan pekerjaan teknis perorangan).",
+        assessment: "Situational Judgement Task (SJT), Studi Kasus Pengambilan Keputusan & Wawancara BEI STAR",
+        svgTerminalNode: "dt-node-w2"
+      },
+      "WADAH_3": {
+        code: "Wadah 3: Common-Functional (Rumpun Job Family)",
+        badgeClass: "badge-wadah-3",
+        reason: "Materi lolos filter kolaborasi Q3 (YA). Merupakan praktik kerja bersama, protokol handoff, atau bahasa operasional yang dipakai oleh banyak jabatan lintas unit.",
+        elimination: "Bukan materi universal 100% korporat, bukan wewenang manajerial anggaran, dan bukan milik eksklusif satu jabatan saja.",
+        assessment: "Simulasi Role-Play Terkontrol & Observasi Kolaborasi Rubrik Tilikan",
+        svgTerminalNode: "dt-node-w3"
+      },
+      "WADAH_4": {
+        code: "Wadah 4: Functional / Technical Job Role Spesifik",
+        badgeClass: "badge-wadah-4",
+        reason: "Materi gugur di seluruh filter bersama, mengonfirmasi statusnya sebagai keahlian spesialis murni yang melekat pada 16 elemen DWP jabatan pengusul.",
+        elimination: "Tidak boleh dimasukkan ke modul umum/shared karena staf di luar peran ini tidak memerlukan keahlian mendalam tersebut.",
+        assessment: "Work Sample Test (Uji Sampel Kerja Riil), Uji Lab & Observasi Lapangan Checklist K3",
+        svgTerminalNode: "dt-node-w4"
+      }
+    };
+
+    // SCENARIO TEST PRESETS
+    const presets = {
+      "SIM-01": {
+        title: "Pengenalan Siklus 5 Fase Proyek DPMF",
+        unit: "PMO & Governance",
+        desc: "Konsep dasar siklus hidup proyek FTTH dari perencanaan hingga commissioning yang harus dipahami seluruh staf.",
+        answers: { "Q1": true }
+      },
+      "SIM-02": {
+        title: "Matriks Otorisasi Pengeluaran Kas Darurat Cabang",
+        unit: "Direktorat Keuangan & SDM",
+        desc: "SOP batas wewenang penandatanganan pengeluaran kas kecil darurat tanpa persetujuan kantor pusat.",
+        answers: { "Q1": false, "Q2": true }
+      },
+      "SIM-03": {
+        title: "Protokol Handoff & Versioning Dokumen Proyek",
+        unit: "Direktorat Operasi FTTH",
+        desc: "Standar serah terima data as-built drawing dari tim konstruksi ke tim pemeliharaan jaringan.",
+        answers: { "Q1": false, "Q2": false, "Q3": true }
+      },
+      "SIM-04": {
+        title: "Teknik Splicing Serat Optik Core Tray ODC",
+        unit: "Direktorat Teknik & Jaringan",
+        desc: "Prosedur penyambungan fusion splicer dengan batas redaman loss di bawah 0.05 dB pada kotak ODC.",
+        answers: { "Q1": false, "Q2": false, "Q3": false }
+      }
+    };
+
+    // APP STATE
+    let currentStepIndex = 0;
+    let userAnswers = {};
+    let terminalResult = null;
+
+    // INITIALIZE
+    window.addEventListener("DOMContentLoaded", () => {
+      renderCurrentStep();
+    });
+
+    // RENDER STEPPER WIZARD
+    function renderCurrentStep() {
+      const wizardBox = document.getElementById("wizard-container");
+      const outputPanel = document.getElementById("output-panel");
+      const stepBadge = document.getElementById("step-counter-badge");
+      const btnPrev = document.getElementById("btn-prev");
+      const btnNext = document.getElementById("btn-next");
+
+      if (terminalResult) {
+        wizardBox.style.display = "none";
+        outputPanel.style.display = "block";
+        stepBadge.innerText = "Audit Selesai";
+        btnPrev.disabled = false;
+        btnNext.disabled = true;
+        btnNext.innerText = "Terkunci di Wadah";
+        updateSvgVisuals();
+        return;
+      }
+
+      wizardBox.style.display = "flex";
+      outputPanel.style.display = "none";
+
+      const step = stepsData[currentStepIndex];
+      stepBadge.innerText = `Langkah ${step.stepNum} dari ${step.totalSteps}`;
+
+      const ans = userAnswers[step.id];
+      const hasAnswer = ans !== undefined;
+
+      btnPrev.disabled = currentStepIndex === 0;
+      btnNext.disabled = !hasAnswer;
+      btnNext.innerText = "Lanjut Uji →";
+
+      wizardBox.innerHTML = `
+        <span class="step-badge">${step.title}</span>
+        <div class="step-question">${step.question}</div>
+        <div class="step-context">${step.context}</div>
+
+        <div class="choice-grid">
+          <div class="choice-card ${ans === true ? 'selected' : ''}" onclick="selectAnswer('${step.id}', true)">
+            <span class="choice-title">
+              <span style="color:#16a34a;">●</span> ${step.yesLabel}
+            </span>
+            <span class="choice-desc">${step.yesDesc}</span>
+          </div>
+
+          <div class="choice-card ${ans === false ? 'selected' : ''}" onclick="selectAnswer('${step.id}', false)">
+            <span class="choice-title">
+              <span style="color:#dc2626;">●</span> ${step.noLabel}
+            </span>
+            <span class="choice-desc">${step.noDesc}</span>
+          </div>
+        </div>
+      `;
+
+      updateSvgVisuals();
+    }
+
+    // SELECT ANSWER
+    function selectAnswer(stepId, value) {
+      userAnswers[stepId] = value;
+      document.getElementById("btn-next").disabled = false;
+
+      const cards = document.querySelectorAll(".choice-card");
+      cards.forEach(c => c.classList.remove("selected"));
+      if (value === true) cards[0].classList.add("selected");
+      else if (value === false) cards[1].classList.add("selected");
+
+      updateSvgVisuals();
+    }
+
+    // NEXT STEP HANDLER
+    function handleNextStep() {
+      const step = stepsData[currentStepIndex];
+      const ans = userAnswers[step.id];
+
+      if (step.id === "Q1") {
+        if (ans === true) {
+          showResult("WADAH_1");
+          return;
+        } else {
+          currentStepIndex = 1;
+        }
+      } else if (step.id === "Q2") {
+        if (ans === true) {
+          showResult("WADAH_2");
+          return;
+        } else {
+          currentStepIndex = 2;
+        }
+      } else if (step.id === "Q3") {
+        if (ans === true) {
+          showResult("WADAH_3");
+          return;
+        } else {
+          showResult("WADAH_4");
+          return;
+        }
+      }
+
+      renderCurrentStep();
+    }
+
+    // PREV STEP HANDLER
+    function handlePrevStep() {
+      if (terminalResult) {
+        terminalResult = null;
+        renderCurrentStep();
+        return;
+      }
+
+      if (currentStepIndex > 0) {
+        currentStepIndex--;
+        renderCurrentStep();
+      }
+    }
+
+    // SHOW FINAL RESULT
+    function showResult(wadahKey) {
+      terminalResult = wadahKey;
+      const data = containersResult[wadahKey];
+
+      const badgeContainer = document.getElementById("result-badge-container");
+      badgeContainer.innerHTML = `
+        <div class="result-badge-target ${data.badgeClass}">
+          <span>🎯</span> ${data.code}
+        </div>
+      `;
+
+      document.getElementById("result-reason").innerText = data.reason;
+      document.getElementById("result-elimination").innerText = data.elimination;
+      document.getElementById("result-assessment").innerText = data.assessment;
+
+      renderCurrentStep();
+    }
+
+    // RESET SIMULATOR
+    function resetSimulator() {
+      currentStepIndex = 0;
+      userAnswers = {};
+      terminalResult = null;
+      document.getElementById("inputTopicName").value = "";
+      document.getElementById("inputTopicDesc").value = "";
+      document.querySelectorAll(".preset-btn").forEach(b => b.classList.remove("active"));
+      renderCurrentStep();
+    }
+
+    // LOAD PRESET SCENARIO
+    function loadScenario(presetId, btnEl) {
+      document.querySelectorAll(".preset-btn").forEach(b => b.classList.remove("active"));
+      if (btnEl) btnEl.classList.add("active");
+
+      const sc = presets[presetId];
+      if (!sc) return;
+
+      document.getElementById("inputTopicName").value = sc.title;
+      document.getElementById("inputUnit").value = sc.unit;
+      document.getElementById("inputTopicDesc").value = sc.desc;
+
+      currentStepIndex = 0;
+      userAnswers = { ...sc.answers };
+      terminalResult = null;
+
+      if (sc.answers["Q1"] === true) {
+        showResult("WADAH_1");
+      } else if (sc.answers["Q2"] === true) {
+        currentStepIndex = 1;
+        showResult("WADAH_2");
+      } else if (sc.answers["Q3"] === true) {
+        currentStepIndex = 2;
+        showResult("WADAH_3");
+      } else if (sc.answers["Q3"] === false) {
+        currentStepIndex = 2;
+        showResult("WADAH_4");
+      }
+    }
+
+    // UPDATE AUDIT CHECKBOX
+    function updateAuditState() {
+      const c1 = document.getElementById("chk-raci-1").checked;
+      const c2 = document.getElementById("chk-raci-2").checked;
+      if (!c1 || !c2) {
+        document.getElementById("btn-next").title = "Peringatan: Verifikasi RACI belum lengkap";
+      }
+    }
+
+    // SVG INTERACTIVE STATE VISUALIZER
+    function updateSvgVisuals() {
+      document.querySelectorAll(".dt-node").forEach(n => {
+        n.classList.remove("active", "terminal-active");
+      });
+      document.querySelectorAll(".dt-line").forEach(l => {
+        l.classList.remove("active");
+      });
+
+      document.getElementById("dt-node-start").classList.add("active");
+      document.getElementById("dt-line-start-q1").classList.add("active");
+      document.getElementById("dt-node-q1").classList.add("active");
+
+      // Q1 state
+      if (userAnswers["Q1"] === true) {
+        document.getElementById("dt-line-q1-ya").classList.add("active");
+        if (terminalResult === "WADAH_1") {
+          document.getElementById("dt-node-w1").classList.add("terminal-active");
+        }
+      } else if (userAnswers["Q1"] === false) {
+        document.getElementById("dt-line-q1-tidak").classList.add("active");
+        document.getElementById("dt-node-q2").classList.add("active");
+
+        // Q2 state
+        if (userAnswers["Q2"] === true) {
+          document.getElementById("dt-line-q2-ya").classList.add("active");
+          if (terminalResult === "WADAH_2") {
+            document.getElementById("dt-node-w2").classList.add("terminal-active");
+          }
+        } else if (userAnswers["Q2"] === false) {
+          document.getElementById("dt-line-q2-tidak").classList.add("active");
+          document.getElementById("dt-node-q3").classList.add("active");
+
+          // Q3 state
+          if (userAnswers["Q3"] === true) {
+            document.getElementById("dt-line-q3-ya").classList.add("active");
+            if (terminalResult === "WADAH_3") {
+              document.getElementById("dt-node-w3").classList.add("terminal-active");
+            }
+          } else if (userAnswers["Q3"] === false) {
+            document.getElementById("dt-line-q3-tidak").classList.add("active");
+            if (terminalResult === "WADAH_4") {
+              document.getElementById("dt-node-w4").classList.add("terminal-active");
+            }
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>
