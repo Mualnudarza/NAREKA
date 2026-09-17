@@ -495,7 +495,7 @@
 
   <!-- CANVAS VIEWPORT -->
   <div class="viewport-container" id="viewport">
-    <svg id="roadmap-svg" viewBox="0 0 1340 2120" preserveAspectRatio="xMidYMin meet">
+    <svg id="roadmap-svg" viewBox="0 0 1340 2360" preserveAspectRatio="xMidYMin meet">
       <defs>
         <!-- Marker Panah Biru -->
         <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -529,10 +529,10 @@
         <path class="line-spine" d="M 280 160 L 280 215" marker-end="url(#arrow-blue)" />
 
         <!-- Jalur Keahlian Bawaan: Dari Container Background Knowledge -> Jalur Bebas Luar Kanan -> Knowledge Job -->
-        <!-- Rute orthogonal zigzag lewat margin kanan luar (X=1215), bebas tabrakan/tanpa overlap -->
-        <path class="line-branch" style="stroke:#2563eb; stroke-dasharray:4 4;" d="M 1180 135 L 1295 135 L 1295 480 L 1075 480 L 1075 520" marker-end="url(#arrow-blue)" />
-        <rect x="1235" y="270" width="120" height="22" rx="4" fill="#eff6ff" stroke="#93c5fd" stroke-width="1" />
-        <text x="1295" y="281" font-family="sans-serif" font-size="10" font-weight="700" fill="#1d4ed8" text-anchor="middle">Keahlian Bawaan</text>
+        <!-- Rute orthogonal zigzag lewat margin kanan luar (X=1305), bebas tabrakan/tanpa overlap -->
+        <path class="line-branch" style="stroke:#2563eb; stroke-dasharray:4 4;" d="M 1180 135 L 1305 135 L 1305 480 L 1100 480 L 1100 520" marker-end="url(#arrow-blue)" />
+        <rect x="1245" y="270" width="120" height="22" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2" />
+        <text x="1305" y="281" font-family="sans-serif" font-size="10" font-weight="700" fill="#15803d" text-anchor="middle">Keahlian Bawaan</text>
 
         <!-- Requirement Organization -> 2 Cabang Mandiri (Orthogonal Fork) -->
         <path class="line-branch" d="M 450 240 L 495 240 L 495 206 L 540 206" marker-end="url(#arrow-blue)" />
@@ -544,78 +544,86 @@
         <!-- Domain DWP Header -> FORK PARALEL: Organization Knowledge (Kiri) & Knowledge Job (Kanan) -->
         <!-- Garis keluar dari bawah DWP Header lalu memecah ke kiri dan kanan -->
         <path class="line-spine" d="M 620 469 L 620 495" />
-        <path class="line-spine" d="M 280 495 L 860 495" />
+        <path class="line-spine" d="M 280 495 L 910 495" />
         <path class="line-spine" d="M 280 495 L 280 520" marker-end="url(#arrow-blue)" />
-        <path class="line-spine" d="M 860 495 L 860 520" marker-end="url(#arrow-blue)" />
+        <path class="line-spine" d="M 910 495 L 910 520" marker-end="url(#arrow-blue)" />
 
         <!-- ALUR DARI KONTAINER DIRECTORATE KNOWLEDGE KE JOB FAMILY -->
         <path class="line-spine" d="M 280 788 L 280 820" marker-end="url(#arrow-blue)" />
+        <!-- Dari Job Family turun ke Parameter KSAO Rumpun Job Family -->
+        <path class="line-spine" d="M 280 960 L 280 975" marker-end="url(#arrow-blue)" />
 
         <!-- FORK 2 CABANG KNOWLEDGE JOB (Orthogonal Fork):
              Knowledge Job bercabang PARALEL menjadi 2 cabang berdampingan:
              Cabang 1: Knowledge Managerial (Kiri)
              Cabang 2: Knowledge Fungsional (Kanan) -->
-        <path class="line-branch" d="M 860 570 L 860 595 L 695 595 L 695 620" marker-end="url(#arrow-blue)" />
-        <path class="line-branch" d="M 860 595 L 1075 595 L 1075 620" marker-end="url(#arrow-blue)" />
+        <path class="line-branch" d="M 910 570 L 910 595 L 720 595 L 720 620" marker-end="url(#arrow-blue)" />
+        <path class="line-branch" d="M 910 595 L 1100 595 L 1100 620" marker-end="url(#arrow-blue)" />
+
+        <!-- Alur dari Managerial & Fungsional ke Node KSAO Masing-Masing -->
+        <path class="line-spine" d="M 720 825 L 720 975" marker-end="url(#arrow-blue)" />
+        <path class="line-spine" d="M 1100 825 L 1100 975" marker-end="url(#arrow-blue)" />
 
         <!-- KONVERGENSI DWP KE LMS (Orthogonal Bus):
-             Setelah bagian Job Family, Managerial, dan Fungsional selesai,
-             ketiganya mengalir lanjut ke Learning Requirement di Domain LMS -->
-        <path class="line-spine" d="M 280 960 L 280 985" />
-        <path class="line-spine" d="M 695 825 L 695 985" />
-        <path class="line-spine" d="M 1075 825 L 1075 985" />
+             Ketiga kontainer KSAO berkonvergensi menuju Domain LMS -->
+        <path class="line-spine" d="M 280 1095 L 280 1135" />
+        <path class="line-spine" d="M 720 1095 L 720 1135" />
+        <path class="line-spine" d="M 1100 1095 L 1100 1135" />
         <!-- Garis Bus Horizontal Konvergensi -->
-        <path class="line-spine" d="M 280 985 L 1075 985" />
+        <path class="line-spine" d="M 280 1135 L 1100 1135" />
         <!-- Alur Bersama Masuk ke Header LMS -->
-        <path class="line-spine" d="M 672 985 L 672 1015" marker-end="url(#arrow-blue)" />
+        <path class="line-spine" d="M 672 1135 L 672 1170" marker-end="url(#arrow-blue)" />
 
         <!-- Alur Keluar Kontainer Domain LMS Menuju Header Domain Uji Kompetensi -->
-        <!-- Dari dasar Content di Y=1425 menembus keluar dasar kontainer LMS (Y=1480), lalu berbelok ke header Uji Kompetensi -->
-        <path class="line-spine" d="M 250 1425 L 250 1490 L 280 1490 L 280 1505" marker-end="url(#arrow-blue)" />
+        <!-- Dari dasar Content di Y=1580 menembus keluar dasar kontainer LMS (Y=1635), lalu berbelok ke header Uji Kompetensi -->
+        <path class="line-spine" d="M 250 1580 L 250 1645 L 280 1645 L 280 1660" marker-end="url(#arrow-blue)" />
 
-        <!-- Dari Header Domain Uji Kompetensi (Y=1539) Menuju Learning Assignment (Y=1565) -->
-        <path class="line-spine" d="M 280 1539 L 280 1565" marker-end="url(#arrow-blue)" />
+        <!-- Dari Header Domain Uji Kompetensi (Y=1694) Menuju Learning Assignment (Y=1720) -->
+        <path class="line-spine" d="M 280 1694 L 280 1720" marker-end="url(#arrow-blue)" />
 
         <!-- Learning Assignment -> 5 Standalone Branch Nodes (Orthogonal, No Container) -->
-        <path class="line-branch" d="M 450 1590 L 495 1590 L 495 1571 L 540 1571" marker-end="url(#arrow-blue)" />
-        <path class="line-branch" d="M 495 1590 L 495 1618 L 540 1618" marker-end="url(#arrow-blue)" />
-        <path class="line-branch" d="M 840 1571 L 860 1571" marker-end="url(#arrow-blue)" />
-        <path class="line-branch" d="M 840 1618 L 860 1618" marker-end="url(#arrow-blue)" />
-        <path class="line-branch" d="M 495 1618 L 495 1666 L 700 1666" marker-end="url(#arrow-blue)" />
+        <path class="line-branch" d="M 450 1745 L 495 1745 L 495 1726 L 540 1726" marker-end="url(#arrow-blue)" />
+        <path class="line-branch" d="M 495 1745 L 495 1773 L 540 1773" marker-end="url(#arrow-blue)" />
+        <path class="line-branch" d="M 840 1726 L 860 1726" marker-end="url(#arrow-blue)" />
+        <path class="line-branch" d="M 840 1773 L 860 1773" marker-end="url(#arrow-blue)" />
+        <path class="line-branch" d="M 495 1773 L 495 1821 L 700 1821" marker-end="url(#arrow-blue)" />
 
         <!-- Learning Assignment -> Assessment -->
-        <path class="line-spine" d="M 280 1615 L 280 1740" marker-end="url(#arrow-blue)" />
+        <path class="line-spine" d="M 280 1770 L 280 1895" marker-end="url(#arrow-blue)" />
 
         <!-- Assessment -> Fork 2 Baris Kontainer KSAO (Orthogonal Bus) -->
-        <path class="line-branch" d="M 450 1765 L 495 1765 L 495 1800 L 540 1800" marker-end="url(#arrow-blue)" />
-        <path class="line-branch" d="M 495 1765 L 495 1965 L 540 1965" marker-end="url(#arrow-blue)" />
+        <path class="line-branch" d="M 450 1920 L 495 1920 L 495 1955 L 540 1955" marker-end="url(#arrow-blue)" />
+        <path class="line-branch" d="M 495 1920 L 495 2120 L 540 2120" marker-end="url(#arrow-blue)" />
 
         <!-- Loop Re-Assignment: Assessment -> Learning Assignment (Orthogonal di Margin Kiri) -->
-        <path class="line-branch" style="stroke:#16a34a; stroke-dasharray:5 4;" d="M 110 1765 L 45 1765 L 45 1590 L 105 1590" marker-end="url(#arrow-green)" />
-        <text x="32" y="1677" font-family="sans-serif" font-size="10.5" font-weight="700" fill="#16a34a" transform="rotate(-90 32 1677)" text-anchor="middle">Re-Assignment (Gap Kinerja)</text>
+        <path class="line-branch" style="stroke:#16a34a; stroke-dasharray:5 4;" d="M 110 1920 L 45 1920 L 45 1745 L 105 1745" marker-end="url(#arrow-green)" />
+        <text x="32" y="1832" font-family="sans-serif" font-size="10.5" font-weight="700" fill="#16a34a" transform="rotate(-90 32 1832)" text-anchor="middle">Re-Assignment (Gap Kinerja)</text>
 
 
         <!-- ============================================== -->
         <!-- HEADER UTAMA & RELATED TOPICS BOX              -->
         <!-- ============================================== -->
 
-        <!-- Panduan Simbol (Pojok Kiri Atas, Sejajar Rapi Tanpa Overlap) -->
+        <!-- Panduan Simbol & Warna (Pojok Kiri Atas, Sejajar Rapi Tanpa Overlap) -->
         <g id="box-canvas-legend">
-          <rect x="60" y="20" width="175" height="60" rx="6" fill="#ffffff" stroke="#18181b" stroke-width="1.5" />
-          <rect x="60" y="20" width="175" height="18" rx="6" fill="#f4f4f5" stroke="#18181b" stroke-width="1.5" />
-          <text x="147" y="31" font-family="sans-serif" font-size="9.5" font-weight="800" fill="#18181b" text-anchor="middle">PANDUAN SIMBOL</text>
+          <rect x="35" y="16" width="205" height="82" rx="6" fill="#ffffff" stroke="#18181b" stroke-width="1.5" />
+          <rect x="35" y="16" width="205" height="19" rx="6" fill="#f4f4f5" stroke="#18181b" stroke-width="1.5" />
+          <text x="137" y="29" font-family="sans-serif" font-size="9.5" font-weight="800" fill="#18181b" text-anchor="middle">PANDUAN WARNA &amp; SIMBOL</text>
 
-          <rect x="68" y="44" width="12" height="10" rx="2" fill="#facc15" stroke="#18181b" stroke-width="1" />
-          <text x="84" y="52" font-family="sans-serif" font-size="8.5" font-weight="600" fill="#27272a">Spine</text>
+          <rect x="42" y="42" width="12" height="10" rx="2" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2" />
+          <text x="58" y="50" font-family="sans-serif" font-size="9.5" font-weight="600" fill="#166534">Sumber Knowledge</text>
 
-          <rect x="118" y="44" width="12" height="10" rx="2" fill="#fef08a" stroke="#18181b" stroke-width="1" />
-          <text x="134" y="52" font-family="sans-serif" font-size="8.5" font-weight="600" fill="#27272a">Cabang</text>
+          <rect x="142" y="42" width="12" height="10" rx="2" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.2" />
+          <text x="158" y="50" font-family="sans-serif" font-size="9.5" font-weight="600" fill="#6b21a8">Metode Penilaian</text>
 
-          <rect x="172" y="44" width="12" height="10" rx="2" fill="#2563eb" stroke="#2563eb" stroke-width="1" />
-          <text x="188" y="52" font-family="sans-serif" font-size="8.5" font-weight="600" fill="#27272a">Domain</text>
+          <rect x="42" y="58" width="12" height="10" rx="2" fill="#fef08a" stroke="#ca8a04" stroke-width="1.2" />
+          <text x="58" y="66" font-family="sans-serif" font-size="9.5" font-weight="600" fill="#854d0e">Parameter KSAO</text>
 
-          <line x1="68" y1="68" x2="82" y2="68" stroke="#16a34a" stroke-width="2" stroke-dasharray="3 2" />
-          <text x="88" y="70" font-family="sans-serif" font-size="8.5" font-weight="600" fill="#16a34a">Loop Re-Assign Gap</text>
+          <rect x="142" y="58" width="12" height="10" rx="2" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.2" />
+          <text x="158" y="66" font-family="sans-serif" font-size="9.5" font-weight="600" fill="#0369a1">Struktur &amp; Kelola</text>
+
+          <line x1="42" y1="83" x2="60" y2="83" stroke="#16a34a" stroke-width="2" stroke-dasharray="3 2" />
+          <text x="66" y="85" font-family="sans-serif" font-size="9.5" font-weight="600" fill="#16a34a">Loop Re-Assign Gap Kinerja</text>
         </g>
 
         <!-- Root Spine Node: Roadmap Manajemen Pengetahuan -->
@@ -661,25 +669,25 @@
         <!-- Container Background Knowledge / Modal Awal (Himpunan Isi Knowledge) -->
         <g id="group-KB">
           <rect x="540" y="95" width="640" height="88" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
-          <rect x="540" y="95" width="640" height="25" rx="8" fill="#fef08a" stroke="#18181b" stroke-width="1.8" />
+          <rect x="540" y="95" width="640" height="25" rx="8" fill="#86efac" stroke="#18181b" stroke-width="1.8" />
           <text class="txt-group-header" x="860" y="107" font-size="11.5">Komponen Background Knowledge (Himpunan Modal Awal)</text>
 
           <!-- 4 Elemen Isi Pengetahuan dalam Container (Grid Paralel 2x2) -->
           <g class="node-elem" id="node-KB_1" onclick="openDrawer('KB_1')">
-            <rect x="552" y="127" width="295" height="24" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
+            <rect x="552" y="127" width="295" height="24" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2" />
             <text class="txt-sub" x="699" y="139" font-size="10.5">Pendidikan Formal / Vokasi</text>
           </g>
           <g class="node-elem" id="node-KB_2" onclick="openDrawer('KB_2')">
-            <rect x="865" y="127" width="303" height="24" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
+            <rect x="865" y="127" width="303" height="24" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2" />
             <text class="txt-sub" x="1016" y="139" font-size="10.5">Pengalaman Kerja Industri</text>
           </g>
           <g class="node-elem" id="node-KB_3" onclick="openDrawer('KB_3')">
-            <rect x="552" y="155" width="295" height="24" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="699" y="167" font-size="10.5">Aktivitas Organisasi & Sosial</text>
+            <rect x="552" y="155" width="295" height="24" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2" />
+            <text class="txt-sub" x="699" y="167" font-size="10.5">Aktivitas Organisasi &amp; Sosial</text>
           </g>
           <g class="node-elem" id="node-KB_4" onclick="openDrawer('KB_4')">
-            <rect x="865" y="155" width="303" height="24" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="1016" y="167" font-size="10.5">Sertifikasi & Kursus Mandiri</text>
+            <rect x="865" y="155" width="303" height="24" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2" />
+            <text class="txt-sub" x="1016" y="167" font-size="10.5">Sertifikasi &amp; Kursus Mandiri</text>
           </g>
         </g>
 
@@ -734,36 +742,36 @@
           <!-- 8 Tombol Literacy Grid 4x2 di Bawah Cabang 2 -->
           <g class="node-elem" id="node-RO_BL1" onclick="openDrawer('RO_BL1')">
             <rect x="540" y="348" width="150" height="24" rx="4" fill="#fefce8" stroke="#ca8a04" stroke-width="1" />
-            <text class="txt-sub" x="615" y="360" font-size="9.5">BL-01 Identity & Strategy</text>
+            <text class="txt-sub" x="615" y="360" font-size="10.5">BL-01 Identity &amp; Strategy</text>
           </g>
           <g class="node-elem" id="node-RO_BL2" onclick="openDrawer('RO_BL2')">
             <rect x="700" y="348" width="155" height="24" rx="4" fill="#fefce8" stroke="#ca8a04" stroke-width="1" />
-            <text class="txt-sub" x="777" y="360" font-size="9.5">BL-02 Corp Structure & Scale</text>
+            <text class="txt-sub" x="777" y="360" font-size="10.5">BL-02 Corp Structure</text>
           </g>
           <g class="node-elem" id="node-RO_BL3" onclick="openDrawer('RO_BL3')">
             <rect x="865" y="348" width="155" height="24" rx="4" fill="#fefce8" stroke="#ca8a04" stroke-width="1" />
-            <text class="txt-sub" x="942" y="360" font-size="9.5">BL-03 Product & Customer</text>
+            <text class="txt-sub" x="942" y="360" font-size="10.5">BL-03 Product &amp; Customer</text>
           </g>
           <g class="node-elem" id="node-RO_BL4" onclick="openDrawer('RO_BL4')">
             <rect x="1030" y="348" width="150" height="24" rx="4" fill="#fefce8" stroke="#ca8a04" stroke-width="1" />
-            <text class="txt-sub" x="1105" y="360" font-size="9.5">BL-04 FTTH Fundamentals</text>
+            <text class="txt-sub" x="1105" y="360" font-size="10.5">BL-04 FTTH Basics</text>
           </g>
 
           <g class="node-elem" id="node-RO_BL5" onclick="openDrawer('RO_BL5')">
             <rect x="540" y="378" width="150" height="24" rx="4" fill="#fefce8" stroke="#ca8a04" stroke-width="1" />
-            <text class="txt-sub" x="615" y="390" font-size="9.5">BL-05 Operating & DPMF</text>
+            <text class="txt-sub" x="615" y="390" font-size="10.5">BL-05 Operating &amp; DPMF</text>
           </g>
           <g class="node-elem" id="node-RO_BL6" onclick="openDrawer('RO_BL6')">
             <rect x="700" y="378" width="155" height="24" rx="4" fill="#fefce8" stroke="#ca8a04" stroke-width="1" />
-            <text class="txt-sub" x="777" y="390" font-size="9.5">BL-06 Workflow & System</text>
+            <text class="txt-sub" x="777" y="390" font-size="10.5">BL-06 Workflow &amp; System</text>
           </g>
           <g class="node-elem" id="node-RO_BL7" onclick="openDrawer('RO_BL7')">
             <rect x="865" y="378" width="155" height="24" rx="4" fill="#fefce8" stroke="#ca8a04" stroke-width="1" />
-            <text class="txt-sub" x="942" y="390" font-size="9.5">BL-07 Ethics, Risk & Safety</text>
+            <text class="txt-sub" x="942" y="390" font-size="10.5">BL-07 Ethics &amp; Safety</text>
           </g>
           <g class="node-elem" id="node-RO_BL8" onclick="openDrawer('RO_BL8')">
             <rect x="1030" y="378" width="150" height="24" rx="4" fill="#fefce8" stroke="#ca8a04" stroke-width="1" />
-            <text class="txt-sub" x="1105" y="390" font-size="9.5">BL-08 Workplace Policy</text>
+            <text class="txt-sub" x="1105" y="390" font-size="10.5">BL-08 Workplace Policy</text>
           </g>
         </g>
 
@@ -797,7 +805,7 @@
 
           <!-- Tree Step 1: Penjelasan Direktorat -->
           <g class="node-elem" id="node-ORG_1" onclick="openDrawer('ORG_1')">
-            <rect x="100" y="568" width="360" height="28" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+            <rect x="100" y="568" width="360" height="28" rx="5" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.2" />
             <text class="txt-sub" x="280" y="582" font-size="11">Penjelasan Direktorat</text>
           </g>
 
@@ -806,8 +814,8 @@
 
           <!-- Tree Step 2: Divisi & Departemen -->
           <g class="node-elem" id="node-ORG_2" onclick="openDrawer('ORG_2')">
-            <rect x="100" y="616" width="360" height="28" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="280" y="630" font-size="11">Divisi & Departemen</text>
+            <rect x="100" y="616" width="360" height="28" rx="5" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.2" />
+            <text class="txt-sub" x="280" y="630" font-size="11">Divisi &amp; Departemen</text>
           </g>
 
           <!-- Tree Connector: 2 -> 3 (Divisi & Departemen -> Kebijakan & Manual Mutu) -->
@@ -815,8 +823,8 @@
 
           <!-- Tree Step 3: Kebijakan & Manual Mutu -->
           <g class="node-elem" id="node-ORG_3" onclick="openDrawer('ORG_3')">
-            <rect x="100" y="664" width="360" height="28" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="280" y="678" font-size="11">Kebijakan & Manual Mutu</text>
+            <rect x="100" y="664" width="360" height="28" rx="5" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.2" />
+            <text class="txt-sub" x="280" y="678" font-size="11">Kebijakan &amp; Manual Mutu</text>
           </g>
 
           <!-- Tree Connector Fork: 3 -> 4 (SOP), 3 -> 6 (Technical Handbook), 3 -> 5 (Base Knowledge) -->
@@ -826,20 +834,20 @@
 
           <!-- Tree Step 4: SOP Resmi Direktorat (Cabang Kiri) -->
           <g class="node-elem" id="node-ORG_4" onclick="openDrawer('ORG_4')">
-            <rect x="75" y="720" width="130" height="34" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="140" y="737" font-size="9.5">SOP Resmi Direktorat</text>
+            <rect x="75" y="720" width="130" height="34" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2" />
+            <text class="txt-sub" x="140" y="737" font-size="10.5">SOP Resmi</text>
           </g>
 
           <!-- Tree Step 6: Technical Handbook (Cabang Tengah) -->
           <g class="node-elem" id="node-ORG_6" onclick="openDrawer('ORG_6')">
-            <rect x="215" y="720" width="130" height="34" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="280" y="737" font-size="9.5">Technical Handbook</text>
+            <rect x="215" y="720" width="130" height="34" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2" />
+            <text class="txt-sub" x="280" y="737" font-size="10.5">Tech Handbook</text>
           </g>
 
           <!-- Tree Step 5: Base Knowledge (Cabang Kanan) -->
           <g class="node-elem" id="node-ORG_5" onclick="openDrawer('ORG_5')">
-            <rect x="355" y="720" width="130" height="34" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="420" y="737" font-size="10">Base Knowledge</text>
+            <rect x="355" y="720" width="130" height="34" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2" />
+            <text class="txt-sub" x="420" y="737" font-size="10.5">Base Knowledge</text>
           </g>
         </g>
 
@@ -857,23 +865,51 @@
 
           <g class="node-elem" id="node-JF_1" onclick="openDrawer('JF_1')">
             <rect x="70" y="900" width="205" height="24" rx="4" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="172" y="912" font-size="10">Kelompok KSAO Bersama</text>
+            <text class="txt-sub" x="172" y="912" font-size="10.5">Kelompok KSAO Bersama</text>
           </g>
           <g class="node-elem" id="node-JF_2" onclick="openDrawer('JF_2')">
             <rect x="285" y="900" width="205" height="24" rx="4" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="387" y="912" font-size="10">Kelompok Interaksi Kerja</text>
+            <text class="txt-sub" x="387" y="912" font-size="10.5">Kelompok Interaksi Kerja</text>
           </g>
 
           <g class="node-elem" id="node-JF_3" onclick="openDrawer('JF_3')">
             <rect x="70" y="928" width="205" height="24" rx="4" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="172" y="940" font-size="10">Batas Wewenang DWP</text>
+            <text class="txt-sub" x="172" y="940" font-size="10.5">Batas Wewenang DWP</text>
           </g>
           <g class="node-elem" id="node-JF_4" onclick="openDrawer('JF_4')">
             <rect x="285" y="928" width="205" height="24" rx="4" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="387" y="940" font-size="10">Target Profisiensi Level 1–5</text>
+            <text class="txt-sub" x="387" y="940" font-size="10.5">Target Profisiensi Level 1–5</text>
           </g>
         </g>
 
+        <!-- Node Baru Jalur Kiri: Parameter KSAO Rumpun Job Family (Kontainer KSAO) -->
+        <g id="group-JF_CP">
+          <rect x="60" y="975" width="440" height="120" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
+          <g class="node-elem" id="node-JF_CP" onclick="openDrawer('JF_CP')">
+            <rect x="60" y="975" width="440" height="28" rx="8" fill="#facc15" stroke="#18181b" stroke-width="1.8" />
+            <text class="txt-group-header" x="280" y="989" font-size="12">Parameter KSAO Rumpun Job Family</text>
+          </g>
+          <g class="node-elem" id="node-JF_CP_K" onclick="openDrawer('JF_CP_K')">
+            <rect x="70" y="1010" width="205" height="36" rx="4" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+            <text class="txt-sub" x="172" y="1021" font-size="10.5" font-weight="700">K: Apa yang Diketahui</text>
+            <text x="172" y="1036" font-family="sans-serif" font-size="9.5" font-style="italic" fill="#52525b" text-anchor="middle">(Alur proses &amp; integrasi peran)</text>
+          </g>
+          <g class="node-elem" id="node-JF_CP_S" onclick="openDrawer('JF_CP_S')">
+            <rect x="285" y="1010" width="205" height="36" rx="4" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+            <text class="txt-sub" x="387" y="1021" font-size="10.5" font-weight="700">S: Kemahiran Eksekusi</text>
+            <text x="387" y="1036" font-family="sans-serif" font-size="9.5" font-style="italic" fill="#52525b" text-anchor="middle">(Koordinasi handoff &amp; tim)</text>
+          </g>
+          <g class="node-elem" id="node-JF_CP_A" onclick="openDrawer('JF_CP_A')">
+            <rect x="70" y="1052" width="205" height="36" rx="4" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+            <text class="txt-sub" x="172" y="1063" font-size="10.5" font-weight="700">A: Mental &amp; Daya Tahan</text>
+            <text x="172" y="1078" font-family="sans-serif" font-size="9.5" font-style="italic" fill="#52525b" text-anchor="middle">(Penalaran sistemik antarfungsi)</text>
+          </g>
+          <g class="node-elem" id="node-JF_CP_O" onclick="openDrawer('JF_CP_O')">
+            <rect x="285" y="1052" width="205" height="36" rx="4" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+            <text class="txt-sub" x="387" y="1063" font-size="10.5" font-weight="700">O: Karakter &amp; Sikap</text>
+            <text x="387" y="1078" font-family="sans-serif" font-size="9.5" font-style="italic" fill="#52525b" text-anchor="middle">(Kolaborasi nir-silo &amp; kolektif)</text>
+          </g>
+        </g>
 
         <!-- ------------------------------------------------------------ -->
         <!-- CABANG KANAN: KNOWLEDGE JOB BERKEMBAR (MANAGERIAL & FUNGSIONAL) -->
@@ -881,233 +917,290 @@
 
         <!-- Knowledge Job Main Node Header -->
         <g class="node-elem" id="node-KJ" onclick="openDrawer('KJ')">
-          <rect x="540" y="520" width="640" height="50" rx="8" fill="#facc15" stroke="#18181b" stroke-width="2" />
-          <text class="txt-title" x="860" y="545" font-size="14">Knowledge Job</text>
+          <rect x="540" y="520" width="740" height="50" rx="8" fill="#facc15" stroke="#18181b" stroke-width="2" />
+          <text class="txt-title" x="910" y="545" font-size="14">Knowledge Job</text>
         </g>
 
         <!-- CABANG 1 KNOWLEDGE JOB: Knowledge Managerial -->
         <g id="group-KM">
-          <rect x="540" y="620" width="310" height="205" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
+          <rect x="540" y="620" width="360" height="205" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
 
           <g class="node-elem" id="node-KM" onclick="openDrawer('KM')">
-            <rect x="540" y="620" width="310" height="28" rx="8" fill="#fef08a" stroke="#18181b" stroke-width="1.8" />
-            <text class="txt-group-header" x="695" y="634" font-size="11.5">Knowledge Managerial</text>
+            <rect x="540" y="620" width="360" height="28" rx="8" fill="#86efac" stroke="#18181b" stroke-width="1.8" />
+            <text class="txt-group-header" x="720" y="634" font-size="11.5">Knowledge Managerial</text>
           </g>
 
-          <text x="695" y="656" font-family="sans-serif" font-size="9" font-style="italic" fill="#71717a" text-anchor="middle">
+          <text x="720" y="656" font-family="sans-serif" font-size="10" font-style="italic" fill="#71717a" text-anchor="middle">
             (Mandat kepemimpinan untuk mengelola tim)
           </text>
 
           <g class="node-elem" id="node-KM_1" onclick="openDrawer('KM_1')">
-            <rect x="552" y="668" width="286" height="23" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="695" y="680" font-size="10">Pengelolaan Kinerja Tim</text>
+            <rect x="552" y="668" width="336" height="23" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2" />
+            <text class="txt-sub" x="720" y="680" font-size="10.5">Pengelolaan Kinerja Tim</text>
           </g>
           <g class="node-elem" id="node-KM_2" onclick="openDrawer('KM_2')">
-            <rect x="552" y="696" width="286" height="23" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="695" y="708" font-size="10">Otoritas Keputusan</text>
+            <rect x="552" y="696" width="336" height="23" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2" />
+            <text class="txt-sub" x="720" y="708" font-size="10.5">Otoritas Keputusan</text>
           </g>
           <g class="node-elem" id="node-KM_3" onclick="openDrawer('KM_3')">
-            <rect x="552" y="724" width="286" height="23" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="695" y="736" font-size="10">Manajemen Krisis</text>
+            <rect x="552" y="724" width="336" height="23" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2" />
+            <text class="txt-sub" x="720" y="736" font-size="10.5">Manajemen Krisis</text>
           </g>
           <g class="node-elem" id="node-KM_4" onclick="openDrawer('KM_4')">
-            <rect x="552" y="752" width="286" height="23" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="695" y="764" font-size="10">Alokasi Sumber Daya</text>
+            <rect x="552" y="752" width="336" height="23" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2" />
+            <text class="txt-sub" x="720" y="764" font-size="10.5">Alokasi Sumber Daya</text>
           </g>
           <g class="node-elem" id="node-KM_5" onclick="openDrawer('KM_5')">
-            <rect x="552" y="780" width="286" height="23" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-            <text class="txt-sub" x="695" y="792" font-size="10">Arah Kerja Strategis</text>
+            <rect x="552" y="780" width="336" height="23" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2" />
+            <text class="txt-sub" x="720" y="792" font-size="10.5">Arah Kerja Strategis</text>
+          </g>
+        </g>
+
+        <!-- Kontainer KSAO: Parameter KSAO Managerial (Grid 2x2) -->
+        <g id="group-KM_VBL">
+          <rect x="540" y="975" width="360" height="120" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
+          <g class="node-elem" id="node-KM_VBL" onclick="openDrawer('KM_VBL')">
+            <rect x="540" y="975" width="360" height="28" rx="8" fill="#facc15" stroke="#18181b" stroke-width="1.8" />
+            <text class="txt-group-header" x="720" y="989" font-size="11.5">Parameter KSAO Managerial</text>
+          </g>
+          <g class="node-elem" id="node-VBL_K" onclick="openDrawer('VBL_K')">
+            <rect x="548" y="1010" width="168" height="36" rx="4" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+            <text class="txt-sub" x="632" y="1021" font-size="10.5" font-weight="700">K: Apa yang Diketahui</text>
+            <text x="632" y="1036" font-family="sans-serif" font-size="9.5" font-style="italic" fill="#52525b" text-anchor="middle">(Tata kelola &amp; regulasi tim)</text>
+          </g>
+          <g class="node-elem" id="node-VBL_S" onclick="openDrawer('VBL_S')">
+            <rect x="724" y="1010" width="168" height="36" rx="4" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+            <text class="txt-sub" x="808" y="1021" font-size="10.5" font-weight="700">S: Kemahiran Eksekusi</text>
+            <text x="808" y="1036" font-family="sans-serif" font-size="9.5" font-style="italic" fill="#52525b" text-anchor="middle">(Coaching &amp; alokasi sumber)</text>
+          </g>
+          <g class="node-elem" id="node-VBL_A" onclick="openDrawer('VBL_A')">
+            <rect x="548" y="1052" width="168" height="36" rx="4" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+            <text class="txt-sub" x="632" y="1063" font-size="10.5" font-weight="700">A: Mental &amp; Daya Tahan</text>
+            <text x="632" y="1078" font-family="sans-serif" font-size="9.5" font-style="italic" fill="#52525b" text-anchor="middle">(Keputusan strategis krisis)</text>
+          </g>
+          <g class="node-elem" id="node-VBL_O" onclick="openDrawer('VBL_O')">
+            <rect x="724" y="1052" width="168" height="36" rx="4" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+            <text class="txt-sub" x="808" y="1063" font-size="10.5" font-weight="700">O: Karakter &amp; Sikap</text>
+            <text x="808" y="1078" font-family="sans-serif" font-size="9.5" font-style="italic" fill="#52525b" text-anchor="middle">(Integritas &amp; etika moral)</text>
           </g>
         </g>
 
         <!-- CABANG 2 KNOWLEDGE JOB: Knowledge Fungsional (16 Elemen DWP dalam 2 Kolom) -->
         <g id="group-KF">
-          <rect x="870" y="620" width="410" height="205" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
+          <rect x="920" y="620" width="360" height="235" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
 
           <g class="node-elem" id="node-KF" onclick="openDrawer('KF')">
-            <rect x="870" y="620" width="410" height="28" rx="8" fill="#fef08a" stroke="#18181b" stroke-width="1.8" />
-            <text class="txt-group-header" x="1075" y="634" font-size="11.5">Knowledge Fungsional (16 Elemen Informasi DWP)</text>
+            <rect x="920" y="620" width="360" height="28" rx="8" fill="#86efac" stroke="#18181b" stroke-width="1.8" />
+            <text class="txt-group-header" x="1100" y="634" font-size="11.5">Knowledge Fungsional (16 Elemen Informasi DWP)</text>
           </g>
 
           <!-- Kolom A (Elemen 1 s.d 8) -->
           <g class="node-elem" id="node-KF_1" onclick="openDrawer('KF_1')">
-            <rect x="878" y="654" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
-            <text class="txt-sub" x="975" y="662" font-size="8.5">1. Nama &amp; Tujuan Jabatan</text>
+            <rect x="928" y="654" width="168" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1" />
+            <text class="txt-sub" x="1012" y="664" font-size="9.5">1. Nama &amp; Tujuan Jabatan</text>
           </g>
           <g class="node-elem" id="node-KF_2" onclick="openDrawer('KF_2')">
-            <rect x="878" y="674" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
-            <text class="txt-sub" x="975" y="682" font-size="8.5">2. Tanggung Jawab Utama</text>
+            <rect x="928" y="677" width="168" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1" />
+            <text class="txt-sub" x="1012" y="687" font-size="9.5">2. Tanggung Jawab Utama</text>
           </g>
           <g class="node-elem" id="node-KF_3" onclick="openDrawer('KF_3')">
-            <rect x="878" y="694" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
-            <text class="txt-sub" x="975" y="702" font-size="8.5">3. Output/Deliverable</text>
+            <rect x="928" y="700" width="168" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1" />
+            <text class="txt-sub" x="1012" y="710" font-size="9.5">3. Output/Deliverable</text>
           </g>
           <g class="node-elem" id="node-KF_4" onclick="openDrawer('KF_4')">
-            <rect x="878" y="714" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
-            <text class="txt-sub" x="975" y="722" font-size="8.5">4. Standar Kinerja/KPI/SLA</text>
+            <rect x="928" y="723" width="168" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1" />
+            <text class="txt-sub" x="1012" y="733" font-size="9.5">4. Standar KPI / SLA</text>
           </g>
           <g class="node-elem" id="node-KF_5" onclick="openDrawer('KF_5')">
-            <rect x="878" y="734" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
-            <text class="txt-sub" x="975" y="742" font-size="8.5">5. Pengetahuan yang Dipersyaratkan</text>
+            <rect x="928" y="746" width="168" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1" />
+            <text class="txt-sub" x="1012" y="756" font-size="9.5">5. Pengetahuan Syarat</text>
           </g>
           <g class="node-elem" id="node-KF_6" onclick="openDrawer('KF_6')">
-            <rect x="878" y="754" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
-            <text class="txt-sub" x="975" y="762" font-size="8.5">6. Aktivitas/Metode Kerja</text>
+            <rect x="928" y="769" width="168" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1" />
+            <text class="txt-sub" x="1012" y="779" font-size="9.5">6. Aktivitas / Metode</text>
           </g>
           <g class="node-elem" id="node-KF_7" onclick="openDrawer('KF_7')">
-            <rect x="878" y="774" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
-            <text class="txt-sub" x="975" y="782" font-size="8.5">7. Masalah yang Harus Diselesaikan</text>
+            <rect x="928" y="792" width="168" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1" />
+            <text class="txt-sub" x="1012" y="802" font-size="9.5">7. Masalah Selesai</text>
           </g>
           <g class="node-elem" id="node-KF_8" onclick="openDrawer('KF_8')">
-            <rect x="878" y="794" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
-            <text class="txt-sub" x="975" y="802" font-size="8.5">8. Orientasi / Karakteristik</text>
+            <rect x="928" y="815" width="168" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1" />
+            <text class="txt-sub" x="1012" y="825" font-size="9.5">8. Orientasi Karakter</text>
           </g>
 
           <!-- Kolom B (Elemen 9 s.d 16) -->
           <g class="node-elem" id="node-KF_9" onclick="openDrawer('KF_9')">
-            <rect x="1078" y="654" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
-            <text class="txt-sub" x="1175" y="662" font-size="8.5">9. Wewenang Keputusan</text>
+            <rect x="1104" y="654" width="168" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1" />
+            <text class="txt-sub" x="1188" y="664" font-size="9.5">9. Wewenang Putusan</text>
           </g>
           <g class="node-elem" id="node-KF_10" onclick="openDrawer('KF_10')">
-            <rect x="1078" y="674" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
-            <text class="txt-sub" x="1175" y="682" font-size="8.5">10. Hubungan Kerja</text>
+            <rect x="1104" y="677" width="168" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1" />
+            <text class="txt-sub" x="1188" y="687" font-size="9.5">10. Hubungan Kerja</text>
           </g>
           <g class="node-elem" id="node-KF_11" onclick="openDrawer('KF_11')">
-            <rect x="1078" y="694" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
-            <text class="txt-sub" x="1175" y="702" font-size="8.5">11. Tools, System &amp; Peralatan</text>
+            <rect x="1104" y="700" width="168" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1" />
+            <text class="txt-sub" x="1188" y="710" font-size="9.5">11. Tools &amp; Peralatan</text>
           </g>
           <g class="node-elem" id="node-KF_12" onclick="openDrawer('KF_12')">
-            <rect x="1078" y="714" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
-            <text class="txt-sub" x="1175" y="722" font-size="8.5">12. Risiko Pekerjaan</text>
+            <rect x="1104" y="723" width="168" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1" />
+            <text class="txt-sub" x="1188" y="733" font-size="9.5">12. Risiko Pekerjaan</text>
           </g>
           <g class="node-elem" id="node-KF_13" onclick="openDrawer('KF_13')">
-            <rect x="1078" y="734" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
-            <text class="txt-sub" x="1175" y="742" font-size="8.5">13. Regulasi/Standar</text>
+            <rect x="1104" y="746" width="168" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1" />
+            <text class="txt-sub" x="1188" y="756" font-size="9.5">13. Regulasi &amp; Standar</text>
           </g>
           <g class="node-elem" id="node-KF_14" onclick="openDrawer('KF_14')">
-            <rect x="1078" y="754" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
-            <text class="txt-sub" x="1175" y="762" font-size="8.5">14. Tanggung Jawab Pemimpin</text>
+            <rect x="1104" y="769" width="168" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1" />
+            <text class="txt-sub" x="1188" y="779" font-size="9.5">14. Tanggung Jawab Lead</text>
           </g>
           <g class="node-elem" id="node-KF_15" onclick="openDrawer('KF_15')">
-            <rect x="1078" y="774" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
-            <text class="txt-sub" x="1175" y="782" font-size="8.5">15. Kriteria Penguasaan</text>
+            <rect x="1104" y="792" width="168" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1" />
+            <text class="txt-sub" x="1188" y="802" font-size="9.5">15. Kriteria Kuasa</text>
           </g>
           <g class="node-elem" id="node-KF_16" onclick="openDrawer('KF_16')">
-            <rect x="1078" y="794" width="194" height="17" rx="3" fill="#f8fafc" stroke="#18181b" stroke-width="1" />
-            <text class="txt-sub" x="1175" y="802" font-size="8.5">16. Pendidikan/Pengalaman</text>
+            <rect x="1104" y="815" width="168" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1" />
+            <text class="txt-sub" x="1188" y="825" font-size="9.5">16. Pendidikan / Syarat</text>
           </g>
         </g>
 
+        <!-- Kontainer KSAO: Parameter KSAO Fungsional (Grid 2x2) -->
+        <g id="group-KF_FVE">
+          <rect x="920" y="975" width="360" height="120" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
+          <g class="node-elem" id="node-KF_FVE" onclick="openDrawer('KF_FVE')">
+            <rect x="920" y="975" width="360" height="28" rx="8" fill="#facc15" stroke="#18181b" stroke-width="1.8" />
+            <text class="txt-group-header" x="1100" y="989" font-size="11.5">Parameter KSAO Fungsional</text>
+          </g>
+          <g class="node-elem" id="node-FVE_K" onclick="openDrawer('FVE_K')">
+            <rect x="928" y="1010" width="168" height="36" rx="4" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+            <text class="txt-sub" x="1012" y="1021" font-size="10.5" font-weight="700">K: Apa yang Diketahui</text>
+            <text x="1012" y="1036" font-family="sans-serif" font-size="9.5" font-style="italic" fill="#52525b" text-anchor="middle">(Prinsip teknis &amp; mutu peran)</text>
+          </g>
+          <g class="node-elem" id="node-FVE_S" onclick="openDrawer('FVE_S')">
+            <rect x="1104" y="1010" width="168" height="36" rx="4" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+            <text class="txt-sub" x="1188" y="1021" font-size="10.5" font-weight="700">S: Kemahiran Eksekusi</text>
+            <text x="1188" y="1036" font-family="sans-serif" font-size="9.5" font-style="italic" fill="#52525b" text-anchor="middle">(Aplikasi instrumen presisi)</text>
+          </g>
+          <g class="node-elem" id="node-FVE_A" onclick="openDrawer('FVE_A')">
+            <rect x="928" y="1052" width="168" height="36" rx="4" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+            <text class="txt-sub" x="1012" y="1063" font-size="10.5" font-weight="700">A: Mental &amp; Daya Tahan</text>
+            <text x="1012" y="1078" font-family="sans-serif" font-size="9.5" font-style="italic" fill="#52525b" text-anchor="middle">(Analisis &amp; ketelitian tugas)</text>
+          </g>
+          <g class="node-elem" id="node-FVE_O" onclick="openDrawer('FVE_O')">
+            <rect x="1104" y="1052" width="168" height="36" rx="4" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+            <text class="txt-sub" x="1188" y="1063" font-size="10.5" font-weight="700">O: Karakter &amp; Sikap</text>
+            <text x="1188" y="1078" font-family="sans-serif" font-size="9.5" font-style="italic" fill="#52525b" text-anchor="middle">(Kejujuran faktual &amp; K3)</text>
+          </g>
+        </g>
 
         <!-- ============================================================== -->
         <!-- DOMAIN LMS (SATU KONTAINER PEMBUNGKUS UTAMA)                   -->
         <!-- ============================================================== -->
         <g id="container-DOMAIN-LMS">
           <!-- Kotak Kontainer Besar Pembungkus Seluruh Domain LMS -->
-          <rect x="60" y="1015" width="1225" height="465" rx="12" fill="#ffffff" stroke="#2563eb" stroke-width="2.5" />
+          <rect x="60" y="1170" width="1225" height="465" rx="12" fill="#ffffff" stroke="#2563eb" stroke-width="2.5" />
 
           <!-- Header Kontainer Domain LMS -->
-          <rect x="60" y="1015" width="1225" height="36" rx="12" fill="#2563eb" />
-          <text x="672" y="1033" font-family="sans-serif" font-size="13.5" font-weight="800" fill="#ffffff" text-anchor="middle">
+          <rect x="60" y="1170" width="1225" height="36" rx="12" fill="#2563eb" />
+          <text x="672" y="1188" font-family="sans-serif" font-size="13.5" font-weight="800" fill="#ffffff" text-anchor="middle">
             DOMAIN LMS
           </text>
 
           <!-- 1. Learning Requirement Node (Spine Kiri di dalam kontainer LMS) -->
           <g class="node-elem" id="node-LR" onclick="openDrawer('LR')">
-            <rect x="80" y="1075" width="340" height="50" rx="8" fill="#facc15" stroke="#18181b" stroke-width="2" />
-            <text class="txt-title" x="250" y="1100" font-size="14">Learning Requirement</text>
+            <rect x="80" y="1230" width="340" height="50" rx="8" fill="#facc15" stroke="#18181b" stroke-width="2" />
+            <text class="txt-title" x="250" y="1255" font-size="14">Learning Requirement</text>
           </g>
 
           <!-- Sub-Kontainer Rincian Silabus Hasil Bedah (A s.d I) di Kanan -->
           <g id="group-LR">
-            <rect x="460" y="1065" width="810" height="270" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
-            <rect x="460" y="1065" width="810" height="24" rx="8" fill="#fef08a" stroke="#18181b" stroke-width="1.8" />
-            <text class="txt-group-header" x="865" y="1077" font-size="11.5">Bedah 9 Elemen Standar Silabus Program Pelatihan</text>
+            <rect x="460" y="1220" width="810" height="270" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
+            <rect x="460" y="1220" width="810" height="24" rx="8" fill="#fef08a" stroke="#18181b" stroke-width="1.8" />
+            <text class="txt-group-header" x="865" y="1232" font-size="11.5">Bedah 9 Elemen Standar Silabus Program Pelatihan</text>
 
             <!-- Baris 1: A, B -->
             <g class="node-elem" id="node-LR_A" onclick="openDrawer('LR_A')">
-              <rect x="472" y="1097" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="666" y="1113" font-size="10.5">A. Header Program (Profil, Kategori, Prasyarat)</text>
+              <rect x="472" y="1252" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="666" y="1268" font-size="10.5">A. Header Program (Profil, Kategori, Prasyarat)</text>
             </g>
             <g class="node-elem" id="node-LR_B" onclick="openDrawer('LR_B')">
-              <rect x="868" y="1097" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="1062" y="1113" font-size="10.5">B. Tujuan Pelatihan (Performance Objective)</text>
+              <rect x="868" y="1252" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="1062" y="1268" font-size="10.5">B. Tujuan Pelatihan (Performance Objective)</text>
             </g>
 
             <!-- Baris 2: C, D -->
             <g class="node-elem" id="node-LR_C" onclick="openDrawer('LR_C')">
-              <rect x="472" y="1136" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="666" y="1152" font-size="10.5">C. Materi Pelatihan &amp; Referensi SOP</text>
+              <rect x="472" y="1291" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="666" y="1307" font-size="10.5">C. Materi Pelatihan &amp; Referensi SOP</text>
             </g>
             <g class="node-elem" id="node-LR_D" onclick="openDrawer('LR_D')">
-              <rect x="868" y="1136" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="1062" y="1152" font-size="10.5">D. Metode Pelatihan (Model 70:20:10)</text>
+              <rect x="868" y="1291" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="1062" y="1307" font-size="10.5">D. Metode Pelatihan (Model 70:20:10)</text>
             </g>
 
             <!-- Baris 3: E, F -->
             <g class="node-elem" id="node-LR_E" onclick="openDrawer('LR_E')">
-              <rect x="472" y="1175" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="666" y="1191" font-size="10.5">E. Alur Kegiatan (Pre-Test s.d RTL)</text>
+              <rect x="472" y="1330" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="666" y="1346" font-size="10.5">E. Alur Kegiatan (Pre-Test s.d RTL)</text>
             </g>
             <g class="node-elem" id="node-LR_F" onclick="openDrawer('LR_F')">
-              <rect x="868" y="1175" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="1062" y="1191" font-size="10.5">F. Media, Alat &amp; Sumber Pelatihan</text>
+              <rect x="868" y="1330" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="1062" y="1346" font-size="10.5">F. Media, Alat &amp; Sumber Pelatihan</text>
             </g>
 
             <!-- Baris 4: G, H -->
             <g class="node-elem" id="node-LR_G" onclick="openDrawer('LR_G')">
-              <rect x="472" y="1214" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="666" y="1230" font-size="10.5">G. Skema Penilaian &amp; Kelulusan (≥ 80%)</text>
+              <rect x="472" y="1369" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="666" y="1385" font-size="10.5">G. Skema Penilaian &amp; Kelulusan (≥ 80%)</text>
             </g>
             <g class="node-elem" id="node-LR_H" onclick="openDrawer('LR_H')">
-              <rect x="868" y="1214" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="1062" y="1230" font-size="10.5">H. Evaluasi 4 Level Kirkpatrick</text>
+              <rect x="868" y="1369" width="388" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="1062" y="1385" font-size="10.5">H. Evaluasi 4 Level Kirkpatrick</text>
             </g>
 
             <!-- Baris 5: I (Full Width) -->
             <g class="node-elem" id="node-LR_I" onclick="openDrawer('LR_I')">
-              <rect x="472" y="1253" width="784" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="864" y="1269" font-size="10.5">I. Catatan Coaching &amp; Pengamatan Jurnal Naratif Pengembangan</text>
+              <rect x="472" y="1408" width="784" height="32" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
+              <text class="txt-sub" x="864" y="1424" font-size="10.5">I. Catatan Coaching &amp; Pengamatan Jurnal Naratif Pengembangan</text>
             </g>
 
             <!-- Footer Box Explanatory -->
-            <text x="864" y="1312" font-family="sans-serif" font-size="10.5" font-weight="600" fill="#71717a" text-anchor="middle">
+            <text x="864" y="1467" font-family="sans-serif" font-size="10.5" font-weight="600" fill="#71717a" text-anchor="middle">
               Standarisasi blueprint kurikulum sebelum materi modul diproduksi atau ditugaskan.
             </text>
           </g>
 
           <!-- 2. Content (Modul & Media Belajar) Node di dalam kontainer LMS -->
           <g class="node-elem" id="node-CT" onclick="openDrawer('CT')">
-            <rect x="80" y="1375" width="340" height="50" rx="8" fill="#facc15" stroke="#18181b" stroke-width="2" />
-            <text class="txt-title" x="250" y="1400" font-size="14">Content</text>
+            <rect x="80" y="1530" width="340" height="50" rx="8" fill="#facc15" stroke="#18181b" stroke-width="2" />
+            <text class="txt-title" x="250" y="1555" font-size="14">Content</text>
           </g>
 
           <!-- Sub-Kontainer Rincian Content di Kanan di dalam kontainer LMS -->
           <g id="group-CT">
-            <rect x="460" y="1365" width="810" height="70" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
-            <rect x="460" y="1365" width="810" height="22" rx="8" fill="#fef08a" stroke="#18181b" stroke-width="1.8" />
-            <text class="txt-group-header" x="865" y="1376" font-size="11">Aset Media &amp; Penyedia Konten Pembelajaran</text>
+            <rect x="460" y="1520" width="810" height="70" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
+            <rect x="460" y="1520" width="810" height="22" rx="8" fill="#86efac" stroke="#18181b" stroke-width="1.8" />
+            <text class="txt-group-header" x="865" y="1531" font-size="11">Aset Media &amp; Penyedia Konten Pembelajaran</text>
 
             <g class="node-elem" id="node-CT_1" onclick="openDrawer('CT_1')">
-              <rect x="472" y="1395" width="250" height="30" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="597" y="1410" font-size="10.5">Modul SCORM / Video</text>
+              <rect x="472" y="1550" width="250" height="30" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2" />
+              <text class="txt-sub" x="597" y="1565" font-size="10.5">Modul SCORM / Video</text>
             </g>
             <g class="node-elem" id="node-CT_2" onclick="openDrawer('CT_2')">
-              <rect x="738" y="1395" width="254" height="30" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="865" y="1410" font-size="10.5">SOP &amp; Job-Aid Lapangan</text>
+              <rect x="738" y="1550" width="254" height="30" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2" />
+              <text class="txt-sub" x="865" y="1565" font-size="10.5">SOP &amp; Job-Aid Lapangan</text>
             </g>
             <g class="node-elem" id="node-CT_3" onclick="openDrawer('CT_3')">
-              <rect x="1008" y="1395" width="248" height="30" rx="5" fill="#fef08a" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="1132" y="1410" font-size="10.5">Pelatihan Mitra Pihak Ketiga</text>
+              <rect x="1008" y="1550" width="248" height="30" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2" />
+              <text class="txt-sub" x="1132" y="1565" font-size="10.5">Pelatihan Mitra Pihak Ketiga</text>
             </g>
           </g>
 
           <!-- Garis internal di dalam kontainer LMS: LR -> Content -->
-          <path class="line-spine" d="M 250 1125 L 250 1375" marker-end="url(#arrow-blue)" />
+          <path class="line-spine" d="M 250 1280 L 250 1530" marker-end="url(#arrow-blue)" />
           <!-- Garis internal: LR -> Sub-kontainer Silabus -->
-          <path class="line-branch" d="M 420 1100 L 460 1100" marker-end="url(#arrow-blue)" />
+          <path class="line-branch" d="M 420 1255 L 460 1255" marker-end="url(#arrow-blue)" />
           <!-- Garis internal: Content -> Sub-kontainer Content Assets -->
-          <path class="line-branch" d="M 420 1400 L 460 1400" marker-end="url(#arrow-blue)" />
+          <path class="line-branch" d="M 420 1555 L 460 1555" marker-end="url(#arrow-blue)" />
         </g>
 
 
@@ -1116,51 +1209,51 @@
         <!-- ============================================================== -->
         <!-- Section Header Pill Biru -->
         <g id="section-uk">
-          <rect x="140" y="1505" width="280" height="34" rx="17" fill="#2563eb" />
-          <text x="280" y="1522" font-family="sans-serif" font-size="12.5" font-weight="800" fill="#ffffff" text-anchor="middle">
+          <rect x="140" y="1660" width="280" height="34" rx="17" fill="#2563eb" />
+          <text x="280" y="1677" font-family="sans-serif" font-size="12.5" font-weight="800" fill="#ffffff" text-anchor="middle">
             DOMAIN UJI KOMPETENSI
           </text>
         </g>
 
         <!-- Learning Assignment Node -->
         <g class="node-elem" id="node-LA" onclick="openDrawer('LA')">
-          <rect x="110" y="1565" width="340" height="50" rx="8" fill="#facc15" stroke="#18181b" stroke-width="2" />
-          <text class="txt-title" x="280" y="1590" font-size="14">Learning Assignment</text>
+          <rect x="110" y="1720" width="340" height="50" rx="8" fill="#facc15" stroke="#18181b" stroke-width="2" />
+          <text class="txt-title" x="280" y="1745" font-size="14">Learning Assignment</text>
         </g>
 
         <!-- METODE PENUGASAN PASCA-BELAJAR LMS (STANDALONE NODES - TANPA KONTAINER) -->
         <g id="nodes-LA-standalone">
           <!-- Kolom 1 -->
           <g class="node-elem" id="node-LA_1" onclick="openDrawer('LA_1')">
-            <rect x="540" y="1555" width="300" height="32" rx="6" fill="#fef08a" stroke="#18181b" stroke-width="1.3" />
-            <text class="txt-sub" x="690" y="1571" font-size="11">Tes Multi Correct Answer</text>
+            <rect x="540" y="1710" width="300" height="32" rx="6" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.3" />
+            <text class="txt-sub" x="690" y="1726" font-size="11">Tes Multi Correct Answer</text>
           </g>
           <g class="node-elem" id="node-LA_2" onclick="openDrawer('LA_2')">
-            <rect x="540" y="1602" width="300" height="32" rx="6" fill="#fef08a" stroke="#18181b" stroke-width="1.3" />
-            <text class="txt-sub" x="690" y="1618" font-size="11">Studi Skenario Kasus</text>
+            <rect x="540" y="1757" width="300" height="32" rx="6" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.3" />
+            <text class="txt-sub" x="690" y="1773" font-size="11">Studi Skenario Kasus</text>
           </g>
 
           <!-- Kolom 2 -->
           <g class="node-elem" id="node-LA_3" onclick="openDrawer('LA_3')">
-            <rect x="860" y="1555" width="300" height="32" rx="6" fill="#fef08a" stroke="#18181b" stroke-width="1.3" />
-            <text class="txt-sub" x="1010" y="1571" font-size="11">Tugas Sampel Kerja</text>
+            <rect x="860" y="1710" width="300" height="32" rx="6" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.3" />
+            <text class="txt-sub" x="1010" y="1726" font-size="11">Tugas Sampel Kerja</text>
           </g>
           <g class="node-elem" id="node-LA_4" onclick="openDrawer('LA_4')">
-            <rect x="860" y="1602" width="300" height="32" rx="6" fill="#fef08a" stroke="#18181b" stroke-width="1.3" />
-            <text class="txt-sub" x="1010" y="1618" font-size="11">Simulasi &amp; Role-Play</text>
+            <rect x="860" y="1757" width="300" height="32" rx="6" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.3" />
+            <text class="txt-sub" x="1010" y="1773" font-size="11">Simulasi &amp; Role-Play</text>
           </g>
 
           <!-- Baris 3 (Tengah) -->
           <g class="node-elem" id="node-LA_5" onclick="openDrawer('LA_5')">
-            <rect x="700" y="1650" width="300" height="32" rx="6" fill="#fef08a" stroke="#18181b" stroke-width="1.3" />
-            <text class="txt-sub" x="850" y="1666" font-size="11">Praktik Terbimbing (OJT)</text>
+            <rect x="700" y="1805" width="300" height="32" rx="6" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.3" />
+            <text class="txt-sub" x="850" y="1821" font-size="11">Praktik Terbimbing (OJT)</text>
           </g>
         </g>
 
         <!-- Assessment (Uji Nyata) Node -->
         <g class="node-elem" id="node-AS" onclick="openDrawer('AS')">
-          <rect x="110" y="1740" width="340" height="50" rx="8" fill="#facc15" stroke="#18181b" stroke-width="2" />
-          <text class="txt-title" x="280" y="1765" font-size="14">Assessment</text>
+          <rect x="110" y="1895" width="340" height="50" rx="8" fill="#facc15" stroke="#18181b" stroke-width="2" />
+          <text class="txt-title" x="280" y="1920" font-size="14">Assessment</text>
         </g>
 
         <!-- KONTEN ASESMEN: 4 KONTAINER INDEPENDEN K, S, A, O (GRID 2x2) -->
@@ -1171,48 +1264,48 @@
 
           <!-- 1. KONTAINER K (KNOWLEDGE) - Apa yang Diketahui -->
           <g id="box-AS-K">
-            <rect x="540" y="1725" width="310" height="152" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
-            <rect x="540" y="1725" width="310" height="26" rx="8" fill="#fef08a" stroke="#18181b" stroke-width="1.8" />
-            <text class="txt-group-header" x="695" y="1738" font-size="11">K (Knowledge) — Apa yang Diketahui</text>
-            <text x="695" y="1762" font-family="sans-serif" font-size="8.5" font-style="italic" fill="#71717a" text-anchor="middle">
-              (Informasi deklaratif, konsep, istilah, & SOP)
+            <rect x="540" y="1880" width="310" height="152" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
+            <rect x="540" y="1880" width="310" height="26" rx="8" fill="#d8b4fe" stroke="#18181b" stroke-width="1.8" />
+            <text class="txt-group-header" x="695" y="1893" font-size="11.5">K (Knowledge) — Apa yang Diketahui</text>
+            <text x="695" y="1917" font-family="sans-serif" font-size="9.5" font-style="italic" fill="#71717a" text-anchor="middle">
+              (Informasi deklaratif, konsep, istilah, &amp; SOP)
             </text>
 
             <g class="node-elem" id="node-AS_K1" onclick="openDrawer('AS_K1')">
-              <rect x="550" y="1775" width="290" height="42" rx="5" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="695" y="1789" font-size="10" font-weight="700">Kuis Objektif / PG (LMS)</text>
-              <text x="695" y="1805" font-family="sans-serif" font-size="8.5" fill="#52525b" text-anchor="middle">C1 Remember, C2 Understand, Ambang ≥ 80%</text>
+              <rect x="550" y="1930" width="290" height="42" rx="5" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.2" />
+              <text class="txt-sub" x="695" y="1944" font-size="10.5" font-weight="700">Kuis Objektif / PG (LMS)</text>
+              <text x="695" y="1960" font-family="sans-serif" font-size="9.5" fill="#52525b" text-anchor="middle">C1 Remember, C2 Understand, Ambang ≥ 80%</text>
             </g>
 
             <g class="node-elem" id="node-AS_K2" onclick="openDrawer('AS_K2')">
-              <rect x="550" y="1824" width="290" height="42" rx="5" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="695" y="1838" font-size="10" font-weight="700">Soal Berbasis Skenario / SJT</text>
-              <text x="695" y="1854" font-family="sans-serif" font-size="8.5" fill="#52525b" text-anchor="middle">C3 Apply, C4 Analyze (Red Flag, Eskalasi)</text>
+              <rect x="550" y="1979" width="290" height="42" rx="5" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.2" />
+              <text class="txt-sub" x="695" y="1993" font-size="10.5" font-weight="700">Soal Berbasis Skenario / SJT</text>
+              <text x="695" y="2009" font-family="sans-serif" font-size="9.5" fill="#52525b" text-anchor="middle">C3 Apply, C4 Analyze (Red Flag, Eskalasi)</text>
             </g>
           </g>
 
           <!-- 2. KONTAINER S (SKILL) - Kemahiran Bertindak / Eksekusi -->
           <g id="box-AS-S">
-            <rect x="870" y="1725" width="310" height="152" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
-            <rect x="870" y="1725" width="310" height="26" rx="8" fill="#fef08a" stroke="#18181b" stroke-width="1.8" />
-            <text class="txt-group-header" x="1025" y="1738" font-size="11">S (Skill) — Kemahiran Eksekusi</text>
-            <text x="1025" y="1762" font-family="sans-serif" font-size="8.5" font-style="italic" fill="#71717a" text-anchor="middle">
+            <rect x="870" y="1880" width="310" height="152" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
+            <rect x="870" y="1880" width="310" height="26" rx="8" fill="#d8b4fe" stroke="#18181b" stroke-width="1.8" />
+            <text class="txt-group-header" x="1025" y="1893" font-size="11.5">S (Skill) — Kemahiran Eksekusi</text>
+            <text x="1025" y="1917" font-family="sans-serif" font-size="9.5" font-style="italic" fill="#71717a" text-anchor="middle">
               (Kapasitas terpelajari tugas spesifik 1–4 minggu)
             </text>
 
             <g class="node-elem" id="node-AS_S1" onclick="openDrawer('AS_S1')">
-              <rect x="880" y="1774" width="290" height="28" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="1025" y="1788" font-size="9.5">Work Sample Test (Uji Sampel Kerja Riil)</text>
+              <rect x="880" y="1929" width="290" height="28" rx="4" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.2" />
+              <text class="txt-sub" x="1025" y="1943" font-size="10.5">Work Sample Test (Uji Sampel Kerja)</text>
             </g>
 
             <g class="node-elem" id="node-AS_S2" onclick="openDrawer('AS_S2')">
-              <rect x="880" y="1808" width="290" height="28" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="1025" y="1822" font-size="9.5">Simulasi & Role-Play (Skenario Terkontrol)</text>
+              <rect x="880" y="1963" width="290" height="28" rx="4" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.2" />
+              <text class="txt-sub" x="1025" y="1977" font-size="10.5">Simulasi &amp; Role-Play Terkontrol</text>
             </g>
 
             <g class="node-elem" id="node-AS_S3" onclick="openDrawer('AS_S3')">
-              <rect x="880" y="1842" width="290" height="28" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="1025" y="1856" font-size="9.5">Observasi Lapangan & Rubrik Checklist</text>
+              <rect x="880" y="1997" width="290" height="28" rx="4" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.2" />
+              <text class="txt-sub" x="1025" y="2011" font-size="10.5">Observasi Lapangan &amp; Checklist</text>
             </g>
           </g>
 
@@ -1223,48 +1316,48 @@
 
           <!-- 3. KONTAINER A (ABILITY) - Kapasitas Mental & Daya Tahan -->
           <g id="box-AS-A">
-            <rect x="540" y="1890" width="310" height="152" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
-            <rect x="540" y="1890" width="310" height="26" rx="8" fill="#fef08a" stroke="#18181b" stroke-width="1.8" />
-            <text class="txt-group-header" x="695" y="1903" font-size="11">A (Ability) — Mental & Daya Tahan Bawaan</text>
-            <text x="695" y="1927" font-family="sans-serif" font-size="8.5" font-style="italic" fill="#71717a" text-anchor="middle">
-              (Kapasitas kognitif & fisik stabil / trait-like)
+            <rect x="540" y="2045" width="310" height="152" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
+            <rect x="540" y="2045" width="310" height="26" rx="8" fill="#d8b4fe" stroke="#18181b" stroke-width="1.8" />
+            <text class="txt-group-header" x="695" y="2058" font-size="11.5">A (Ability) — Mental &amp; Daya Tahan Bawaan</text>
+            <text x="695" y="2082" font-family="sans-serif" font-size="9.5" font-style="italic" fill="#71717a" text-anchor="middle">
+              (Kapasitas kognitif &amp; fisik stabil / trait-like)
             </text>
 
             <g class="node-elem" id="node-AS_A1" onclick="openDrawer('AS_A1')">
-              <rect x="550" y="1940" width="290" height="42" rx="5" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="695" y="1954" font-size="10" font-weight="700">Tes Inteligensi (mis. IST)</text>
-              <text x="695" y="1970" font-family="sans-serif" font-size="8.5" fill="#52525b" text-anchor="middle">Penalaran Verbal, Hitung, Visual-Spasial</text>
+              <rect x="550" y="2095" width="290" height="42" rx="5" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.2" />
+              <text class="txt-sub" x="695" y="2109" font-size="10.5" font-weight="700">Tes Inteligensi (mis. IST)</text>
+              <text x="695" y="2125" font-family="sans-serif" font-size="9.5" fill="#52525b" text-anchor="middle">Penalaran Verbal, Hitung, Visual-Spasial</text>
             </g>
 
             <g class="node-elem" id="node-AS_A2" onclick="openDrawer('AS_A2')">
-              <rect x="550" y="1989" width="290" height="42" rx="5" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="695" y="2003" font-size="10" font-weight="700">Tes Kraepelin / Pauli</text>
-              <text x="695" y="2019" font-family="sans-serif" font-size="8.5" fill="#52525b" text-anchor="middle">Tempo, Akurasi, Stabilitas, Daya Tahan Rutinitas</text>
+              <rect x="550" y="2144" width="290" height="42" rx="5" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.2" />
+              <text class="txt-sub" x="695" y="2158" font-size="10.5" font-weight="700">Tes Kraepelin / Pauli</text>
+              <text x="695" y="2174" font-family="sans-serif" font-size="9.5" fill="#52525b" text-anchor="middle">Tempo, Akurasi, Stabilitas, Daya Tahan</text>
             </g>
           </g>
 
           <!-- 4. KONTAINER O (OTHER) - Kepribadian & Karakter Kerja -->
           <g id="box-AS-O">
-            <rect x="870" y="1890" width="310" height="152" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
-            <rect x="870" y="1890" width="310" height="26" rx="8" fill="#fef08a" stroke="#18181b" stroke-width="1.8" />
-            <text class="txt-group-header" x="1025" y="1903" font-size="11">O (Other) — Kepribadian & Karakter Kerja</text>
-            <text x="1025" y="1927" font-family="sans-serif" font-size="8.5" font-style="italic" fill="#71717a" text-anchor="middle">
-              (Motif, nilai internal, sikap & gaya perilaku laten)
+            <rect x="870" y="2045" width="310" height="152" rx="8" fill="#ffffff" stroke="#18181b" stroke-width="1.8" />
+            <rect x="870" y="2045" width="310" height="26" rx="8" fill="#d8b4fe" stroke="#18181b" stroke-width="1.8" />
+            <text class="txt-group-header" x="1025" y="2058" font-size="11.5">O (Other) — Kepribadian &amp; Karakter Kerja</text>
+            <text x="1025" y="2082" font-family="sans-serif" font-size="9.5" font-style="italic" fill="#71717a" text-anchor="middle">
+              (Motif, nilai internal, sikap &amp; gaya perilaku)
             </text>
 
             <g class="node-elem" id="node-AS_O1" onclick="openDrawer('AS_O1')">
-              <rect x="880" y="1939" width="290" height="28" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="1025" y="1953" font-size="9.5">PAPI Kostick (Roles & Needs di Tempat Kerja)</text>
+              <rect x="880" y="2094" width="290" height="28" rx="4" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.2" />
+              <text class="txt-sub" x="1025" y="2108" font-size="10.5">PAPI Kostick (Roles &amp; Needs)</text>
             </g>
 
             <g class="node-elem" id="node-AS_O2" onclick="openDrawer('AS_O2')">
-              <rect x="880" y="1973" width="290" height="28" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="1025" y="1987" font-size="9.5">DISC (Gaya Komunikasi & Adaptasi Perilaku)</text>
+              <rect x="880" y="2128" width="290" height="28" rx="4" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.2" />
+              <text class="txt-sub" x="1025" y="2142" font-size="10.5">DISC (Gaya Komunikasi &amp; Perilaku)</text>
             </g>
 
             <g class="node-elem" id="node-AS_O3" onclick="openDrawer('AS_O3')">
-              <rect x="880" y="2007" width="290" height="28" rx="4" fill="#f8fafc" stroke="#18181b" stroke-width="1.2" />
-              <text class="txt-sub" x="1025" y="2021" font-size="9.5">Wawancara BEI / STAR (Integritas & Etika)</text>
+              <rect x="880" y="2162" width="290" height="28" rx="4" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.2" />
+              <text class="txt-sub" x="1025" y="2176" font-size="10.5">Wawancara BEI / STAR (Integritas)</text>
             </g>
           </g>
         </g>
@@ -1860,7 +1953,33 @@
         example: "Minimal SMK Telekomunikasi / D3 Teknik Elektro dengan pengalaman kerja minimal 1 tahun di bidang jaringan akses optik.",
         dependensi: "Filter awal seleksi penerimaan dan penempatan jabatan."
       },
-
+      "JF_CP": {
+        title: "Parameter KSAO Rumpun Job Family",
+        category: "DWP Direktorat (Parameter KSAO Rumpun Job Family)",
+        hakikat: "Penerapan metode kerja kolaboratif dan kebiasaan profesional bersama lintas kluster peran yang merepresentasikan nilai organisasi (seperti End-to-End Collaboration).",
+        sumber: "Enterprise Competency Dictionary §2 (Tabel 2 & Tabel 3) & DWP Lintas Fungsi.",
+        turunan: "• K (Knowledge): Memahami konsep alur proses kerja, batas peran lintas fungsi, dan integrasi tugas bersama.<br>• S (Skill): Mengoordinasikan handoff pekerjaan, komunikasi tim yang efektif, dan mitigasi friksi antar-unit.<br>• A (Ability): Memiliki penalaran sistemik (systemic thinking) dan fleksibilitas dalam memahami sudut pandang fungsi lain.<br>• O (Other): Membangun kolaborasi nir-silo, keterbukaan informasi, dan komitmen terhadap keberhasilan kolektif.",
+        example: "Melibatkan fungsi terkait sejak awal perencanaan, menyerahkan data handoff yang lengkap dan akurat, serta menyelesaikan hambatan kerja secara musyawarah tanpa saling melempar kesalahan.",
+        dependensi: "Diturunkan dari Job Family, menyuplai indikator perilaku kerja teramati ke Learning Requirement, dan dinilai pada instrumen evaluasi kolaborasi di Assessment."
+      },
+      "KM_VBL": {
+        title: "Parameter KSAO Managerial",
+        category: "Knowledge Managerial (Parameter KSAO Managerial)",
+        hakikat: "Perwujudan mandat kepemimpinan berbasis nilai luhur organisasi dalam mengarahkan orang lain, mengambil keputusan etis, dan mengelola dinamika unit kerja.",
+        sumber: "Enterprise Competency Dictionary §1.4 (Tabel 2) & Pedoman Tata Kelola Kepemimpinan Korporat.",
+        turunan: "• K (Knowledge): Memahami prinsip kepemimpinan, tata kelola tim, regulasi ketenagakerjaan, dan etika manajerial.<br>• S (Skill): Melakukan pengarahan kerja, pembinaan tim (coaching & feedback objektif), serta alokasi sumber daya secara adil.<br>• A (Ability): Memiliki ketajaman pertimbangan keputusan strategis dan ketenangan kepemimpinan di situasi krisis.<br>• O (Other): Menunjukkan integritas keteladanan (walk the talk), etika moral tinggi, dan kematangan emosi dalam memimpin.",
+        example: "Menunjukkan konsistensi antara kata dan perbuatan dalam penegakan aturan, mengevaluasi kinerja bawahan secara transparan tanpa favoritisme, dan mengambil tanggung jawab penuh saat terjadi kegagalan operasional.",
+        dependensi: "Diturunkan dari Knowledge Managerial, mendikte silabus kepemimpinan berbasis nilai di LMS, dan diverifikasi melalui Wawancara BEI STAR serta laporan PAPI/DISC pada Assessment."
+      },
+      "KF_FVE": {
+        title: "Parameter KSAO Fungsional",
+        category: "Knowledge Fungsional (Parameter KSAO Fungsional)",
+        hakikat: "Eksekusi integritas nilai, kepatuhan prosedur baku, dan presisi mutu hasil kerja nyata dalam pelaksanaan 16 elemen tugas teknis spesifik jabatan.",
+        sumber: "Enterprise Competency Dictionary §1.3 (Tabel 2) & 16 Elemen Transformasi Data DWP.",
+        turunan: "• K (Knowledge): Menguasai prinsip teknis peran, metodologi operasional, serta regulasi dan standar mutu tugas.<br>• S (Skill): Menerapkan instrumen dan metode kerja spesifik secara presisi sesuai prosedur operasional baku.<br>• A (Ability): Memiliki kapasitas penalaran analitis, daya pemecahan masalah teknis, dan ketelitian kerja tingkat tinggi.<br>• O (Other): Memegang teguh kejujuran faktual, disiplin kepatuhan keselamatan (K3), dan komitmen mutu tanpa kompromi.",
+        example: "Mencatat dan melaporkan hasil kerja secara jujur dan akurat sesuai kondisi riil, disiplin mematuhi prosedur K3 di lapangan, serta menyelesaikan pekerjaan hingga tuntas memenuhi spesifikasi mutu tanpa kompromi kualitas.",
+        dependensi: "Diturunkan dari Knowledge Fungsional (16 elemen DWP), menjadi rubrik unjuk kerja pada Work Sample Test dan Observasi Lapangan Checklist di Assessment."
+      },
       // -------------------------------------------------------------
       // DOMAIN 2: LMS (KURIKULUM & MEDIA BELAJAR)
       // -------------------------------------------------------------
@@ -2314,7 +2433,7 @@
 
         let match = false;
         if (domain === "fondasi" && (id.startsWith("KB") || id.startsWith("RO"))) match = true;
-        if (domain === "dwp" && (id.startsWith("ORG") || id.startsWith("JF") || id.startsWith("KJ") || id.startsWith("KM") || id.startsWith("KF"))) match = true;
+        if (domain === "dwp" && (id.startsWith("ORG") || id.startsWith("JF") || id.startsWith("KJ") || id.startsWith("KM") || id.startsWith("KF") || id.startsWith("VBL") || id.startsWith("FVE"))) match = true;
         if (domain === "lms" && (id.startsWith("LR") || id.startsWith("CT"))) match = true;
         if (domain === "uk" && (id.startsWith("LA") || id.startsWith("AS"))) match = true;
 
