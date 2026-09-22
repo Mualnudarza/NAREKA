@@ -8,7 +8,7 @@
 (() => {
   'use strict';
 
-  const CANVAS_W = 2680;
+  const CANVAS_W = 2730;
   const MIN_SCALE = 0.4;
   const MAX_SCALE = 1.6;
   const STEP = 0.1;
@@ -55,11 +55,15 @@
      Registry topik: semua elemen dengan data-id
      --------------------------------------------------------- */
   const KIND_BY_CLASS = [
-    ['n-root', 'Peta utama'],
-    ['n-main', 'Topik utama'],
-    ['n-ref', 'Kerangka acuan'],
+    ['n-root', 'Peta Utama'],
+    ['n-main', 'Pilar Utama'],
+    ['n-doc', 'Dokumen Resmi & Standar'],
+    ['n-mat', 'Materi Pembelajaran & Pelatihan'],
+    ['n-asset', 'Luaran Materi & Aset Media'],
+    ['n-eva', 'Instrumen Evaluasi & Asesmen'],
+    ['n-pro', 'Data Profil & Rekam Jejak'],
+    ['n-ref', 'Kerangka Acuan'],
     ['n-chip', 'Silabus'],
-    ['n-comp', 'Kompetensi'],
     ['n-leaf', 'Subtopik']
   ];
 
@@ -119,33 +123,131 @@
   }
 
   /* ---------------------------------------------------------
-     Zoom
+     Zoom & Pan
      --------------------------------------------------------- */
   let userScale = null; // null = otomatis pas lebar layar
   let scale = 1;
+  let panX = 0;
+  let panY = 0;
 
   const fitScale = () => {
-    const avail = document.documentElement.clientWidth - 32;
+    const avail = (stage.clientWidth || window.innerWidth) - 40;
     return Math.max(MIN_SCALE, Math.min(1, avail / CANVAS_W));
   };
 
-  function applyScale() {
-    scale = userScale == null ? fitScale() : userScale;
-    canvas.style.transform = `scale(${scale})`;
-    stage.style.width = `${CANVAS_W * scale}px`;
-    stage.style.height = `${canvas.offsetHeight * scale}px`;
+  function applyTransform() {
+    canvas.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
     $('#zoom-fit').textContent = `${Math.round(scale * 100)}%`;
   }
 
-  function zoomBy(delta) {
+  function applyScale(center = false) {
+    scale = userScale == null ? fitScale() : userScale;
+    if (center || userScale == null) {
+      const stageW = stage.clientWidth || window.innerWidth;
+      panX = Math.max(20, (stageW - CANVAS_W * scale) / 2);
+      panY = 24;
+    }
+    applyTransform();
+  }
+
+  function zoomBy(delta, originX, originY) {
     const next = Math.round((scale + delta) * 100) / 100;
-    userScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, next));
-    applyScale();
+    const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, next));
+    if (newScale === scale) return;
+
+    const ox = originX != null ? originX : (stage.clientWidth || window.innerWidth) / 2;
+    const oy = originY != null ? originY : (stage.clientHeight || window.innerHeight) / 2;
+    const ratio = newScale / scale;
+    panX = ox - (ox - panX) * ratio;
+    panY = oy - (oy - panY) * ratio;
+
+    userScale = newScale;
+    scale = newScale;
+    applyTransform();
+  }
+
+  function resetView() {
+    userScale = null;
+    scale = fitScale();
+    const stageW = stage.clientWidth || window.innerWidth;
+    panX = Math.max(20, (stageW - CANVAS_W * scale) / 2);
+    panY = 24;
+    applyTransform();
   }
 
   $('#zoom-in').addEventListener('click', () => zoomBy(STEP));
   $('#zoom-out').addEventListener('click', () => zoomBy(-STEP));
-  $('#zoom-fit').addEventListener('click', () => { userScale = null; applyScale(); });
+  $('#zoom-fit').addEventListener('click', resetView);
+
+  /* ---------------------------------------------------------
+     Interaksi Pan (Geser Kiri, Kanan, Atas, Bawah)
+     --------------------------------------------------------- */
+  let isPointerDown = false;
+  let isPanning = false;
+  let startX = 0;
+  let startY = 0;
+  let startPanX = 0;
+  let startPanY = 0;
+  let pointerId = null;
+
+  stage.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0) return;
+    isPointerDown = true;
+    isPanning = false;
+    pointerId = e.pointerId;
+    startX = e.clientX;
+    startY = e.clientY;
+    startPanX = panX;
+    startPanY = panY;
+  });
+
+  stage.addEventListener('pointermove', (e) => {
+    if (!isPointerDown) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    if (!isPanning && Math.hypot(dx, dy) > 6) {
+      isPanning = true;
+      stage.classList.add('is-panning');
+      try { stage.setPointerCapture(pointerId); } catch (_) {}
+    }
+    if (isPanning) {
+      panX = startPanX + dx;
+      panY = startPanY + dy;
+      applyTransform();
+    }
+  });
+
+  const stopPan = () => {
+    if (!isPointerDown) return;
+    isPointerDown = false;
+    stage.classList.remove('is-panning');
+    if (isPanning) {
+      try { stage.releasePointerCapture(pointerId); } catch (_) {}
+      window.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        ev.preventDefault();
+      }, { capture: true, once: true });
+      isPanning = false;
+    }
+  };
+
+  stage.addEventListener('pointerup', stopPan);
+  stage.addEventListener('pointercancel', stopPan);
+  window.addEventListener('pointerup', stopPan);
+
+  // Scroll roda mouse: pan horizontal/vertikal (atau Ctrl+wheel untuk zoom)
+  stage.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    if (e.ctrlKey || e.metaKey) {
+      const delta = e.deltaY < 0 ? STEP : -STEP;
+      const rect = stage.getBoundingClientRect();
+      zoomBy(delta, e.clientX - rect.left, e.clientY - rect.top);
+    } else {
+      panX -= e.deltaX;
+      panY -= e.deltaY;
+      applyTransform();
+    }
+  }, { passive: false });
 
   /* ---------------------------------------------------------
      Garis penghubung
@@ -190,8 +292,9 @@
     const [x0, y0] = pts[at];
     const [x1, y1] = pts[at + 1];
     const isVertical = Math.abs(x1 - x0) < Math.abs(y1 - y0);
+    const typeCls = edge.edgeType ? ` el-${edge.edgeType}` : ' el-main';
     const tag = h('span', {
-      class: 'edge-label' + (edge.vertical && isVertical ? ' v' : ''),
+      class: 'edge-label' + typeCls + (edge.vertical && isVertical ? ' v' : ''),
       text: edge.label
     });
     tag.style.left = `${(x0 + x1) / 2}px`;
@@ -239,8 +342,12 @@
 
       const path = document.createElementNS(SVG_NS, 'path');
       path.setAttribute('d', roundedPath(pts, 12));
-      path.setAttribute('class', 'edge' + (edge.style === 'd' ? ' dashed' : ''));
-      if (edge.arrow) path.setAttribute('marker-end', 'url(#arr)');
+      const typeCls = edge.edgeType ? ` edge-${edge.edgeType}` : ' edge-main';
+      path.setAttribute('class', 'edge' + (edge.style === 'd' ? ' dashed' : '') + typeCls);
+      if (edge.arrow) {
+        const markerId = edge.edgeType ? `arr-${edge.edgeType}` : 'arr';
+        path.setAttribute('marker-end', `url(#${markerId})`);
+      }
       svg.appendChild(path);
       edgeNodes.push({ edge, path });
 
@@ -389,6 +496,7 @@
   canvas.addEventListener('click', (e) => {
     const hit = e.target.closest('.node, .group-title');
     if (!hit) return;
+    e.stopPropagation();
     const holder = hit.classList.contains('group-title') ? hit.closest('.group') : hit;
     if (holder && holder.dataset.id) openPanel(holder.dataset.id);
   });
@@ -413,11 +521,17 @@
     if (!btn) return;
     const id = btn.dataset.goto;
     openPanel(id, { focus: false });
-    registry.get(id).el.scrollIntoView({
-      block: 'center',
-      inline: 'nearest',
-      behavior: reduceMotion ? 'auto' : 'smooth'
-    });
+    const item = registry.get(id);
+    if (!item) return;
+    const stageR = stage.getBoundingClientRect();
+    const nodeR = item.el.getBoundingClientRect();
+    const nodeCx = (nodeR.left + nodeR.right) / 2;
+    const nodeCy = (nodeR.top + nodeR.bottom) / 2;
+    const stageCx = stageR.left + stageR.width / 2;
+    const stageCy = stageR.top + stageR.height / 2;
+    panX += (stageCx - nodeCx);
+    panY += (stageCy - nodeCy);
+    applyTransform();
   });
 
   $('#reset-progress').addEventListener('click', () => {
