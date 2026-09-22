@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Roadmap Manajemen Pengetahuan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="roadmapLMS\style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <div>
+      <h1>Roadmap Manajemen Pengetahuan</h1>
+      <p>Klik topik mana pun untuk membuka penjelasannya.</p>
+    </div>
+  </div>
+
+  <div class="tools">
+    <div class="progress">
+      <span id="progress-text">0 dari 0 selesai</span>
+      <div class="bar" aria-hidden="true"><i id="progress-bar"></i></div>
+      <button type="button" class="link-btn" id="reset-progress">Reset</button>
+    </div>
+    <div class="zoom" role="group" aria-label="Zoom roadmap">
+      <button type="button" id="zoom-out" aria-label="Perkecil">−</button>
+      <button type="button" id="zoom-fit" title="Sesuaikan dengan lebar layar">100%</button>
+      <button type="button" id="zoom-in" aria-label="Perbesar">+</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <ul class="legend" aria-label="Keterangan">
+    <li><i class="sw sw-main"></i>Topik utama</li>
+    <li><i class="sw sw-leaf"></i>Subtopik</li>
+    <li><i class="sw sw-k"></i><i class="sw sw-s"></i><i class="sw sw-a"></i><i class="sw sw-o"></i>Asesmen K, S, A, A/O</li>
+    <li><i class="ln"></i>Alur langsung</li>
+    <li><i class="ln dashed"></i>Relasi pendukung</li>
+  </ul>
+
+  <div class="stage" id="stage">
+    <div class="canvas" id="canvas">
+
+      <svg class="edges" id="edges" aria-hidden="true" focusable="false">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="10" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+            <path d="M0 0 L10 4 L0 8 Z" fill="#2b78e4"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="edge-labels" id="edge-labels" aria-hidden="true"></div>
+
+      <!-- ============ Judul ============ -->
+      <div class="row r-title">
+        <div class="c-mid">
+          <button type="button" class="node n-root" data-id="title">Roadmap Manajemen Pengetahuan</button>
+        </div>
+      </div>
+
+      <!-- ============ Background Knowledge + Modal Awal ============ -->
+      <div class="row r-bk">
+        <div class="c-mid">
+          <button type="button" class="node n-main w-300" data-id="bk">Background Knowledge</button>
+        </div>
+        <div class="c-right end">
+          <section class="group g-modal" data-id="modal-awal">
+            <button type="button" class="group-title">Komponen Modal Awal Individu</button>
+            <div class="grid-2">
+              <button type="button" class="node n-leaf" data-id="ma1">Pendidikan Formal / Vokasi</button>
+              <button type="button" class="node n-leaf" data-id="ma2">Aktivitas Organisasi &amp; Sosial</button>
+              <button type="button" class="node n-leaf" data-id="ma3">Pengalaman Kerja Industri</button>
+              <button type="button" class="node n-leaf" data-id="ma4">Sertifikasi &amp; Kursus Mandiri</button>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ============ Requirement Organization / Directorate ============ -->
+      <div class="row r-req">
+        <div class="c-left ctr">
+          <button type="button" class="node n-main w-300" data-id="req-org">Requirement Organization</button>
+        </div>
+        <div class="c-right ctr">
+          <button type="button" class="node n-main w-300" data-id="req-dir">Requirement Directorate</button>
+        </div>
+      </div>
+
+      <!-- ============ Kolom Organization (kiri) dan Directorate (kanan) ============ -->
+      <div class="row r-body">
+
+        <div class="c-left col-org">
+          <section class="group g-cv" data-id="cv">
+            <button type="button" class="group-title">Core Values &amp; Expected Behaviour Awareness</button>
+            <div class="list">
+              <button type="button" class="node n-leaf" data-id="cv1">Integrity &amp; Ethical Responsibility</button>
+              <button type="button" class="node n-leaf" data-id="cv2">Collaboration &amp; Respect</button>
+              <button type="button" class="node n-leaf" data-id="cv3">Ownership &amp; Accountability</button>
+              <button type="button" class="node n-leaf" data-id="cv4">Adaptability &amp; Continuous Learning</button>
+              <button type="button" class="node n-leaf" data-id="cv5">Innovation &amp; Continuous Improvement</button>
+            </div>
+          </section>
+
+          <section class="group g-cbl" data-id="cbl">
+            <button type="button" class="group-title">Core Business &amp; Industry Literacy</button>
+            <div class="list">
+              <button type="button" class="node n-leaf" data-id="cb1">Identity &amp; Strategic Direction Literacy</button>
+              <button type="button" class="node n-leaf" data-id="cb2">Product, Service &amp; Customer Value Literacy</button>
+              <button type="button" class="node n-leaf" data-id="cb3">Corporate Structure &amp; Business Scale Literacy</button>
+              <button type="button" class="node n-leaf" data-id="cb4">FTTH Technology &amp; Industry Fundamentals</button>
+              <button type="button" class="node n-leaf" data-id="cb5">Enterprise Operating Model &amp; DPMF Literacy</button>
+              <button type="button" class="node n-leaf" data-id="cb6">Ethics, Risk, Safety &amp; Compliance Literacy</button>
+              <button type="button" class="node n-leaf" data-id="cb7">Workflow, Reporting &amp; Work-System Literacy</button>
+              <button type="button" class="node n-leaf" data-id="cb8">Mandatory Workplace Policy Literacy</button>
+            </div>
+          </section>
+        </div>
+
+        <div class="c-right col-dir">
+          <section class="group g-needs" data-id="dir-needs">
+            <button type="button" class="group-title">Directorate Needs</button>
+            <div class="list">
+              <button type="button" class="node n-leaf" data-id="dn1">Tujuan Strategis &amp; Target Kinerja (KPI)</button>
+              <button type="button" class="node n-leaf" data-id="dn2">Penyelesaian Masalah Operasional (Pain Points)</button>
+              <button type="button" class="node n-leaf" data-id="dn3">Inovasi &amp; Permintaan Perubahan (Change Requests)</button>
+              <button type="button" class="node n-leaf" data-id="dn4">Kepatuhan &amp; Standarisasi (Compliance)</button>
+              <button type="button" class="node n-leaf" data-id="dn5">Tata Kelola &amp; Kejelasan Peran (Governance)</button>
+            </div>
+          </section>
+
+          <section class="group g-dwp" data-id="dwp">
+            <button type="button" class="group-title">Dasaria Workflow Playbook</button>
+            <div class="dwp-body">
+
+              <div class="dwp-left">
+                <section class="group g-dk" data-id="dk">
+                  <button type="button" class="group-title">Directorate Knowledge</button>
+                  <div class="dk-chain">
+                    <button type="button" class="node n-leaf" data-id="dk1">Penjelasan Direktorat</button>
+                    <button type="button" class="node n-leaf" data-id="dk2">Divisi &amp; Departemen</button>
+                    <button type="button" class="node n-leaf" data-id="dk3">Kebijakan &amp; Manual Mutu</button>
+                  </div>
+                  <div class="dk-leaves">
+                    <button type="button" class="node n-leaf" data-id="dk4">SOP Resmi Direktorat</button>
+                    <button type="button" class="node n-leaf" data-id="dk5">Technical Handbook</button>
+                    <button type="button" class="node n-leaf" data-id="dk6">Base Knowledge</button>
+                  </div>
+                </section>
+
+                <section class="group g-jf" data-id="jf">
+                  <button type="button" class="group-title">Job Family (Common-Functional Professional)</button>
+                  <div class="list">
+                    <button type="button" class="node n-leaf" data-id="jf1">Kelompok KSAO Bersama</button>
+                    <button type="button" class="node n-leaf" data-id="jf2">Batas Wewenang DWP</button>
+                    <button type="button" class="node n-leaf" data-id="jf3">Kelompok Interaksi Kerja</button>
+                    <button type="button" class="node n-leaf" data-id="jf4">Target Profisiensi Level 1–5</button>
+                  </div>
+                </section>
+              </div>
+
+              <section class="group g-jr" data-id="jr">
+                <button type="button" class="group-title">Job &amp; Role Requirements</button>
+                <div class="jr-body">
+                  <section class="group g-mcr" data-id="mcr">
+                    <button type="button" class="group-title">Managerial Competency Requirements</button>
+                    <div class="list">
+                      <button type="button" class="node n-leaf" data-id="mc1">Strategic Execution &amp; Business Planning</button>
+                      <button type="button" class="node n-leaf" data-id="mc2">People Leadership &amp; Talent Development</button>
+                      <button type="button" class="node n-leaf" data-id="mc3">Governance, Risk &amp; Crisis Management</button>
+                      <button type="button" class="node n-leaf" data-id="mc4">Resource &amp; Budget Optimization</button>
+                      <button type="button" class="node n-leaf" data-id="mc5">Decision Authority &amp; Escalation Governance</button>
+                    </div>
+                  </section>
+                  <section class="group g-fcr" data-id="fcr">
+                    <button type="button" class="group-title">Functional Competency Requirements</button>
+                    <div class="list">
+                      <button type="button" class="node n-leaf" data-id="fc1">Role Mandate &amp; Scope Boundary</button>
+                      <button type="button" class="node n-leaf" data-id="fc2">Technical Execution &amp; SLA Delivery</button>
+                      <button type="button" class="node n-leaf" data-id="fc3">Professional Qualification &amp; Working Relations</button>
+                      <button type="button" class="node n-leaf" data-id="fc4">Workplace Assets &amp; Applied Tools</button>
+                      <button type="button" class="node n-leaf" data-id="fc5">Compliance, Risk &amp; Operational Safety</button>
+                    </div>
+                  </section>
+                </div>
+              </section>
+
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ============ Domain LMS ============ -->
+      <div class="row r-lms">
+        <div class="c-mid">
+          <button type="button" class="node n-main w-260" data-id="lms">Domain LMS</button>
+        </div>
+      </div>
+
+      <!-- ============ Learning Requirement (kiri) dan Assessment (kanan) ============ -->
+      <div class="row r-learn">
+
+        <div class="c-left">
+          <section class="group g-lr" data-id="lr">
+            <button type="button" class="group-title">Learning Requirement</button>
+            <div class="lr-body">
+
+              <section class="group g-silabus" data-id="silabus">
+                <button type="button" class="group-title">Silabus</button>
+                <div class="chain">
+                  <button type="button" class="node n-chip" data-id="sil-a" data-title="Silabus A">A</button><i class="arr"></i>
+                  <button type="button" class="node n-chip" data-id="sil-b" data-title="Silabus B">B</button><i class="arr"></i>
+                  <button type="button" class="node n-chip" data-id="sil-c" data-title="Silabus C">C</button><i class="arr"></i>
+                  <button type="button" class="node n-chip" data-id="sil-d" data-title="Silabus D">D</button><i class="arr"></i>
+                  <button type="button" class="node n-chip" data-id="sil-e" data-title="Silabus E">E</button><i class="arr"></i>
+                  <button type="button" class="node n-chip" data-id="sil-f" data-title="Silabus F">F</button><i class="arr"></i>
+                  <button type="button" class="node n-chip" data-id="sil-g" data-title="Silabus G">G</button><i class="arr"></i>
+                  <button type="button" class="node n-chip" data-id="sil-h" data-title="Silabus H">H</button><i class="arr"></i>
+                  <button type="button" class="node n-chip" data-id="sil-i" data-title="Silabus I">I</button>
+                </div>
+              </section>
+
+              <section class="group g-media" data-id="media">
+                <button type="button" class="group-title">Aset Media &amp; Penyedia Konten Pembelajaran</button>
+                <div class="list">
+                  <button type="button" class="node n-leaf" data-id="m1">Modul Digital SCORM / Video</button>
+                  <button type="button" class="node n-leaf" data-id="m2">SOP &amp; Job-Aid Lapangan</button>
+                  <button type="button" class="node n-leaf" data-id="m3">Pelatihan Mitra Pihak Ketiga</button>
+                </div>
+              </section>
+
+              <section class="group g-la" data-id="la">
+                <button type="button" class="group-title">Learning Assignment</button>
+                <div class="la-body">
+                  <section class="group g-pen" data-id="penugasan">
+                    <button type="button" class="group-title">Penugasan</button>
+                    <div class="list">
+                      <button type="button" class="node n-leaf" data-id="p1">Tes Multi Correct Answer</button>
+                      <button type="button" class="node n-leaf" data-id="p2">Studi Skenario Kasus</button>
+                      <button type="button" class="node n-leaf" data-id="p3">Praktik Terbimbing (OJT)</button>
+                      <button type="button" class="node n-leaf" data-id="p4">Tugas Sampel Kerja</button>
+                      <button type="button" class="node n-leaf" data-id="p5">Simulasi &amp; Role-Play</button>
+                    </div>
+                  </section>
+                  <div class="comp">
+                    <button type="button" class="node n-comp n-comp-k" data-id="comp-k">Kompetensi 'K' Dominant</button>
+                    <button type="button" class="node n-comp n-comp-s" data-id="comp-s">Kompetensi 'S' Partialy</button>
+                  </div>
+                </div>
+              </section>
+
+            </div>
+          </section>
+        </div>
+
+        <div class="c-right">
+          <div class="assess-row">
+            <button type="button" class="node n-main w-250" data-id="assess">Assessment</button>
+            <button type="button" class="node n-main w-260" data-id="tl">Tindak Lanjut Hasil Penilaian</button>
+          </div>
+
+          <section class="group g-ases" data-id="asesmen">
+            <button type="button" class="group-title">Asesmen</button>
+            <div class="ase-cols">
+              <div class="ase-col">
+                <section class="group g-k" data-id="ase-k">
+                  <button type="button" class="group-title">K (Knowledge)</button>
+                  <div class="list">
+                    <button type="button" class="node n-leaf" data-id="k1">Kuis Objektif / Pilihan Ganda (LMS)</button>
+                    <button type="button" class="node n-leaf" data-id="k2">Soal Berbasis Skenario / Situational Judgement (LMS)</button>
+                  </div>
+                </section>
+                <section class="group g-s" data-id="ase-s">
+                  <button type="button" class="group-title">S (Skills)</button>
+                  <div class="list">
+                    <button type="button" class="node n-leaf" data-id="s1">Work Sample Test (Uji Sampel Kerja)</button>
+                    <button type="button" class="node n-leaf" data-id="s2">Simulasi &amp; Role-Play Terkontrol</button>
+                    <button type="button" class="node n-leaf" data-id="s3">Observasi Lapangan dengan Rubrik Checklist</button>
+                  </div>
+                </section>
+              </div>
+              <div class="ase-col">
+                <section class="group g-a" data-id="ase-a">
+                  <button type="button" class="group-title">A (Ability)</button>
+                  <div class="list">
+                    <button type="button" class="node n-leaf" data-id="a1">Tes Inteligensi (IST / Struktur Kognitif)</button>
+                    <button type="button" class="node n-leaf" data-id="a2">Tes Kraepelin / Pauli (Ketahanan Kerja)</button>
+                  </div>
+                </section>
+                <section class="group g-o" data-id="ase-o">
+                  <button type="button" class="group-title">A / O (Personality &amp; Behaviour)</button>
+                  <div class="list">
+                    <button type="button" class="node n-leaf" data-id="o1">PAPI Kostick (Roles &amp; Needs)</button>
+                    <button type="button" class="node n-leaf" data-id="o2">DISC (Gaya Komunikasi &amp; Perilaku)</button>
+                    <button type="button" class="node n-leaf" data-id="o3">Wawancara Berbasis Bukti (BEI / STAR)</button>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- ============ Sidebar detail topik ============ -->
+<aside class="panel" id="panel" aria-label="Detail topik" aria-hidden="true" inert>
+  <div class="panel-bar">
+    <div class="seg" role="group" aria-label="Status belajar">
+      <button type="button" data-set="done">Selesai</button>
+      <button type="button" data-set="learning">Sedang dipelajari</button>
+      <button type="button" data-set="skip">Lewati</button>
+    </div>
+    <button type="button" class="icon-btn" id="panel-close" aria-label="Tutup panel">×</button>
+  </div>
+
+  <div class="panel-scroll">
+    <p class="crumb" id="panel-crumb"></p>
+    <h2 id="panel-title"></h2>
+    <p class="tag-row"><span class="tag" id="panel-kind"></span></p>
+    <div id="panel-body"></div>
+    <section class="related" id="panel-related" hidden>
+      <h3>Terhubung dengan</h3>
+      <ul id="panel-related-list"></ul>
+    </section>
+  </div>
+</aside>
+
+<script src="roadmapLMS\content.js"></script>
+<script src="roadmapLMS\edges.js"></script>
+<script src="roadmapLMS\script.js"></script>
+</body>
+</html>
