@@ -66,20 +66,32 @@
     const a = R('req-dir'), l = R('lms');
     return [[a.l, a.cy], [l.cx, a.cy], [l.cx, l.t]];
   }, { edgeType: 'main' });
-  add('req-dir', 'dir-needs', 's', false, (R) => {
-    const a = R('req-dir'), n = R('dir-needs');
-    const mid = (a.b + n.t) / 2;
-    return [[a.cx, a.b], [a.cx, mid], [n.cx, mid], [n.cx, n.t]];
-  }, { edgeType: 'mat' });
   add('req-dir', 'dwp', 's', false, (R) => {
     const a = R('req-dir'), d = R('dwp');
-    const mid = (a.b + d.t) / 2;
-    return [[a.cx, a.b], [a.cx, mid], [d.cx, mid], [d.cx, d.t]];
+    return [[a.cx, a.b], [a.cx, d.t]];
   }, { edgeType: 'doc' });
-  add('dir-needs', 'dwp', 'd', true, (R) => {
-    const n = R('dir-needs'), d = R('dwp');
-    return [[n.r, n.cy], [d.l, n.cy]];
-  }, { label: 'Dipenuhi', edgeType: 'mat' });
+
+  /* ---------- Directorate Needs -> Pendahuluan & Fondasi Tata Kelola DWP (1 Jalur Konvergensi) ---------- */
+  ['dn1', 'dn2', 'dn4', 'dn5'].forEach((id) => {
+    add(id, 'pdwp', 's', false, (R) => {
+      const d = R(id), p = R('pdwp'), center = R('dn3');
+      const busX = (d.r + p.l) / 2;
+      return [[d.r, d.cy], [busX, d.cy], [busX, center.cy]];
+    }, { edgeType: 'need' });
+  });
+
+  add('dn3', 'pdwp', 's', true, (R) => {
+    const d = R('dn3'), p = R('pdwp');
+    const busX = (d.r + p.l) / 2;
+    return [[d.r, d.cy], [busX, d.cy], [p.l, d.cy]];
+  }, { edgeType: 'need' });
+
+  /* ---------- Pendahuluan DWP -> Penjelasan Direktorat (DK1) ---------- */
+  add('pdwp', 'dk1', 's', true, (R) => {
+    const p = R('pdwp'), d = R('dk1');
+    const midX = (p.r + d.l) / 2;
+    return [[p.r, p.cy], [midX, p.cy], [midX, d.cy], [d.l, d.cy]];
+  }, { label: 'Mendasari', edgeType: 'doc' });
 
   /* ---------- Directorate Knowledge ---------- */
   add('dk1', 'dk2', 's', true, (R) => drop(R('dk1'), R('dk2')), { edgeType: 'doc' });
@@ -95,7 +107,9 @@
   add('dk', 'jf', 'd', true, (R) => drop(R('dk'), R('jf')), { label: 'Membentuk', edgeType: 'mat' });
   add('jr', 'jf', 'd', true, (R) => {
     const j = R('jr'), f = R('jf');
-    return [[j.l, f.cy], [f.r, f.cy]];
+    const midX = (f.r + j.l) / 2;
+    const yStart = (j.t + j.b) / 2;
+    return [[j.l, yStart], [midX, yStart], [midX, f.cy], [f.r, f.cy]];
   }, { label: 'Membentuk', edgeType: 'mat' });
 
   /* ---------- Domain LMS ---------- */

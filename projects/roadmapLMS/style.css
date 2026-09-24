@@ -44,6 +44,12 @@
   --c-asset-border: #0f766e;
   --c-asset-hover: #2dd4bf;
   --c-asset-ink: #042f2e;
+
+  /* 6. Kebutuhan Operasional & Kinerja (Abu-abu Baja / Slate) */
+  --c-need-bg: #cbd5e1;
+  --c-need-border: #334155;
+  --c-need-hover: #94a3b8;
+  --c-need-ink: #0f172a;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -171,6 +177,7 @@ button:focus-visible {
 .sw-main  { background: #0f172a; border-color: #000; }
 .sw-doc   { background: var(--c-doc-bg); border-color: var(--c-doc-border); }
 .sw-mat   { background: var(--c-mat-bg); border-color: var(--c-mat-border); }
+.sw-need  { background: var(--c-need-bg); border-color: var(--c-need-border); }
 .sw-asset { background: var(--c-asset-bg); border-color: var(--c-asset-border); }
 .sw-eva   { background: var(--c-eva-bg); border-color: var(--c-eva-border); }
 .sw-pro   { background: var(--c-pro-bg); border-color: var(--c-pro-border); }
@@ -185,6 +192,7 @@ button:focus-visible {
 .ln-main  { border-top-color: #000000; }
 .ln-doc   { border-top-color: #1d4ed8; }
 .ln-mat   { border-top-color: #ea580c; }
+.ln-need  { border-top-color: #475569; }
 .ln-asset { border-top-color: #0d9488; }
 .ln-eva   { border-top-color: #16a34a; }
 .ln-pro   { border-top-color: #7c3aed; }
@@ -218,13 +226,13 @@ button:focus-visible {
 .canvas {
   --col-l: 850px;
   --col-g: 80px;
-  --col-r: 1660px;
+  --col-r: 1980px;
 
   position: absolute;
   top: 0;
   left: 0;
   isolation: isolate;
-  width: 2730px;
+  width: 3040px;
   padding: 56px 70px 110px;
   background: #fff;
   font-family: var(--font-map);
@@ -254,6 +262,7 @@ button:focus-visible {
 .edge.edge-main  { stroke: #000000; stroke-width: 3.5; }
 .edge.edge-doc   { stroke: #1d4ed8; stroke-width: 3.5; }
 .edge.edge-mat   { stroke: #ea580c; stroke-width: 3.5; }
+.edge.edge-need  { stroke: #475569; stroke-width: 3.5; }
 .edge.edge-asset { stroke: #0d9488; stroke-width: 3.5; }
 .edge.edge-eva   { stroke: #16a34a; stroke-width: 3.5; }
 .edge.edge-pro   { stroke: #7c3aed; stroke-width: 3.5; }
@@ -279,6 +288,7 @@ button:focus-visible {
 .edge-label.el-main  { border-color: #000000; color: #000000; }
 .edge-label.el-doc   { border-color: #1d4ed8; color: #1d4ed8; }
 .edge-label.el-mat   { border-color: #ea580c; color: #9a3412; }
+.edge-label.el-need  { border-color: #334155; color: #1e293b; }
 .edge-label.el-asset { border-color: #0d9488; color: #042f2e; }
 .edge-label.el-eva   { border-color: #16a34a; color: #14532d; }
 .edge-label.el-pro   { border-color: #7c3aed; color: #5b21b6; }
@@ -314,7 +324,7 @@ button:focus-visible {
 
 .stack { display: flex; flex-direction: column; align-items: center; }
 .col-org { display: flex; align-items: flex-start; gap: 50px; }
-.col-dir { display: flex; align-items: flex-start; gap: 90px; }
+.col-dir { display: block; }
 
 /* ---------- Node ---------- */
 
@@ -424,6 +434,16 @@ button:focus-visible {
   box-shadow: 2px 2px 0 var(--c-asset-border);
 }
 
+/* 6. Kebutuhan Operasional & Kinerja (Abu-abu Baja / Slate) */
+.node.n-need {
+  --fill: var(--c-need-bg);
+  --fill-hover: var(--c-need-hover);
+  border: 2px solid var(--c-need-border);
+  color: var(--c-need-ink);
+  font-weight: 700;
+  box-shadow: 2px 2px 0 var(--c-need-border);
+}
+
 .n-chip {
   flex: none;
   width: 30px;
@@ -510,17 +530,31 @@ button:focus-visible {
 }
 
 /* Modifiers Semantik Group */
-.group.g-doc   { background: #eff6ff; border: 2px dashed #1d4ed8; }
-.group.g-mat   { background: #fffbeb; border: 2px dashed #b45309; }
-.group.g-asset { background: #f0fdfa; border: 2px dashed #0d9488; }
-.group.g-eva   { background: #f0fdf4; border: 2px dashed #15803d; }
-.group.g-pro   { background: #faf5ff; border: 2px dashed #6d28d9; }
+.group.g-doc, .group .group.g-doc     { background: #eff6ff; border: 2px dashed #1d4ed8; }
+.group.g-mat, .group .group.g-mat     { background: #fffbeb; border: 2px dashed #b45309; }
+.group.g-need, .group .group.g-need   { background: #f8fafc; border: 2px dashed #475569; }
+.group.g-asset, .group .group.g-asset { background: #f0fdfa; border: 2px dashed #0d9488; }
+.group.g-eva, .group .group.g-eva     { background: #f0fdf4; border: 2px dashed #15803d; }
+.group.g-pro, .group .group.g-pro     { background: #faf5ff; border: 2px dashed #6d28d9; }
 
 /* Ukuran tiap grup */
 .g-modal { width: 400px; }
 .g-cv, .g-cbl { width: 400px; }
-.g-needs { width: 310px; flex: none; }
-.g-dwp { width: 1260px; flex: none; }
+.g-needs { width: 590px; flex: none; }
+.needs-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 36px;
+}
+.needs-list {
+  width: 270px;
+  flex: none;
+}
+.g-pdwp {
+  width: 250px;
+  flex: none;
+}
+.g-dwp { width: 1940px; flex: none; }
 .g-ases { width: 620px; }
 .g-lr { width: 100%; }
 
@@ -533,11 +567,12 @@ button:focus-visible {
 /* Dasaria Workflow Playbook */
 .dwp-body {
   display: grid;
-  grid-template-columns: 460px 600px;
-  column-gap: 170px;
-  align-items: stretch;
+  grid-template-columns: 590px 460px 600px;
+  column-gap: 90px;
+  align-items: start;
 }
-.dwp-left { display: flex; flex-direction: column; gap: 56px; }
+.dwp-mid, .dwp-left { display: flex; flex-direction: column; gap: 56px; }
+.g-jr { margin-left: 70px; }
 
 .dk-chain { display: flex; flex-direction: column; gap: 22px; }
 .dk-chain > .node { width: 100%; }
@@ -764,11 +799,39 @@ button:focus-visible {
 .soon strong { font-size: 16px; }
 .soon p { margin: 0; font-size: 14px; color: #52525b; }
 
-.content p { margin: 0 0 14px; font-size: 15px; }
-.content h3 { margin: 20px 0 8px; font-size: 14px; }
-.content ul { margin: 0 0 14px; padding-left: 20px; font-size: 15px; }
-.content li { margin-bottom: 4px; }
+.content p { margin: 0 0 12px; font-size: 14.5px; line-height: 1.6; color: #1e293b; }
+.content h3 {
+  margin: 22px 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #475569;
+  border-bottom: 1.5px solid #e2e8f0;
+  padding-bottom: 4px;
+}
+.content ul { margin: 0 0 14px; padding-left: 20px; font-size: 14.5px; line-height: 1.55; }
+.content li { margin-bottom: 5px; color: #1e293b; }
 .content a { color: var(--blue-ink); }
+
+.content .c-box {
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  margin-bottom: 14px;
+}
+.content .c-box p { margin: 0; font-size: 14px; line-height: 1.55; }
+.content .c-source {
+  background: #eff6ff;
+  border-color: #93c5fd;
+  color: #1e3a8a;
+}
+.content .c-example {
+  background: #fefce8;
+  border: 1.5px solid #facc15;
+  color: #713f12;
+}
 
 .related { margin-top: 26px; }
 .related h3 { margin: 0 0 8px; font-size: 14px; }

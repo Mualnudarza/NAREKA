@@ -8,7 +8,7 @@
 (() => {
   'use strict';
 
-  const CANVAS_W = 2730;
+  const CANVAS_W = 3040;
   const MIN_SCALE = 0.4;
   const MAX_SCALE = 1.6;
   const STEP = 0.1;
@@ -59,6 +59,7 @@
     ['n-main', 'Pilar Utama'],
     ['n-doc', 'Dokumen Resmi & Standar'],
     ['n-mat', 'Materi Pembelajaran & Pelatihan'],
+    ['n-need', 'Kebutuhan Operasional & Kinerja'],
     ['n-asset', 'Luaran Materi & Aset Media'],
     ['n-eva', 'Instrumen Evaluasi & Asesmen'],
     ['n-pro', 'Data Profil & Rekam Jejak'],
@@ -413,6 +414,38 @@
 
   function contentBlock(c) {
     const box = h('div', { class: 'content' });
+
+    if (c.hakikat) {
+      box.append(h('h3', { text: 'Hakikat & Definisi' }));
+      box.append(h('p', { text: c.hakikat }));
+    }
+
+    if (c.turunan) {
+      box.append(h('h3', { text: 'Komponen & Turunan' }));
+      if (Array.isArray(c.turunan)) {
+        box.append(h('ul', {}, c.turunan.map((item) => h('li', { text: item }))));
+      } else {
+        const d = h('div', { class: 'c-turunan' });
+        d.innerHTML = c.turunan;
+        box.append(d);
+      }
+    }
+
+    if (c.sumber) {
+      box.append(h('h3', { text: 'Sumber Acuan / Rujukan' }));
+      box.append(h('div', { class: 'c-box c-source' }, h('p', { text: c.sumber })));
+    }
+
+    if (c.example) {
+      box.append(h('h3', { text: 'Contoh Konkret Lapangan' }));
+      box.append(h('div', { class: 'c-box c-example' }, h('p', { text: c.example })));
+    }
+
+    if (c.dependensi) {
+      box.append(h('h3', { text: 'Keterkaitan Arsitektur' }));
+      box.append(h('p', { text: c.dependensi }));
+    }
+
     if (c.summary) box.append(h('p', { text: c.summary }));
     if (Array.isArray(c.points) && c.points.length) {
       box.append(h('h3', { text: 'Poin penting' }),
@@ -434,12 +467,12 @@
   }
 
   function renderPanel(item) {
+    const c = CONTENT[item.id];
     panelTitle.textContent = item.title;
     panelCrumb.textContent = breadcrumbOf(item).join(' › ');
-    panelKind.textContent = item.kind;
+    panelKind.textContent = (c && c.category) ? c.category : item.kind;
     syncStatusButtons(item.id);
 
-    const c = CONTENT[item.id];
     panelBody.replaceChildren(c ? contentBlock(c) : soonBlock());
 
     const rel = relatedOf(item.id);

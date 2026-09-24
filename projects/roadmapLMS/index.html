@@ -39,12 +39,14 @@
     <li><i class="sw sw-main"></i>Pilar Utama</li>
     <li><i class="sw sw-doc"></i>Dokumen Resmi &amp; Standar Operasional</li>
     <li><i class="sw sw-mat"></i>Materi Pembelajaran &amp; Pelatihan</li>
+    <li><i class="sw sw-need"></i>Kebutuhan Operasional &amp; Kinerja</li>
     <li><i class="sw sw-asset"></i>Luaran Materi &amp; Aset Media</li>
     <li><i class="sw sw-eva"></i>Instrumen Evaluasi &amp; Penugasan</li>
     <li><i class="sw sw-pro"></i>Data Profil &amp; Rekam Jejak</li>
     <li><i class="ln ln-main"></i>Alur Utama</li>
     <li><i class="ln ln-doc"></i>Alur Dokumen</li>
     <li><i class="ln ln-mat"></i>Alur Materi</li>
+    <li><i class="ln ln-need"></i>Alur Kebutuhan</li>
     <li><i class="ln ln-asset"></i>Alur Luaran/Media</li>
     <li><i class="ln ln-eva"></i>Alur Asesmen</li>
     <li><i class="ln ln-pro dashed"></i>Alur Profil</li>
@@ -66,6 +68,9 @@
           </marker>
           <marker id="arr-mat" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="10" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
             <path d="M0 0 L10 4 L0 8 Z" fill="#ea580c"/>
+          </marker>
+          <marker id="arr-need" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="10" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+            <path d="M0 0 L10 4 L0 8 Z" fill="#475569"/>
           </marker>
           <marker id="arr-asset" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="10" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
             <path d="M0 0 L10 4 L0 8 Z" fill="#0d9488"/>
@@ -146,22 +151,33 @@
         </div>
 
         <div class="c-right col-dir">
-          <section class="group g-needs g-mat" data-id="dir-needs">
-            <button type="button" class="group-title">Directorate Needs</button>
-            <div class="list">
-              <button type="button" class="node n-leaf n-mat" data-id="dn1">Tujuan Strategis &amp; Target Kinerja (KPI)</button>
-              <button type="button" class="node n-leaf n-mat" data-id="dn2">Penyelesaian Masalah Operasional (Pain Points)</button>
-              <button type="button" class="node n-leaf n-mat" data-id="dn3">Inovasi &amp; Permintaan Perubahan (Change Requests)</button>
-              <button type="button" class="node n-leaf n-mat" data-id="dn4">Kepatuhan &amp; Standarisasi (Compliance)</button>
-              <button type="button" class="node n-leaf n-mat" data-id="dn5">Tata Kelola &amp; Kejelasan Peran (Governance)</button>
-            </div>
-          </section>
-
           <section class="group g-dwp" data-id="dwp">
             <button type="button" class="group-title">Dasaria Workflow Playbook</button>
             <div class="dwp-body">
 
-              <div class="dwp-left">
+              <section class="group g-needs g-need" data-id="dir-needs">
+                <button type="button" class="group-title">Directorate Needs</button>
+                <div class="needs-body">
+                  <div class="list needs-list">
+                    <button type="button" class="node n-leaf n-need" data-id="dn1">Tujuan Strategis &amp; Target Kinerja (KPI)</button>
+                    <button type="button" class="node n-leaf n-need" data-id="dn2">Penyelesaian Masalah Operasional (Pain Points)</button>
+                    <button type="button" class="node n-leaf n-need" data-id="dn3">Inovasi &amp; Permintaan Perubahan (Change Requests)</button>
+                    <button type="button" class="node n-leaf n-need" data-id="dn4">Kepatuhan &amp; Standarisasi (Compliance)</button>
+                    <button type="button" class="node n-leaf n-need" data-id="dn5">Tata Kelola &amp; Kejelasan Peran (Governance)</button>
+                  </div>
+
+                  <section class="group g-pdwp g-doc" data-id="pdwp">
+                    <button type="button" class="group-title">Pendahuluan &amp; Fondasi Tata Kelola DWP</button>
+                    <div class="list">
+                      <button type="button" class="node n-leaf n-doc" data-id="pdwp1">Pendahuluan</button>
+                      <button type="button" class="node n-leaf n-doc" data-id="pdwp2">Kebijakan &amp; Prinsip Dasar</button>
+                      <button type="button" class="node n-leaf n-doc" data-id="pdwp3">Tujuan &amp; Ruang Lingkup</button>
+                    </div>
+                  </section>
+                </div>
+              </section>
+
+              <div class="dwp-mid">
                 <section class="group g-dk g-doc" data-id="dk">
                   <button type="button" class="group-title">Directorate Knowledge</button>
                   <div class="dk-chain">
