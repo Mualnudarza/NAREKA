@@ -1,8 +1,26 @@
 [
   {
-    "title": "Model Kompetensi & Manajemen Pengetahuan Organisasi",
+    "title": "BPMN Token Simulation & Modeler | NAREKA",
+    "desc": "BPMN 2.0 Web Modeler dengan Token Simulation interaktif, ekspor SVG/PNG/BPMN, serta fitur Copy & Download elemen terpilih (Selected).",
+    "url": "projects/BPMN-IO/index.html",
+    "file": "BPMN-IO/index.html"
+  },
+  {
+    "title": "Roadmap Manajemen Pengetahuan",
     "desc": "",
-    "url": "projects/roadmap-kompetensi-organisasi.html",
-    "file": "roadmap-kompetensi-organisasi.html"
+    "url": "projects/roadmapLMS/index.html",
+    "file": "roadmapLMS/index.html"
+  },
+  {
+    "title": "Simulator Penempatan Pengetahuan — Single-Home Method",
+    "desc": "",
+    "url": "projects/simulator-wadah-kompetensi.html",
+    "file": "simulator-wadah-kompetensi.html"
+  },
+  {
+    "title": "TEPIS Research Framework — NAREKA",
+    "desc": "",
+    "url": "projects/tepis-research-framework.html",
+    "file": "tepis-research-framework.html"
   }
 ]

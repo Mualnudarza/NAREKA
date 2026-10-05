@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>BPMN Token Simulation & Modeler | NAREKA</title>
+  <meta name="description" content="BPMN 2.0 Web Modeler dengan Token Simulation interaktif, ekspor SVG/PNG/BPMN, serta fitur Copy & Download elemen terpilih (Selected)." />
+
+  <link rel="stylesheet" href="./dist/vendor/bpmn-js/assets/diagram-js.css" />
+  <link rel="stylesheet" href="./dist/vendor/bpmn-js/assets/bpmn-js.css" />
+  <link rel="stylesheet" href="./dist/vendor/bpmn-js/assets/bpmn-font/css/bpmn-embedded.css" />
+  <link rel="stylesheet" href="./dist/vendor/bpmn-js-token-simulation/assets/css/bpmn-js-token-simulation.css" />
+  <link rel="stylesheet" href="./dist/vendor/bpmn-js-properties-panel/assets/properties-panel.css" />
+  <link rel="stylesheet" href="./dist/vendor/diagram-js-canvas-lock/assets/canvas-lock.css" />
+  <link rel="stylesheet" href="./style.css" />
+
+  <link rel="icon" type="image/png" href="favicon.png" />
+
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="bpmn-js-token-simulation demo" />
+  <meta property="og:title" content="Modeler | BPMN Token Simulation Demo" />
+  <meta property="og:url" content="https://bpmn-io.github.io/bpmn-js-token-simulation/modeler.html" />
+  <meta property="og:description" content="Simulate your BPMN diagrams with bpmn-js-token-simulation. Understand and learn BPMN execution semantics one token at a time." />
+  <meta property="og:image" content="https://bpmn-io.github.io/bpmn-js-token-simulation/screenshot.png" />
+</head>
+<body>
+
+  <div class="canvas-parent">
+    <div class="canvas" id="canvas">
+      <div class="drop-message"><strong>Hint:</strong> Drop a diagram to open</div>
+
+      <div class="links top-links">
+        <a href="https://github.com/bpmn-io/bpmn-js-token-simulation" class="link" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+    </div>
+
+    <div class="properties-panel" id="properties-panel">
+      <div class="properties-panel-resizer" id="properties-panel-resizer" title="Toggle properties panel" draggable="true">
+         <div class="properties-panel-resize-handle"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Menu Trigger (Clean & Unobtrusive) -->
+  <button class="menu-fab" id="menu-fab-btn" title="Buka Menu Export & Tools" aria-label="Open Export Menu">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+      <polyline points="7 10 12 15 17 10"></polyline>
+      <line x1="12" y1="15" x2="12" y2="3"></line>
+    </svg>
+    <span>Menu & Export</span>
+    <span class="badge" id="selected-badge">0</span>
+  </button>
+
+  <!-- Modal/Popup Backdrop -->
+  <div class="menu-backdrop" id="menu-backdrop"></div>
+
+  <!-- Pop-up Modal Panel -->
+  <div class="menu-popup" id="menu-popup">
+    <div class="popup-header">
+      <div class="popup-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="9" y1="3" x2="9" y2="21"></line>
+        </svg>
+        <span>BPMN Tools & Export</span>
+      </div>
+      <button class="popup-close-btn" id="popup-close-btn" title="Tutup Menu (Esc)">✕</button>
+    </div>
+
+    <div class="popup-content">
+      <!-- Diagram Lengkap -->
+      <div class="popup-section">
+        <div class="section-title">DIAGRAM LENGKAP</div>
+        <div class="popup-grid grid-2">
+          <button class="p-btn" id="open-btn" title="Buka berkas BPMN dari komputer (Ctrl+O)">
+            <span class="icon">📂</span> Buka BPMN
+          </button>
+          <button class="p-btn p-btn-primary" id="download-button" title="Unduh diagram BPMN XML (Ctrl+S)">
+            <span class="icon">💾</span> Unduh BPMN
+          </button>
+          <button class="p-btn" id="download-full-svg-btn" title="Unduh seluruh diagram format SVG">
+            <span class="icon">🖼️</span> Unduh SVG
+          </button>
+          <button class="p-btn" id="download-full-png-btn" title="Unduh seluruh diagram format PNG">
+            <span class="icon">📷</span> Unduh PNG
+          </button>
+        </div>
+      </div>
+
+      <!-- Elemen Terpilih (Selected) -->
+      <div class="popup-section selected-group empty" id="selected-group">
+        <div class="section-title">
+          <span>ELEMEN TERPILIH</span>
+          <span class="badge" id="selected-badge-popup">0</span>
+        </div>
+
+        <div class="selection-empty-hint">
+          Pilih 1 atau beberapa elemen di canvas (klik / lasso) untuk mengaktifkan opsi salin & unduh di bawah ini.
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-label">Salin ke Clipboard:</div>
+          <div class="popup-grid grid-3">
+            <button class="p-btn t-btn-action" id="copy-selected-svg-btn" title="Salin SVG elemen terpilih ke clipboard">
+              <span class="icon">📋</span> SVG
+            </button>
+            <button class="p-btn t-btn-action" id="copy-selected-png-btn" title="Salin Gambar PNG elemen terpilih ke clipboard">
+              <span class="icon">🖼️</span> PNG
+            </button>
+            <button class="p-btn t-btn-action" id="copy-selected-xml-btn" title="Salin XML fragmen elemen terpilih ke clipboard">
+              <span class="icon">📄</span> XML
+            </button>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <div class="sub-label">Unduh Berkas:</div>
+          <div class="popup-grid grid-3">
+            <button class="p-btn t-btn-action" id="download-selected-svg-btn" title="Unduh SVG elemen terpilih">
+              <span class="icon">⬇️</span> SVG
+            </button>
+            <button class="p-btn t-btn-action" id="download-selected-png-btn" title="Unduh PNG elemen terpilih">
+              <span class="icon">⬇️</span> PNG
+            </button>
+            <button class="p-btn t-btn-action" id="download-selected-xml-btn" title="Unduh XML fragmen elemen terpilih">
+              <span class="icon">⬇️</span> XML
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="popup-footer">
+      <span>Tip: <b>Ctrl+C</b> salin elemen, <b>Ctrl+S</b> unduh BPMN, <b>Esc</b> tutup menu.</span>
+    </div>
+  </div>
+
+  <script src="./dist/modeler.js"></script>
+  <script>
+    (function() {
+      var fab = document.getElementById('menu-fab-btn');
+      var popup = document.getElementById('menu-popup');
+      var backdrop = document.getElementById('menu-backdrop');
+      var closeBtn = document.getElementById('popup-close-btn');
+
+      function toggleMenu(open) {
+        var isOpen = (open !== undefined) ? open : !popup.classList.contains('open');
+        popup.classList.toggle('open', isOpen);
+        backdrop.classList.toggle('open', isOpen);
+        fab.classList.toggle('active', isOpen);
+      }
+
+      fab.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleMenu();
+      });
+
+      closeBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleMenu(false);
+      });
+
+      backdrop.addEventListener('click', function() {
+        toggleMenu(false);
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && popup.classList.contains('open')) {
+          toggleMenu(false);
+        }
+      });
+
+      // Synchronize badge on popup
+      var mainBadge = document.getElementById('selected-badge');
+      var popupBadge = document.getElementById('selected-badge-popup');
+      if (mainBadge && popupBadge) {
+        var observer = new MutationObserver(function() {
+          popupBadge.textContent = mainBadge.textContent;
+        });
+        observer.observe(mainBadge, { childList: true, characterData: true, subtree: true });
+      }
+    })();
+  </script>
+</body>
+</html>
