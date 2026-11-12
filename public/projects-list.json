@@ -6,10 +6,22 @@
     "file": "BPMN-IO/index.html"
   },
   {
+    "title": "Manajemen Kualitas Operasional - Slide 8-15",
+    "desc": "",
+    "url": "projects/kualitasOperasional/index.html",
+    "file": "kualitasOperasional/index.html"
+  },
+  {
     "title": "Roadmap Manajemen Pengetahuan",
     "desc": "",
     "url": "projects/roadmapLMS/index.html",
     "file": "roadmapLMS/index.html"
+  },
+  {
+    "title": "Roadmap Kepatuhan Keamanan API SNAP BCA (22 Syarat Wajib)",
+    "desc": "",
+    "url": "projects/roadmapSnapBCA/index.html",
+    "file": "roadmapSnapBCA/index.html"
   },
   {
     "title": "Simulator Penempatan Pengetahuan — Single-Home Method",

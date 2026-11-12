@@ -1,0 +1,744 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>BPD Optimasi PSB CUNI</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+/* Layout: sticky section nav on top, one reading column (max 1080px), each section = heading + visual + short reading notes.
+   Palette: ink-blue neutrals; 4 cluster hues (optik blue, fisik gold, foto rose, splicing violet); status red = Abnormal, green = Normal. */
+:root{
+  --bg:#f3f6f9; --surface:#ffffff; --surface2:#eaf0f6; --line:#d6dee8; --fg:#10202f; --muted:#56687a;
+  --accent:#1b5fc4; --accent-soft:#e1ecfb;
+  --c1:#2a6fdb; --c2:#b9800a; --c3:#b8478f; --c4:#7c52c9;
+  --c1s:#e3edfc; --c2s:#f8eed4; --c3s:#f6e2ee; --c4s:#ece5f8;
+  --bad:#d1432f; --bads:#fbe6e2; --good:#2c8a4b; --goods:#e0f2e6; --warn:#b9800a;
+  --font-head:'Space Grotesk','Segoe UI',system-ui,sans-serif;
+  --font-body:'Inter','Segoe UI',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0c151f; --surface:#131f2c; --surface2:#1a2937; --line:#27394a; --fg:#e6edf4; --muted:#9bb0c3;
+  --accent:#6ea8ff; --accent-soft:#16304f;
+  --c1:#6ea8ff; --c2:#e0a83a; --c3:#e27ab8; --c4:#a98af0;
+  --c1s:#162f50; --c2s:#3a2f12; --c3s:#3d1f33; --c4s:#2b2250;
+  --bad:#ff7b66; --bads:#3b1c18; --good:#5ccf84; --goods:#143324; --warn:#e0a83a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c151f; --surface:#131f2c; --surface2:#1a2937; --line:#27394a; --fg:#e6edf4; --muted:#9bb0c3;
+  --accent:#6ea8ff; --accent-soft:#16304f;
+  --c1:#6ea8ff; --c2:#e0a83a; --c3:#e27ab8; --c4:#a98af0;
+  --c1s:#162f50; --c2s:#3a2f12; --c3s:#3d1f33; --c4s:#2b2250;
+  --bad:#ff7b66; --bads:#3b1c18; --good:#5ccf84; --goods:#143324; --warn:#e0a83a; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:15px;line-height:1.6;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.2;margin:0;text-wrap:balance}
+p{margin:0}
+a{color:var(--accent)}
+.mono,.num{font-variant-numeric:tabular-nums}
+.mono{font-family:var(--font-mono)}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+
+/* top nav */
+nav.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+nav.top .wrap{display:flex;gap:4px;overflow-x:auto;padding-block:8px;scrollbar-width:thin}
+nav.top a{white-space:nowrap;text-decoration:none;color:var(--muted);font-size:13px;font-weight:500;padding:6px 11px;border-radius:6px}
+nav.top a:hover{color:var(--fg);background:var(--surface2)}
+nav.top a.on{color:var(--accent);background:var(--accent-soft)}
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* header */
+header.hero{background:var(--surface);border-bottom:1px solid var(--line)}
+header.hero .wrap{padding-block:34px 28px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;align-items:end}
+header.hero h1{font-size:clamp(28px,4.4vw,44px);font-weight:700;margin-top:10px;letter-spacing:-.01em}
+header.hero .sub{color:var(--muted);margin-top:12px;max-width:56ch}
+.meta{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:13px;margin:0}
+.meta dt{color:var(--muted)}
+.meta dd{margin:0;font-weight:500}
+@media(max-width:760px){header.hero .wrap{grid-template-columns:minmax(0,1fr)}}
+
+main{padding-block:12px 64px}
+section.sec{padding-top:44px;scroll-margin-top:calc(54px + env(safe-area-inset-top,0px))}
+.sec>header{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+.sec>header h2{font-size:clamp(22px,3vw,30px);font-weight:700}
+.sec>header p{color:var(--muted);max-width:70ch}
+h3{font-size:17px;font-weight:600}
+.sub-h{margin:28px 0 10px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:640px){.g2,.g4{grid-template-columns:minmax(0,1fr)}}
+.note{color:var(--muted);font-size:13px}
+.takeaway{border-left:3px solid var(--accent);padding:2px 0 2px 14px;margin-top:14px;max-width:75ch}
+
+/* KPI */
+.kpi{display:flex;flex-direction:column;gap:2px}
+.kpi .v{font-family:var(--font-head);font-size:32px;font-weight:700;line-height:1.1}
+.kpi .l{font-size:13px;color:var(--muted)}
+.kpi.bad .v{color:var(--bad)} .kpi.good .v{color:var(--good)}
+
+/* segmented bar */
+.seg{display:flex;height:34px;border-radius:6px;overflow:hidden;gap:2px}
+.seg>div{display:flex;align-items:center;padding:0 10px;font-size:12px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden}
+.seg .n{background:var(--good)} .seg .a{background:var(--bad)} .seg .p{background:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--muted);margin-top:10px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--surface2);font-weight:600;white-space:nowrap;position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right}
+tr.total td{font-weight:600;background:var(--surface2)}
+.tw table.min{min-width:720px}
+.tw table.wide{min-width:980px}
+
+/* chips + tabs */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:inherit;font-size:13px;font-weight:500;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 13px;cursor:pointer}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-pressed="true"],.chip[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .chip[aria-pressed="true"],:root:not([data-theme="light"]) .chip[aria-selected="true"]{color:#07121f}}
+:root[data-theme="dark"] .chip[aria-pressed="true"],:root[data-theme="dark"] .chip[aria-selected="true"]{color:#07121f}
+.tag{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.t1{background:var(--c1s);color:var(--c1)} .t2{background:var(--c2s);color:var(--c2)} .t3{background:var(--c3s);color:var(--c3)} .t4{background:var(--c4s);color:var(--c4)}
+.tbad{background:var(--bads);color:var(--bad)} .tgood{background:var(--goods);color:var(--good)} .tmute{background:var(--surface2);color:var(--muted)}
+
+/* horizontal bars */
+.bars{display:flex;flex-direction:column;gap:7px}
+.brow{display:grid;grid-template-columns:118px minmax(0,1fr) 78px;gap:10px;align-items:center;font-size:13px}
+.brow .lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brow .val{text-align:right;font-family:var(--font-mono);font-size:12px}
+.track{height:18px;background:var(--surface2);border-radius:4px;position:relative;overflow:hidden}
+.fill{position:absolute;inset:0 auto 0 0;border-radius:4px;background:var(--accent);transition:width .35s}
+.brow.hl .lbl{font-weight:700}
+.brow.hl .fill{background:var(--bad)}
+@media(max-width:520px){.brow{grid-template-columns:92px minmax(0,1fr) 62px;gap:8px}}
+@media(prefers-reduced-motion:reduce){.fill{transition:none}}
+
+/* range plot */
+.range{position:relative;height:46px;margin:8px 0 4px}
+.range .axis{position:absolute;left:0;right:0;top:22px;height:2px;background:var(--line)}
+.range .box{position:absolute;top:12px;height:22px;border-radius:4px;opacity:.9}
+.range .med{position:absolute;top:6px;height:34px;width:3px;background:var(--fg);border-radius:2px}
+.range .mean{position:absolute;top:16px;width:10px;height:10px;border-radius:50%;background:var(--surface);border:2px solid var(--fg);margin-left:-5px}
+.ticks{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-family:var(--font-mono)}
+
+/* cluster tabs */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.ctab{flex:1 1 180px;text-align:left;font:inherit;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;color:var(--fg);border-top:4px solid var(--cc)}
+.ctab small{display:block;color:var(--muted);font-size:12px}
+.ctab b{font-family:var(--font-head);font-size:15px}
+.ctab[aria-selected="true"]{background:var(--cs);border-color:var(--cc)}
+.panel .cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:14px}
+@media(max-width:820px){.panel .cols{grid-template-columns:minmax(0,1fr)}}
+ul.clean{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+ul.clean li{position:relative;padding-left:16px}
+ul.clean li::before{content:"";position:absolute;left:0;top:.65em;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+ol.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:10px}
+ol.steps li{counter-increment:s;padding-left:34px;position:relative}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-weight:600;font-size:12px;display:grid;place-items:center}
+.rulelist{display:flex;flex-direction:column;gap:6px}
+.rulelist div{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:6px 10px;border-radius:6px;background:var(--surface2)}
+.rulelist b{font-family:var(--font-mono);font-weight:500;white-space:nowrap}
+
+/* pairs chart */
+.pair{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px;align-items:center;margin-bottom:12px;font-size:13px}
+.pair .tracks{display:flex;flex-direction:column;gap:4px}
+.pair .track{height:16px}
+.pair .track span{position:absolute;right:6px;top:0;font-size:11px;line-height:16px;font-family:var(--font-mono);color:var(--fg)}
+@media(max-width:520px){.pair{grid-template-columns:minmax(0,1fr)}}
+
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media(max-width:820px){.flow{grid-template-columns:minmax(0,1fr)}}
+.flow .st{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;position:relative}
+.flow .st h4{font-size:14px;margin-bottom:6px}
+
+/* survey */
+.opt{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin-bottom:12px}
+@media(max-width:760px){.opt{grid-template-columns:minmax(0,1fr)}}
+.opt .card{display:flex;flex-direction:column;gap:10px;border-top:4px solid var(--cc)}
+.opt h4{font-size:15px}
+.kv{display:grid;grid-template-columns:96px minmax(0,1fr);gap:4px 10px;font-size:13px}
+.kv dt{color:var(--muted)} .kv dd{margin:0}
+.okr{margin-bottom:14px}
+.okr h4{font-size:16px;margin-bottom:10px}
+.okr .opts{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.okr .opts button{font:inherit;font-size:13px;text-align:left;padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.okr .opts button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.base{background:var(--surface2);border-radius:8px;padding:10px 12px;font-size:13px}
+
+/* raci */
+.raci td.c,.raci th.c{text-align:center}
+.rc{display:inline-grid;place-items:center;min-width:28px;height:24px;border-radius:5px;font-weight:600;font-size:12px;font-family:var(--font-mono)}
+.rc.R{background:var(--c1s);color:var(--c1)} .rc.A{background:var(--bads);color:var(--bad)} .rc.AR{background:var(--bads);color:var(--bad)}
+.rc.C{background:var(--c2s);color:var(--c2)} .rc.I{background:var(--surface2);color:var(--muted)}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin-bottom:12px}
+input[type=search]{font:inherit;font-size:13px;padding:7px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg);min-width:200px;max-width:100%}
+.scope{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media(max-width:760px){.scope{grid-template-columns:minmax(0,1fr)}}
+.hold{border:1px dashed var(--warn);background:var(--c2s);border-radius:10px;padding:16px}
+.fn{margin-top:16px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);max-width:80ch}
+.fn b{color:var(--fg)}
+sup.fnref{font-size:.65em;font-weight:600;margin-left:1px}
+footer{padding-block:28px 48px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">Brainstorming Proposal Document · Versi V2</div>
+      <h1>Evaluasi Skema PSB (NICE)</h1>
+      <p class="sub">Ringkasan visual BPD Optimasi PSB CUNI: kondisi aktual 885 WO, pemetaan 24 rule ke 4 klaster solusi, dan bahan keputusan rapat User dan Direksi.</p>
+    </div>
+    <dl class="meta">
+      <dt>Tanggal</dt><dd>12 November 2026</dd>
+      <dt>Dibuat</dt><dd>Dedik &amp; Wawan, Business Analyst</dd>
+      <dt>Jenis</dt><dd>Project Document</dd>
+      <dt>Project Director</dt><dd>Pak Risa</dd>
+      <dt>Audiens</dt><dd>Teknisi &amp; BL</dd>
+      <dt>Data</dt><dd class="mono">1–11 Nov 2026</dd>
+    </dl>
+  </div>
+</header>
+
+<nav class="top" aria-label="Navigasi bagian">
+  <div class="wrap" id="navlinks"></div>
+</nav>
+
+<main class="wrap">
+
+<!-- RINGKASAN -->
+<section class="sec" id="ringkasan" data-nav="Ringkasan">
+  <header><div class="eyebrow">Baca ini dulu</div><h2>Gambaran dalam satu layar</h2>
+  <p>Tiga pesan utama dokumen, dan alur keputusan yang diminta dari rapat berikutnya.</p></header>
+  <div class="grid g4">
+    <div class="card kpi bad"><div class="v">75,9%</div><div class="l">WO PSB berstatus Abnormal (669 dari 881 tervalidasi)</div></div>
+    <div class="card kpi"><div class="v">28,7%</div><div class="l">Slot gagal nasional berasal dari satu cabang, Temas, yang hanya 10,3% volume WO</div></div>
+    <div class="card kpi"><div class="v">52,9%</div><div class="l">Slot gagal disumbang 15 dari 50 teknisi (30%)</div></div>
+    <div class="card kpi good"><div class="v">+50,1%</div><div class="l">Porsi WO Abnormal yang langsung Normal bila 4 klaster tuntas (335 WO solo-cluster)</div></div>
+  </div>
+  <div class="flow" style="margin-top:14px">
+    <div class="st"><span class="tag t4">1 · Temuan</span><h4 style="margin-top:8px">Diagnosis data aktual</h4><p class="note">Abnormal stagnan di 66,7–87,5% per hari. Durasi kerja bukan pembeda kualitas.</p></div>
+    <div class="st"><span class="tag t4">2 · Solusi</span><h4 style="margin-top:8px">24 rule jadi 4 klaster</h4><p class="note">Optik, Fisik &amp; Kerapian, Foto &amp; Label, Splicing. Opsi 5 (jalur aset) ditunda.</p></div>
+    <div class="st"><span class="tag t4">3 · Rekomendasi</span><h4 style="margin-top:8px">Dual-Track paralel</h4><p class="note">Track A: perbaikan cepat non-optik (Opsi 2, 3, 4). Track B: investigasi optik (Opsi 1).</p></div>
+    <div class="st"><span class="tag t4">4 · Keputusan</span><h4 style="margin-top:8px">Rapat User &amp; Direksi</h4><p class="note">Urutan prioritas klaster dan target OKR ditentukan lewat kolom survei, bukan dikunci BPD.</p></div>
+  </div>
+</section>
+
+<!-- BASELINE -->
+<section class="sec" id="baseline" data-nav="Baseline data">
+  <header><div class="eyebrow">Bab 1.1 A</div><h2>Baseline aktual sistem NICE</h2>
+  <p>Ekspor basis data 2026-11-01 08:15:31 sampai 2026-11-11 18:35:25: 885 WO dari 15 cabang, 12 tim, dan 50 teknisi.</p></header>
+  <div class="card">
+    <div class="eyebrow" style="margin-bottom:10px">Status 885 WO tercatat</div>
+    <div class="seg" role="img" aria-label="212 Normal, 669 Abnormal, 4 Pending">
+      <div class="n" style="flex:212">Normal 212 · 24,1%</div>
+      <div class="a" style="flex:669">Abnormal 669 · 75,9%</div>
+      <div class="p" style="flex:14;padding:0 4px"> </div>
+    </div>
+    <div class="legend"><span><i style="background:var(--good)"></i>Normal: lulus 24 rule di 3 proses PSB</span><span><i style="background:var(--bad)"></i>Abnormal: gagal minimal 1 slot (single-point failure)</span><span><i style="background:var(--muted)"></i>Pending 4 WO (41581, 41711, 41612, 41712)</span></div>
+  </div>
+  <div class="tw" style="margin-top:14px"><table class="min">
+    <thead><tr><th>Indikator</th><th class="r">Angka</th><th>Catatan</th></tr></thead>
+    <tbody>
+      <tr><td>Total WO tercatat</td><td class="r mono">885</td><td>15 cabang, 12 tim, 50 teknisi pelaksana</td></tr>
+      <tr><td>WO tervalidasi penuh</td><td class="r mono">881</td><td>Basis persentase kualitas (100%)</td></tr>
+      <tr><td>WO Normal</td><td class="r mono">212 · 24,1%</td><td>Lulus seluruh 24 rule</td></tr>
+      <tr><td>WO Abnormal</td><td class="r mono">669 · 75,9%</td><td>Gagal minimal 1 slot</td></tr>
+      <tr><td>WO Pending</td><td class="r mono">4</td><td>WO sore/malam 11 Nov</td></tr>
+      <tr><td>Kegagalan terdeduplikasi</td><td class="r mono">1.560 slot</td><td>Setara 1.537 pasangan unik (WO × rule); 4 rule muncul di proses ODP &amp; Customer</td></tr>
+      <tr><td>Anomali query sumber</td><td class="r mono">28 baris</td><td>WO 41676 (Kedungkandang) terduplikasi 2×, hitungan mentah -21.50 dBm tampil 386 vs 385 unik</td></tr>
+      <tr><td>Angka dBm/dB di actual_value</td><td class="r mono">0</td><td>Kolom hanya menyimpan flag (&#39;&#39;, &#39;0&#39;, &#39;1&#39;), belum besaran aktual</td></tr>
+    </tbody></table></div>
+
+  <h3 class="sub-h">Dua asumsi awal yang diuji data</h3>
+  <div class="grid g2">
+    <div class="card">
+      <span class="tag tbad">Asumsi 1</span>
+      <h3 style="margin:8px 0 6px">Belum ada pemulihan alami</h3>
+      <p class="note">Rasio abnormal harian datar di rentang 66,7%–87,5%.</p>
+      <div style="margin-top:14px" class="bars">
+        <div class="brow"><span class="lbl">Terendah</span><div class="track"><div class="fill" style="width:66.7%"></div></div><span class="val">66,7%</span></div>
+        <div class="brow hl"><span class="lbl">Puncak 9 Nov</span><div class="track"><div class="fill" style="width:87.5%"></div></div><span class="val">87,5%</span></div>
+        <div class="brow"><span class="lbl">11 Nov (akhir)</span><div class="track"><div class="fill" style="width:80.8%"></div></div><span class="val">80,8%</span></div>
+      </div>
+      <p class="takeaway">Tanpa intervensi terstruktur, angka tidak turun sendiri.</p>
+    </div>
+    <div class="card">
+      <span class="tag tbad">Asumsi 2</span>
+      <h3 style="margin:8px 0 6px">Durasi kerja bukan pembeda</h3>
+      <p class="note">Waktu eksekusi (started_at ke completed_at), dalam menit. Kotak = P25–P75, garis = median, lingkaran = rerata.</p>
+      <div id="range"></div>
+      <p class="takeaway">Dugaan teknisi terburu-buru mengejar kuota tidak terbukti oleh data durasi. Masalahnya ada di prosedur dan kepatuhan standar.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TEMUAN -->
+<section class="sec" id="temuan" data-nav="Temuan">
+  <header><div class="eyebrow">Bab 1.1 B</div><h2>Di mana kegagalan menumpuk</h2>
+  <p>Konsentrasi per cabang, per teknisi, kontras redaman -21.50 dBm, dan pembagian ke 4 kelompok akar masalah.</p></header>
+
+  <div class="card">
+    <div class="toolbar"><h3>Beban kegagalan per cabang</h3>
+      <div class="chips" id="branchMetric" role="group" aria-label="Metrik cabang"></div></div>
+    <div class="bars" id="branchBars"></div>
+    <p class="note" id="branchNote" style="margin-top:12px"></p>
+  </div>
+  <div class="grid g2" style="margin-top:14px">
+    <div class="card">
+      <span class="tag tbad">Outlier ekstrem</span>
+      <h3 style="margin:8px 0">Temas</h3>
+      <p>91 WO tervalidasi, <b>86 Abnormal (94,5%)</b>, 447 dari 1.560 slot gagal (28,7%). Kepadatan <b>5,20 kegagalan per WO abnormal</b>, cabang lain 1,44–2,68.</p>
+      <div class="bars" style="margin-top:12px">
+        <div class="brow"><span class="lbl">Pemakaian twistie</span><div class="track"><div class="fill" style="width:86.2%"></div></div><span class="val">25/29</span></div>
+        <div class="brow"><span class="lbl">Foto nilai splicer</span><div class="track"><div class="fill" style="width:87.5%"></div></div><span class="val">21/24</span></div>
+        <div class="brow"><span class="lbl">Foto fisik ODP</span><div class="track"><div class="fill" style="width:83.3%"></div></div><span class="val">5/6</span></div>
+        <div class="brow"><span class="lbl">ODP terklik</span><div class="track"><div class="fill" style="width:68.4%"></div></div><span class="val">26/38</span></div>
+        <div class="brow"><span class="lbl">Max 0.01 dB</span><div class="track"><div class="fill" style="width:68.4%"></div></div><span class="val">13/19</span></div>
+      </div>
+      <p class="note" style="margin-top:8px">Bar = porsi slot rule tersebut yang berasal dari Temas.</p>
+    </div>
+    <div class="card">
+      <span class="tag tbad">Pareto</span>
+      <h3 style="margin:8px 0">Teknisi dan tim</h3>
+      <p>Tidak ada satu pun dari 50 teknisi yang 0% abnormal, dan <b>11 teknisi 100% abnormal</b>.</p>
+      <div class="bars" style="margin-top:12px">
+        <div class="brow"><span class="lbl">Top 15 teknisi</span><div class="track"><div class="fill" style="width:52.9%"></div></div><span class="val">52,9%</span></div>
+        <div class="brow"><span class="lbl">4 teknisi Temas</span><div class="track"><div class="fill" style="width:23.6%"></div></div><span class="val">23,6%</span></div>
+      </div>
+      <p class="note" style="margin-top:8px">Porsi dari 1.560 slot gagal. Aan 109, Damar 106, Rully 101, Vino 52 = 368 slot.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <h3>Kontras geografis redaman -21.50 dBm</h3>
+    <p class="note" style="margin:4px 0 12px">385 WO (57,5% dari WO abnormal) gagal di parameter ini. Persentase = kasus dibagi WO tervalidasi cabang.</p>
+    <div class="bars" id="dbmBars"></div>
+    <div class="grid g2" style="margin-top:14px">
+      <div class="base"><b class="mono">284 WO</b> abnormal (42,5%) sama sekali tidak punya temuan -21.50 dBm.</div>
+      <div class="base"><b class="mono">194 WO</b> (29,0%) murni bermasalah di luar seluruh parameter optik.</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <h3>Empat kelompok akar masalah (24 rule, 28 slot)</h3>
+    <p class="note" style="margin:4px 0 12px">Satu WO bisa punya temuan di lebih dari satu klaster, jadi persentase WO tidak dijumlahkan.</p>
+    <div class="tw"><table class="min">
+      <thead><tr><th>Klaster</th><th class="r">Rule</th><th class="r">WO</th><th>% WO Abnormal</th><th class="r">Slot</th><th>% slot gagal</th><th class="r">Solo-cluster</th></tr></thead>
+      <tbody id="clusterTable"></tbody></table></div>
+  </div>
+</section>
+
+<!-- LAPANGAN -->
+<section class="sec" id="lapangan" data-nav="Perspektif lapangan">
+  <header><div class="eyebrow">Bab 1.1 C</div><h2>Celah proses as-is dan sudut pandang lapangan</h2>
+  <p>Catatan dari penelusuran operasional dan rekaman diskusi lintas tim di balik angka-angka.</p></header>
+  <div class="grid g3">
+    <div class="card"><span class="tag t1">Kontrol</span>
+      <h3 style="margin:8px 0 10px">Peran Branch Leader bergeser</h3>
+      <ul class="clean">
+        <li>Sejak alur validasi “semua langsung ke CUNI”, BL tidak lagi bisa menyaring kesalahan sebelum tercatat sistem.</li>
+        <li>Belum semua BL rutin meninjau hasil audit harian dan story cabang.</li>
+        <li>Ada gap standar teknis: kesalahan 1510 nm (seharusnya 1490 nm) tidak dikenali dari foto layar.</li>
+        <li>Peran Ketua Tim (Katim) masih nominal.</li>
+      </ul></div>
+    <div class="card"><span class="tag t2">Kebiasaan</span>
+      <h3 style="margin:8px 0 10px">Eksekusi dan kepatuhan mikro</h3>
+      <ul class="clean">
+        <li><b>Upload-before-lock (Temas):</b> ODP difoto terbuka lalu langsung diunggah. Kepatuhan turun lagi di hari ke-3 setelah refreshment.</li>
+        <li><b>Wendit:</b> kunci ODP hilang, port pelanggan dicabut atau ditukar sehingga berisiko loss.</li>
+        <li><b>Anak PKL</b> mengambil alih foto dokumentasi, hasilnya di luar standar NICE.</li>
+        <li><b>Cuaca dan komponen:</b> kerja saat hujan tanpa bersihkan adapter/SC (ODP -24 dBm, pelanggan terbaca -19 dBm), grommet dilepas, dust cap hilang, muncul debu dan semut.</li>
+        <li><b>Alat:</b> kamera HP buram, layar splicer cepat hilang, modem stok kotor, antrean cetak label ODP bergantung pada BL.</li>
+      </ul></div>
+    <div class="card"><span class="tag t3">Sistem</span>
+      <h3 style="margin:8px 0 10px">ERP satu arah</h3>
+      <ul class="clean">
+        <li>Antarmuka ERP sudah menyediakan hint dan foto referensi standar.</li>
+        <li>Unggahan bersifat one-way, teknisi tidak bisa memperbaiki foto setelah menekan submit.</li>
+        <li>Kesalahan foto langsung terkunci jadi Abnormal di NICE.</li>
+      </ul></div>
+  </div>
+
+  <h3 class="sub-h">1.2 Empat pernyataan masalah</h3>
+  <div class="grid g2">
+    <div class="card"><h4>1 · Rasio abnormal tinggi dan stagnan</h4><p class="note" style="margin-top:6px">669 dari 881 WO (75,9%), tren 66,7%–87,5%. Median 63,1 vs 63,0 menit menunjukkan akar masalah di ketepatan prosedur, bukan beban waktu.</p></div>
+    <div class="card"><h4>2 · Beban kegagalan sangat timpang</h4><p class="note" style="margin-top:6px">Temas 10,3% WO tapi 28,7% slot gagal. Top 15 teknisi 52,9%. Redaman -21.50 dBm: 0% di Sawojajar dan Bangil, 51,9%–70,8% di enam cabang lain.</p></div>
+    <div class="card"><h4>3 · Kontrol lini pertama lemah</h4><p class="note" style="margin-top:6px">BL belum seragam memeriksa laporan harian, gap standar 1490 vs 1510 nm, label menumpuk di Dau dan Temas, upload-before-lock, PKL, grommet/dust cap, ERP tanpa koreksi.</p></div>
+    <div class="card"><h4>4 · Belum ada bukti objektif optik vs aset</h4><p class="note" style="margin-top:6px">actual_value belum menyimpan dBm/dB dan belum ada catatan verifikasi sistematis (konektor kotor, salah setting, tekukan, atau kerusakan hulu). Klaim tanggung jawab aset berisiko menormalisasi kelalaian atau menutupi masalah sebenarnya.</p></div>
+  </div>
+
+  <h3 class="sub-h">1.3 Tujuan</h3>
+  <div class="grid g3">
+    <div class="card"><span class="tag tmute">Tujuan 1</span><p style="margin-top:8px">Peta diagnosis faktual berbasis 885 WO dan 24 rule, plus perspektif lapangan, sebagai landasan diskusi bebas asumsi.</p></div>
+    <div class="card"><span class="tag tmute">Tujuan 2</span><p style="margin-top:8px">Kelompokkan 24 rule ke 4 klaster dengan WO terdampak dan potensi penyelamatan solo-cluster, supaya tiap tindakan terhubung ke temuan.</p></div>
+    <div class="card"><span class="tag tmute">Tujuan 3</span><p style="margin-top:8px">Sediakan matriks survei prioritas dan target OKR agar User dan Direksi (BOD) menentukan sendiri urutan dan target resmi.</p></div>
+  </div>
+</section>
+
+<!-- PIHAK -->
+<section class="sec" id="pihak" data-nav="Stakeholder &amp; RACI">
+  <header><div class="eyebrow">Bab 1.4 – 1.5</div><h2>Siapa berperan apa</h2>
+  <p>Pihak berkepentingan dan matriks RACI untuk enam aktivitas utama.</p></header>
+  <div class="tw"><table class="min">
+    <thead><tr><th>Pihak</th><th>Peran dan tanggung jawab</th></tr></thead>
+    <tbody>
+      <tr><td><b>Direksi (BOD) &amp; Project Director</b></td><td>Pengambil keputusan akhir atas urutan prioritas klaster dan target OKR, pemberi arahan kebijakan lintas unit.</td></tr>
+      <tr><td><b>Tim CUNI</b></td><td>Penentu kelayakan teknis operasional bersama Direksi, koordinator pembekalan BL, pengawal verifikasi lapangan optik dan kerapian. Pemilik sistem NICE dan otoritas validasi 24 rule, penyedia klarifikasi anomali dan validasi ulang.</td></tr>
+      <tr><td><b>Tim Business Analyst (BA)</b></td><td>Penyusun BPD, pengolah bukti data 885 WO dan simulasi dampak klaster, fasilitator matriks survei, pengawal rekonsiliasi metrik.</td></tr>
+      <tr><td><b>Tim Business Intelligence (BI)</b></td><td>Pengelola pemantauan rutin di Superset.</td></tr>
+      <tr><td><b>Branch Leader &amp; Katim</b></td><td>Pengawasan lini pertama cabang, daily briefing dan cek story harian, pemegang larangan foto oleh anak PKL, pengelola pasokan label ODP.</td></tr>
+      <tr><td><b>Teknisi PSB</b></td><td>Pelaksana standar instalasi 3 proses PSB, pemeriksa kebersihan konektor/modem, self-check foto dengan hint ERP sebelum submit.</td></tr>
+      <tr><td><b>Unit PCO &amp; Tim Penyusun DWP</b></td><td>Penyelarasan tata tertib tertulis (DWP) dan skema reward-punishment bila diaktifkan Direksi setelah fase pembuktian dan kontrol berjalan.</td></tr>
+    </tbody></table></div>
+
+  <h3 class="sub-h">RACI Matrix</h3>
+  <div class="tw"><table class="min raci">
+    <thead><tr><th>Aktivitas utama</th><th class="c">BA</th><th class="c">Tim BI</th><th class="c">CUNI</th><th class="c">Ops &amp; BL</th><th class="c">PCO</th><th class="c">PD / BOD</th></tr></thead>
+    <tbody id="raciBody"></tbody></table></div>
+  <p class="note" style="margin-top:8px">R = Responsible, A = Accountable, C = Consulted, I = Informed.</p>
+</section>
+
+<!-- LINGKUP -->
+<section class="sec" id="lingkup" data-nav="Ruang lingkup">
+  <header><div class="eyebrow">Bab 2.1</div><h2>Ruang lingkup</h2></header>
+  <div class="scope">
+    <div class="card"><span class="tag tgood">Dalam ruang lingkup</span>
+      <ol class="steps" style="margin-top:12px">
+        <li>Analisis berbasis data aktual (885 WO, 1–11 Nov 2026) atas 24 rule (28 slot) pada 3 proses PSB di NICE.</li>
+        <li>Pengelompokan 24 rule ke 4 klaster beserta pemetaan catatan lapangan.</li>
+        <li>Mekanisme eksekusi lintas klaster: kontrol dan pembekalan BL, targeted coaching, protokol self-check pra-submit ERP, pemantauan Superset.</li>
+        <li>Matriks survei keputusan rapat untuk prioritas opsi dan target OKR.</li>
+      </ol></div>
+    <div class="card"><span class="tag tbad">Di luar ruang lingkup</span>
+      <ol class="steps" style="margin-top:12px">
+        <li><b>Penetapan sepihak</b> target KPI/OKR dan urutan prioritas final. Menunggu keputusan rapat.</li>
+        <li><b>Modifikasi arsitektur ERP satu arah.</b> Fitur revisi foto pasca-submit tetap di luar fase ini.</li>
+        <li><b>Sanksi pemotongan finansial langsung.</b> Skema punishment DWP belum diterapkan sebelum kontrol BL, alat bantu dasar, dan verifikasi objektif berjalan.</li>
+      </ol></div>
+  </div>
+</section>
+
+<!-- SOLUSI -->
+<section class="sec" id="solusi" data-nav="Solusi">
+  <header><div class="eyebrow">Bab 2.2</div><h2>Empat klaster solusi</h2>
+  <p>1.560 slot gagal di 669 WO abnormal dibagi tanpa tumpang tindih berdasarkan akar penyebab teknis dan jenis tindakan. Pilih klaster untuk melihat rule, volume, dan arah solusinya.</p></header>
+  <div class="tabs" role="tablist" id="ctabs"></div>
+  <div class="card panel" id="cpanel" role="tabpanel"></div>
+
+  <div class="card" style="margin-top:14px">
+    <h3>Dampak penyelamatan: WO total vs solo-cluster</h3>
+    <p class="note" style="margin:4px 0 14px">Batang atas: WO dengan temuan di klaster. Batang bawah: WO yang langsung Normal bila klaster itu tuntas. Total 335 WO solo-cluster = 50,1% dari 669 WO abnormal.</p>
+    <div id="pairs"></div>
+  </div>
+
+  <h3 class="sub-h">Instrumen eksekusi lintas klaster</h3>
+  <div class="grid g2">
+    <div class="card"><span class="tag tmute">1</span><h4 style="margin:8px 0 6px">Pembekalan &amp; kontrol harian BL/Katim</h4><p class="note">Samakan pemahaman 24 rule (termasuk Lambda 1490 nm dan tata letak foto). BL wajib meninjau rekap/story temuan cabang tiap hari dan memutus regresi hari ke-3 pasca-refreshment.</p></div>
+    <div class="card"><span class="tag tmute">2</span><h4 style="margin:8px 0 6px">Targeted coaching berbasis Pareto</h4><p class="note">Tidak lagi massal ke 50 teknisi. Fokus ke Temas (28,7%), Top 15 teknisi (52,9%), dan cabang spesifik per masalah (Dau untuk label ODP, Pasuruan Selatan/Amrul untuk bubble).</p></div>
+    <div class="card"><span class="tag tmute">3</span><h4 style="margin:8px 0 6px">Pemantauan rutin BI (Superset)</h4><p class="note">Data 885 WO sudah cukup untuk mulai bertindak. Superset berjalan paralel untuk tren mingguan, termasuk perbaikan deduplikasi query dan usulan penarikan nilai dBm mentah.</p></div>
+    <div class="card"><span class="tag tmute">4</span><h4 style="margin:8px 0 6px">DWP &amp; reward-punishment bertahap</h4><p class="note">Pengunci konsistensi jangka menengah, setelah kontrol BL, alat bantu dasar (pen cleaner, tisu basah, kunci ODP, label), dan pembuktian optik berjalan.</p></div>
+  </div>
+
+  <div class="hold" style="margin-top:14px">
+    <span class="tag t2">DITUNDA · On-Hold</span>
+    <h3 style="margin:8px 0 8px">Opsi 5: Pemisahan &amp; eskalasi jalur aset</h3>
+    <p style="max-width:75ch">Ditunda pada fase ini karena tiga alasan empiris.</p>
+    <ul class="clean" style="margin-top:10px">
+      <li>Tidak ada data dBm aktual (actual_value hanya flag 0/1) dan belum ada catatan verifikasi yang membedakan redaman &gt; -21.50 dBm akibat konektor kotor, salah setting OPM (1510 nm), tekukan kabel, atau kerusakan port/hulu.</li>
+      <li>Kontras antara cabang 0% (Sawojajar, Bangil) dan cabang 51,9%–70,8% perlu diuji dulu di lapangan sebelum menyimpulkan faktor aset bawaan.</li>
+      <li>Dibuka kembali hanya bila verifikasi Opsi 1 dan 2 membuktikan kerusakan fisik aset signifikan dan tidak bisa diselesaikan tim PSB.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- SURVEI -->
+<section class="sec" id="survei" data-nav="Matriks survei">
+  <header><div class="eyebrow">Bab 2.2 D</div><h2>Rekomendasi analis dan kolom survei rapat</h2>
+  <p>Data mengarah ke strategi <b>Dual-Track Paralel</b>. Keputusan prioritas final ada di User dan Direksi. Panel di bawah meniru kolom survei di dokumen, untuk latihan diskusi (pilihan tidak terkirim ke mana pun).</p></header>
+  <div class="grid g2" style="margin-bottom:14px">
+    <div class="card"><span class="tag tgood">Track A · Perbaikan cepat</span><p style="margin-top:8px">Opsi 2, 3, dan 4. Karena 284 WO abnormal (42,5%) tidak punya masalah -21.50 dBm. Fokus tajam ke Temas dan Top 15 teknisi.</p></div>
+    <div class="card"><span class="tag t1">Track B · Investigasi objektif</span><p style="margin-top:8px">Opsi 1: uji lapangan pen cleaner dan OPM 1490 nm di cabang tertinggi (Pasuruan Utara, Blimbing, Lawang, Kedungkandang).</p></div>
+  </div>
+  <div id="survey"></div>
+  <div class="card" id="surveySummary" style="margin-top:6px"></div>
+</section>
+
+<!-- RENCANA -->
+<section class="sec" id="rencana" data-nav="Sumber daya &amp; risiko">
+  <header><div class="eyebrow">Bab 2.3 · 3.1 · 3.2</div><h2>Sumber daya, risiko, dan manfaat</h2></header>
+  <div class="grid g3">
+    <div class="card"><span class="tag tmute">Tim analitik &amp; monitoring BI</span><p class="mono" style="margin:8px 0 6px;font-size:13px">1 BA · 1 Tim BI · 1 PIC NICE (CUNI)</p><p class="note">Perbaikan query deduplikasi (WO 41676), pemeliharaan Superset, format log verifikasi lapangan Opsi 1.</p></div>
+    <div class="card"><span class="tag tmute">Penyelaras &amp; pengawas lapangan</span><p class="mono" style="margin:8px 0 6px;font-size:13px">Pak Risa · Mas Hasan · BL cabang prioritas</p><p class="note">Pengisian matriks survei, pembekalan 24 rule ke BL, pengawasan larangan PKL, coaching Top 15.</p></div>
+    <div class="card"><span class="tag tmute">Estimasi siklus awal</span><p class="mono" style="margin:8px 0 6px;font-size:13px">2–4 minggu pilot</p><p class="note">Minggu 1: pembekalan BL, penertiban Temas/Dau, verifikasi sampel -21.50 dBm. Minggu 2–4: evaluasi tren mingguan di Superset.</p></div>
+  </div>
+
+  <h3 class="sub-h">Risiko dan mitigasi</h3>
+  <div class="tw"><table class="min">
+    <thead><tr><th>Potensi risiko</th><th>Dampak</th><th>Mitigasi awal</th></tr></thead>
+    <tbody>
+      <tr><td><b>Efek pembinaan memudar cepat</b> (regresi hari ke-3, Temas)</td><td>Abnormal kembali ke 80%+ setelah refreshment.</td><td>Kunci daily briefing, review story harian oleh BL, laporan tren mingguan di Superset.</td></tr>
+      <tr><td><b>BL kurang paham standar teknis</b> (1510 vs 1490 nm)</td><td>BL gagal mendeteksi kesalahan atau memberi arahan keliru.</td><td>Sesi kalibrasi ringkas 24 rule untuk BL sebelum pengawasan berjalan.</td></tr>
+      <tr><td><b>Atribusi sepihak -21.50 dBm ke “aset”</b> tanpa bukti</td><td>Akar masalah (konektor, setting OPM, tekukan) tertutupi, rasio Normal gagal naik.</td><td>Pertahankan On-Hold Opsi 5, wajibkan log bukti lapangan dan pembanding cabang 0%.</td></tr>
+      <tr><td><b>Bias pencatatan data</b> (WO 41676 duplikat, tanpa dBm numerik)</td><td>Agregat meleset, selisih tipis sulit dibedakan dari kegagalan berat.</td><td>Perbaiki query deduplikasi, usulkan pencatatan numerik actual_value.</td></tr>
+      <tr><td><b>Foto salah lolos ke ERP</b> atau diambil anak PKL</td><td>WO langsung terkunci Abnormal tanpa koreksi.</td><td>Self-check dengan hint dan foto referensi ERP sebelum submit, larang PKL mengambil foto validasi.</td></tr>
+    </tbody></table></div>
+
+  <h3 class="sub-h">Manfaat yang diharapkan</h3>
+  <div class="grid g3">
+    <div class="card"><h4>Operasional</h4><p class="note" style="margin-top:6px">Dari pembinaan menyamaratakan ke intervensi berbasis bukti: Temas (28,7%), Dau (label), 15 teknisi penyumbang 52,9%.</p></div>
+    <div class="card"><h4>Efisiensi sumber daya</h4><p class="note" style="margin-top:6px">Hemat waktu refreshment massal, cegah pemborosan biaya eskalasi aset (Opsi 5) sebelum bukti terverifikasi.</p></div>
+    <div class="card"><h4>Kualitas layanan &amp; tata kelola</h4><p class="note" style="margin-top:6px">Cegah gangguan loss akibat ODP tidak terkunci, tukar port, konektor tercemar, dan pulihkan fungsi pengawasan BL.</p></div>
+  </div>
+</section>
+
+<!-- OKR -->
+<section class="sec" id="okr" data-nav="OKR">
+  <header><div class="eyebrow">Bab 3.3</div><h2>Kriteria keberhasilan: OKR dan kolom survei target</h2>
+  <p>Baseline aktual berdampingan dengan opsi referensi target. Target akhir tidak dikunci sebelum rapat. Pilih opsi untuk mensimulasikan kolom survei.</p></header>
+  <div id="okrList"></div>
+</section>
+
+<!-- LAMPIRAN -->
+<section class="sec" id="lampiran" data-nav="Lampiran">
+  <header><div class="eyebrow">Bab 3.4</div><h2>Lampiran data aktual</h2>
+  <p>Tabel lengkap bisa difilter dan diurutkan. Basis: 881 WO tervalidasi (212 Normal, 669 Abnormal) dan 1.560 slot gagal terdeduplikasi.</p></header>
+
+  <h3>A · 24 rule penilaian per klaster</h3>
+  <div class="toolbar" style="margin-top:10px">
+    <div class="chips" id="ruleFilter" role="group" aria-label="Filter klaster"></div>
+    <input type="search" id="ruleSearch" placeholder="Cari rule atau cabang" aria-label="Cari rule atau cabang">
+  </div>
+  <div class="tw"><table class="wide">
+    <thead><tr><th>Klaster</th><th>Rule penilaian</th><th>Proses &amp; jenis</th><th class="r">WO Abn</th><th class="r">Slot gagal</th><th class="r">% 669 Abn</th><th class="r">% 881 Val</th><th class="r">Solo</th><th>Cabang menonjol &amp; catatan</th></tr></thead>
+    <tbody id="ruleBody"></tbody></table></div>
+
+  <h3 class="sub-h">B · Sebaran kualitas 15 cabang</h3>
+  <div class="tw"><table class="wide">
+    <thead><tr><th class="r">#</th><th>Cabang</th><th class="r">WO val</th><th class="r">Normal</th><th class="r">Abnormal</th><th class="r">% Abn</th><th class="r">Slot gagal</th><th class="r">% nasional</th><th class="r">-21.50 (solo)</th><th class="r">Non-optik murni</th></tr></thead>
+    <tbody id="branchBody"></tbody></table></div>
+  <p class="note" style="margin-top:8px">Singkatan di grafik asli: Blimb = Blimbing, Pas-U = Pasuruan Utara, KLama = Kota Lama, Wendt = Wendit, Kdk = Kedungkandang, Kpl = Karangploso, Lwng = Lawang, Bmj = Bumiaji, Pas-S = Pasuruan Selatan, Swj = Sawojajar, Bangl = Bangil, Blw = Bululawang.</p>
+
+  <h3 class="sub-h">C · Top 15 teknisi penyumbang slot gagal</h3>
+  <div class="card" style="margin-bottom:12px">
+    <div class="bars" id="techBars"></div>
+    <p class="note" style="margin-top:10px">Merah = cabang Temas. Angka kanan = slot gagal. Kumulatif 15 teknisi = 825 slot (52,9%).</p>
+  </div>
+  <div class="tw"><table class="wide">
+    <thead><tr><th class="r">#</th><th>Teknisi</th><th>Cabang</th><th>Tim</th><th class="r">WO val</th><th class="r">WO Abn</th><th class="r">% Abn</th><th class="r">Slot</th><th class="r">Kumulatif</th><th>Dominasi temuan</th></tr></thead>
+    <tbody id="techBody"></tbody></table></div>
+</section>
+
+</main>
+<footer><div class="wrap">Sumber: BPD Optimasi PSB CUNI v3, Evaluasi Skema PSB (NICE), 12 November 2026. Seluruh angka disalin dari dokumen; grafik digambar ulang dari tabel dokumen.</div></footer>
+
+<script>
+(function(){
+  var $=function(s){return document.querySelector(s)};
+  var fmt=function(n){return n.toLocaleString('id-ID')};
+  var pc=function(n,d){return n.toFixed(d==null?1:d).replace('.',',')+'%'};
+
+  /* ---------- data ---------- */
+  var CL={
+    1:{k:'Opsi 1',n:'Redaman & Kualitas Optik',s:'Objektif + verifikasi lapangan wajib',rules:4,wo:475,pwo:71.0,slot:623,pslot:39.9,solo:199,pp:22.6,
+      list:[['-21.50 dBm',385+' WO'],['> 1 dBm selisih tarik','157 WO'],['-24.00 dBm customer','62 WO (96,8% irisan -21.50)'],['Lambda 1490 nm','13 WO / 19 slot']],
+      act:['Tanpa auto-exempt aset: wajib verifikasi lapangan per cabang tinggi (Pasuruan Utara 36 solo -21.50, Blimbing, Lawang, Kedungkandang, Temas, Dau) melawan tolok ukur Sawojajar dan Bangil (0% gagal).',
+           'Mitigasi konektor dan cuaca: pen cleaner untuk adapter/SC (kasus ODP -24 vs pelanggan -19 akibat hujan/debu), hindari buka ODP saat hujan.',
+           'Audit OPM dan Lambda 1490 nm: cek setting alat ukur (cegah salah ukur 1510 nm, khususnya Sawojajar 5 WO) dan inspeksi patch cord / tekukan ekstrem (> 1 dBm).',
+           'Catat angka dBm numerik saat verifikasi agar selisih tipis dan degradasi berat terpisah secara objektif.'],
+      focus:'Pasuruan Utara (36 solo -21.50), Blimbing (62), Temas (51), Dau (40), Kota Lama (39), Sawojajar (Lambda 1490)',rec:'Track B (paralel, fase investigasi dan verifikasi objektif): audit setting OPM + uji pen cleaner + catat angka dBm sebelum klaim aset.',
+      imp:'Tertinggi secara volume (71,0% Abn) dan potensi penyelamatan tunggal (199 WO solo, +22,6 pp Normal)',
+      sv:['Prioritas 1 (Langsung Eksekusi)','Prioritas 2 / Paralel Track B (Investigasi Dulu)','Prioritas Lanjutan']},
+    2:{k:'Opsi 2',n:'Disiplin Fisik ODP & Kerapian Modem',s:'Quick-win kontrol prosedur dan alat bantu',rules:7,wo:301,pwo:45.0,slot:449,pslot:28.8,solo:68,pp:7.7,
+      list:[['ODP terkunci & terputar rapat','130 WO'],['Modem bersih','122 WO'],['Kabel masuk ke lubang sesuai','93 WO'],['ODP terklik & tertutup rapat','38 WO'],['Pemakaian twistie','29 WO'],['Port sesuai WO','21 WO'],['Patchcord sesuai alur kaset','16 WO']],
+      act:['Urutan “Kunci dulu baru foto/upload”: hentikan upload-before-lock di Temas, wajibkan cek klik fisik tutup ODP.',
+           'Komponen pelindung ODP: patch cord sesuai alur kaset (rear odd / front even), larang lepas karet grommet, kembalikan dust cap untuk cegah semut dan debu.',
+           'Kebersihan modem: tisu basah/lap di tas teknisi, cek kebersihan modem saat serah terima dari gudang (WH) atau BL.',
+           'Kunci dan port: kunci ODP standar cabang (Wendit), verifikasi Port Sesuai WO agar layanan pelanggan lain tidak terganggu, foto bila baut berkarat/terhalang (sebagai data bukti, bukan pengecualian sepihak).'],
+      focus:'Temas (ODP terkunci 51, Lubang 31, Terklik 26, Twistie 25), Blimbing, Pakis, Kedungkandang',rec:'Track A (paralel, quick-win eksekusi langsung): mulai dari Temas (upload-before-lock, kunci/klik, tisu modem, grommet).',
+      imp:'Tertinggi di kategori non-optik (45,0% Abn; 68 WO solo, +7,7 pp Normal)',
+      sv:['Prioritas 1 (Quick-Win Utama)','Prioritas 2 / Paralel Track A','Prioritas Lanjutan']},
+    3:{k:'Opsi 3',n:'Kelengkapan Foto, Standar Visual & Pelabelan',s:'Pencegahan pra-submit dan alur label',rules:11,wo:248,pwo:37.1,slot:362,pslot:23.2,solo:57,pp:6.5,
+      list:[['9 rule standar/kelengkapan foto','314 slot'],['Redaman ODP','71'],['Instalasi modem','50'],['Tutup ODP','49'],['Splice modem','47'],['Patchcord','39'],['Foto layar splicer','24'],['Splice ODP','21'],['Redaman customer','7'],['Fisik ODP','6'],['Label sudah tercetak di ODP','43 WO'],['Terdapat label modem','5 WO']],
+      act:['Self-check dan retake pra-submit ERP: karena ERP satu arah, teknisi wajib mencocokkan foto dengan hint dan foto referensi sebelum menekan submit.',
+           'Larangan foto oleh anak PKL: foto validasi NICE tidak boleh diambil PKL tanpa pengawasan penuh.',
+           'Alat dokumentasi: evaluasi kamera HP buram dan prosedur cepat memotret layar splicer sebelum angka hilang.',
+           'Bottleneck label: atur jadwal cetak stiker lebih awal atau distribusi alat cetak di Dau (20 WO) dan Temas (11 WO) agar tidak antre di BL.'],
+      focus:'Dau (Label ODP 20/43), Temas (Foto tutup 29, Foto splicer 21), Kota Lama, Karangploso',rec:'Track A (gabung kontrol harian BL dan larangan PKL): wajib self-check hint ERP pra-submit + urai cetak label di Dau dan Temas.',
+      imp:'Cukup besar dan murni kontrol kerja (37,1% Abn; 57 WO solo, +6,5 pp Normal)',
+      sv:['Prioritas 1','Prioritas 2 / Paralel bersama Opsi 2','Prioritas Lanjutan']},
+    4:{k:'Opsi 4',n:'Kualitas Teknis Splicing',s:'Kalibrasi alat dan coaching teknik inti',rules:2,wo:108,pwo:16.1,slot:126,pslot:8.1,solo:11,pp:1.2,
+      list:[['Tidak ada bubble/titik di sambungan core','99 WO / 107 slot (45 ODP + 62 Cust)'],['Nilai sambungan max 0.01 dB','16 WO / 19 slot']],
+      act:['Perawatan splicer dan cleaver: cek V-groove, mata pisau cleaver, kondisi elektroda pada regu penyumbang bubble/titik dan loss > 0.01 dB (Temas 68,4% slot max 0.01 dB).',
+           'Coaching teknik penyambungan terarah: stripping-cleaving-fusion untuk teknisi berulang (Amrul, Pasuruan Selatan, 10/14 WO abnormal pada bubble; regu terkait di Temas, Blimbing, Kedungkandang).'],
+      focus:'Temas (13/19 slot 0.01 dB), Blimbing, Pasuruan Selatan (Amrul 10 WO bubble), Kedungkandang',rec:'Targeted terfokus: coaching dan kalibrasi splicer khusus teknisi berulang, bukan pelatihan massal.',
+      imp:'Volume terkecil (16,1% Abn; 11 WO solo, +1,2 pp Normal), perlu peralatan/teknik',
+      sv:['Prioritas 1','Prioritas 2 (Targeted Teknisi)','Prioritas Lanjutan']}
+  };
+  var CLS={1:'Optik',2:'Fisik & Kerapian',3:'Foto & Label',4:'Splicing'};
+
+  var BR=[['Temas',91,5,86,94.5,447,28.7,51,1,22],['Blimbing',101,14,87,86.1,177,11.3,62,14,13],['Pasuruan Utara',108,22,86,79.6,140,9.0,61,36,15],['Dau',77,11,66,85.7,118,7.6,40,13,20],['Kota Lama',90,27,63,70.0,111,7.1,39,15,15],['Wendit',39,5,34,87.2,92,5.9,19,3,12],['Pakis',43,3,40,93.0,86,5.5,18,4,17],['Kedungkandang',44,5,39,88.6,80,5.1,28,13,8],['Karangploso',43,8,35,81.4,61,3.9,8,6,23],['Lawang',24,2,22,91.7,56,3.6,17,1,5],['Bumiaji',54,23,31,57.4,54,3.5,23,11,4],['Pasuruan Selatan',47,18,29,61.7,48,3.1,11,5,12],['Sawojajar',62,42,20,32.3,33,2.1,0,0,10],['Bangil',25,10,15,60.0,33,2.1,0,0,12],['Bululawang',33,17,16,48.5,24,1.5,8,5,6]];
+
+  var RULES=[
+    [1,'Nilai redaman tidak melebihi -21.50 dBm','Instalasi ODP (Kualitas)',385,385,57.5,43.7,127,'Blimbing (62), Pasuruan Utara (61; 36 solo), Temas (51), Dau (40), Kota Lama (39); Sawojajar & Bangil = 0. Raw CSV tampil 386 akibat duplikat WO 41676'],
+    [1,'Tidak boleh lebih dari 1 dBm','Penarikan (Kualitas)',157,157,23.5,17.8,32,'Temas (30), Blimbing (23), Pasuruan Utara (18), Kota Lama (18), Wendit (11). Terkait tekukan atau konektor basah/kotor'],
+    [2,'ODP terkunci dan terputar rapat','Instalasi ODP (Kerapian)',130,130,19.4,14.8,21,'Temas (51), Blimbing (31), Pakis (13), Karangploso (9), Lawang (8). Isu upload-before-lock (Temas) dan kunci (Wendit)'],
+    [2,'Modem bersih','Instalasi Customer (Kerapian)',122,122,18.2,13.8,20,'Temas (24), Pakis (23), Kedungkandang (17), Kota Lama (13), Pasuruan Utara (13), Wendit (13). Stok WH/BL vs tangan kotor'],
+    [4,'Tidak ada bubble/titik di sambungan core','Instalasi ODP (45) + Customer (62) (Kualitas)',99,107,14.8,11.2,9,'Temas (19 slot), Blimbing (12), Pasuruan Selatan (12; Amrul 10 WO), Kedungkandang (9)'],
+    [2,'Kabel masuk ke lubang yang sesuai','Instalasi ODP (Kerapian)',93,93,13.9,10.6,12,'Temas (31), Blimbing (9), Dau (9), Pakis (8), Kota Lama (6). Jaga karet grommet dan dust cap'],
+    [3,'Foto redaman ODP sesuai standar','Instalasi ODP (Kualitas)',71,71,10.6,8.1,12,'Kota Lama (17), Temas (16), Blimbing (8), Pakis (5), Pasuruan Utara (5)'],
+    [1,'Nilai redaman tidak melebihi -24.00 dBm','Instalasi Customer (Kualitas)',62,62,9.3,7.0,0,'Temas (22), Dau (10), Blimbing (10). 96,8% (60/62) beririsan dengan -21.50 dBm hulu'],
+    [3,'Foto instalasi modem sesuai standar','Instalasi Customer (Kerapian)',50,50,7.5,5.7,6,'Temas (20 = 40,0%), Blimbing (6), Bangil (5), Wendit (5), Pakis (4)'],
+    [3,'Foto tutup ODP sesuai standar','Instalasi ODP (Kerapian)',49,49,7.3,5.6,6,'Temas (29/49 = 59,2%), Wendit (5), Dau (4), Bangil (3)'],
+    [3,'Foto splice modem sesuai standar','Instalasi Customer (Kualitas)',47,47,7.0,5.3,9,'Karangploso (11), Temas (7), Bangil (6), Blimbing (5), Pasuruan Utara (5)'],
+    [3,'Label sudah tercetak di ODP','Instalasi ODP (Kerapian)',43,43,6.4,4.9,8,'Dau (20/43 = 46,5%), Temas (11 = 25,6%), Blimbing (4). Ketergantungan cetak stiker ke BL'],
+    [3,'Foto penataan patchcord sesuai standar','Instalasi ODP (Kerapian)',39,39,5.8,4.4,4,'Temas (17 = 43,6%), Bangil (4), Wendit (4), Blimbing (3), Kedungkandang (3)'],
+    [2,'ODP terklik dan tertutup rapat','Instalasi ODP (Kerapian)',38,38,5.7,4.3,1,'Temas (26 = 68,4%), Bangil (3), Wendit (3). Sering menyertai kasus tidak terkunci'],
+    [2,'Pemakaian twistie','Instalasi ODP (Kerapian)',29,29,4.3,3.3,0,'Temas (25/29 = 86,2%), Wendit (3), Pakis (1)'],
+    [2,'Port sesuai WO','Instalasi ODP (Kualitas)',21,21,3.1,2.4,1,'Temas (5), Pasuruan Utara (5), Kota Lama (2), Kedungkandang (2). Risiko tukar port/gangguan pelanggan (Wendit)'],
+    [3,'Foto splice ODP sesuai standar','Instalasi ODP (Kualitas)',21,21,3.1,2.4,0,'Dau (3), Karangploso (3), Pasuruan Selatan (3), Pasuruan Utara (3), Temas (3)'],
+    [3,'Terdapat foto nilai sambungan splicer','Instalasi ODP (13) + Customer (11) (Kualitas)',18,24,2.7,2.0,0,'Temas (21/24 slot = 87,5%). Layar splicer cepat hilang sebelum difoto'],
+    [2,'Patchcord sesuai alur kaset (“Patchore” di NICE)','Instalasi ODP (Kerapian)',16,16,2.4,1.8,1,'Temas (9 = 56,3%), Pakis (3), Dau (2). Standar rear odd / front even'],
+    [4,'Nilai sambungan max 0.01 dB','Instalasi ODP (12) + Customer (7) (Kualitas)',16,19,2.4,1.8,2,'Temas (13/19 slot = 68,4%), Bumiaji (2), Wendit (2)'],
+    [1,'Nilai Lambda (1490 nm)','Instalasi ODP (13) + Customer (6) (Kualitas)',13,19,1.9,1.5,4,'Sawojajar (5 WO / 9 slot, termasuk Ali 4 WO), Temas (3 WO / 4 slot). Kesalahan setting OPM (1510 nm)'],
+    [3,'Foto redaman customer sesuai standar','Instalasi Customer (Kualitas)',7,7,1.0,0.8,0,'Temas (5), Bangil (1), Sawojajar (1)'],
+    [3,'Foto keseluruhan fisik ODP tertutup','Instalasi ODP (Kerapian)',6,6,0.9,0.7,0,'Temas (5/6 = 83,3%), Kedungkandang (1)'],
+    [3,'Terdapat label modem','Instalasi Customer (Kerapian)',5,5,0.7,0.6,0,'Temas (3), Kedungkandang (1), Wendit (1)']
+  ];
+
+  var TECH=[[1,'Aan','Temas','Beruang',11,11,100,109,'ODP Terkunci (11), Foto tutup ODP (8), Terklik (8)'],[2,'Damar','Temas','Rusa',34,32,94.1,106,'ODP Terkunci (19), -21.50 dBm (17), > 1 dBm (14)'],[3,'Rully','Temas','Engineer - 2',12,12,100,101,'Twistie (9), Foto Inst Modem (8), ODP Terkunci (8)'],[4,'Vino','Temas','Engineer - 8',12,12,100,52,'Lubang sesuai (10), Twistie (8), -21.50 dBm (7)'],[5,'Abdil','Kedungkandang','Engineer - 2',24,22,91.7,50,'-21.50 dBm (18), Modem bersih (9), > 1 dBm (4)'],[6,'Fabyan','Blimbing','Engineer - 4',27,22,81.5,47,'-21.50 dBm (19), ODP Terkunci (15), Foto Inst Modem (3)'],[7,'Alfian','Blimbing','Engineer - 5',17,17,100,44,'> 1 dBm (10), -21.50 dBm (8), ODP Terkunci (6)'],[8,'Alvano','Dau','Engineer - 7',22,22,100,42,'-21.50 dBm (11), Label ODP (8), Lubang sesuai (7)'],[9,'Ariel','Kota Lama','Engineer - 1',32,27,84.4,42,'-21.50 dBm (14), Modem bersih (8), > 1 dBm (6)'],[10,'Bintang','Temas','Engineer - 3',8,8,100,40,'Foto nilai splicer (7 slot), -21.50 dBm (6), ODP Terkunci (5)'],[11,'Faza','Pakis','Engineer - 3',15,15,100,40,'ODP Terkunci (13), -21.50 dBm (9), Modem bersih (7)'],[12,'Ikrar','Blimbing','Engineer - 3',22,19,86.4,40,'-21.50 dBm (13), > 1 dBm (8), Foto redaman ODP (3)'],[13,'Fadel','Karangploso','Engineer - 4',23,20,87.0,38,'ODP Terkunci (7), Foto Splice Modem (6), Bubble/titik (5)'],[14,'Abian','Kota Lama','Engineer - 3',28,18,64.3,37,'-21.50 dBm (14), Foto redaman ODP (12), > 1 dBm (5)'],[15,'Elvan','Dau','Engineer - 2',21,18,85.7,37,'-21.50 dBm (12), Label ODP (9), Foto Splice Modem (4)']];
+
+  var RACI=[['Audit data aktual 885 WO, pengelompokan 24 rule, dan penyusunan BPD v3.0','R','C','C','C','I','A'],['Penentuan prioritas klaster opsi dan target OKR via survei rapat','C','I','C','C','I','AR'],['Kalibrasi pemahaman 24 rule ke BL dan penghentian keterlibatan PKL','I','I','C','R','I','A'],['Eksekusi tindak lanjut klaster terpilih (kontrol BL, coaching Top 15, verifikasi optik)','I','I','C','R','I','A'],['Pemeliharaan dashboard Superset dan deduplikasi data NICE','C','R','C','I','I','A'],['Penyesuaian aturan tertulis DWP dan reward-punishment (bila disetujui)','R','I','C','C','C','A']];
+
+  var OKR=[
+   {o:'Meningkatkan kualitas kelulusan WO PSB secara objektif dan terarah',kr:'Kenaikan proporsi WO Normal nasional pada periode evaluasi pasca-intervensi.',base:'24,1% Normal (212 / 881 WO tervalidasi; 75,9% Abnormal)',opts:['A · Moderat: naik ke ≥ 35%–40% dalam 1 bulan','B · Progresif: naik ke ≥ 50% (fokus klaster non-optik + optik ringan)','C · Bertahap per cabang pilot terlebih dahulu']},
+   {o:'Menekan beban kegagalan pada cabang dan teknisi outlier',kr:'Penurunan jumlah slot gagal di Cabang Temas dan kelompok Top 15 Teknisi.',base:'Temas: 447 slot (28,7% nasional; 94,5% Abn). Top 15 Teknisi: 825 slot (52,9% nasional)',opts:['A · Pangkas slot gagal Temas minimal -40% dalam 3 minggu','B · Tekan kepadatan gagal Temas dari 5,20 ke ≤ 2,5 slot/WO Abn','C · Target per individu pada daftar Top 15 teknisi']},
+   {o:'Menuntaskan verifikasi objektif klaster optik (Opsi 1) sebelum membuka isu aset (Opsi 5)',kr:'Persentase sampel WO -21.50 dBm di cabang tinggi yang selesai diverifikasi lapangan (pen cleaner, setting 1490 nm, kondisi port/hulu).',base:'385 WO gagal -21.50 dBm (0 angka dBm numerik tersimpan di CSV)',opts:['A · Audit sampel lapangan pada 6 cabang tinggi (≥ 50% gagal -21.50) dalam 2 minggu','B · Fokus awal Pasuruan Utara (36 solo -21.50) dan Blimbing, pembanding Sawojajar (0%)','Wajibkan semua cabang tinggi']},
+   {o:'Mengaktifkan kontrol lini pertama Branch Leader dan kepatuhan mikro',kr:'Kepatuhan review harian/story oleh BL, penghentian foto oleh anak PKL, penyelesaian isu lokal (Dau label, Temas kunci).',base:'Review BL dan story belum merata; gap teknis BL (1510 nm); ketergantungan label (Dau 20 WO)',opts:['A · 100% BL melakukan briefing dan review temuan harian cabang + kalibrasi 24 rule','B · 0 insiden foto oleh anak PKL dan penurunan kasus Label ODP Dau minimal -50%','Wajibkan Opsi A & B penuh','Pilot terbatas di cabang prioritas']},
+   {o:'Menjaga keandalan monitoring rutin BI (Superset)',kr:'Perbaikan deduplikasi data NICE dan ketersediaan laporan mingguan per klaster di Superset.',base:'28 baris duplikat pada WO 41676; actual_value masih flag 0/1',opts:['A · 100% query Superset bebas duplikasi + tampilkan 4 klaster opsi','B · Tambah pencatatan angka dBm numerik bila disepakati IT/CUNI']}
+  ];
+
+  /* ---------- nav ---------- */
+  var secs=[].slice.call(document.querySelectorAll('section.sec'));
+  $('#navlinks').innerHTML=secs.map(function(s){return '<a href="#'+s.id+'" data-t="'+s.id+'">'+s.dataset.nav+'</a>'}).join('');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){document.querySelectorAll('#navlinks a').forEach(function(a){a.classList.toggle('on',a.dataset.t===e.target.id)})}})},{rootMargin:'-20% 0px -70% 0px'});
+    secs.forEach(function(s){io.observe(s)});
+  }
+
+  /* ---------- duration range ---------- */
+  function range(label,p25,med,p75,mean,color){
+    var L=function(v){return v+'%'};
+    return '<div style="margin-top:12px"><div class="note" style="display:flex;justify-content:space-between"><b style="color:var(--fg)">'+label+'</b><span class="mono">median '+pc(med,1).replace('%','')+' · rerata '+pc(mean,1).replace('%','')+' mnt</span></div>'+
+      '<div class="range"><div class="axis"></div><div class="box" style="left:'+p25+'%;width:'+(p75-p25)+'%;background:'+color+'"></div><div class="med" style="left:'+med+'%"></div><div class="mean" style="left:'+mean+'%"></div></div></div>';
+  }
+  $('#range').innerHTML=range('WO Normal (P25 50,5 · P75 80,8)',50.5,63.1,80.8,80.2,'var(--good)')+range('WO Abnormal (P25 47,5 · P75 82,4)',47.5,63.0,82.4,84.6,'var(--bad)')+'<div class="ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100 menit</span></div>';
+
+  /* ---------- branch chart ---------- */
+  var BM=[
+    {k:'slot',l:'Slot gagal',f:function(b){return b[5]},t:function(v){return fmt(v)},max:447,n:'Temas menyumbang 447 dari 1.560 slot gagal (28,7%).'},
+    {k:'abn',l:'% Abnormal',f:function(b){return b[4]},t:function(v){return pc(v)},max:100,n:'Sawojajar terendah (32,3%), Temas tertinggi (94,5%), Pakis 93,0%.'},
+    {k:'dbm',l:'Kasus -21.50 dBm',f:function(b){return b[7]},t:function(v){return v},max:62,n:'Sawojajar dan Bangil = 0 kasus. Blimbing tertinggi (62), disusul Pasuruan Utara (61).'},
+    {k:'non',l:'WO murni non-optik',f:function(b){return b[9]},t:function(v){return v},max:23,n:'WO yang hanya gagal di Opsi 2/3/4: total 194. Karangploso 23, Temas 22, Dau 20.'}
+  ];
+  var bm='slot';
+  function drawBranch(){
+    var m=BM.filter(function(x){return x.k===bm})[0];
+    var rows=BR.slice().sort(function(a,b){return m.f(b)-m.f(a)});
+    $('#branchBars').innerHTML=rows.map(function(b){return '<div class="brow'+(b[0]==='Temas'?' hl':'')+'"><span class="lbl">'+b[0]+'</span><div class="track"><div class="fill" style="width:'+(m.f(b)/m.max*100)+'%"></div></div><span class="val">'+m.t(m.f(b))+'</span></div>'}).join('');
+    $('#branchNote').textContent=m.n;
+    document.querySelectorAll('#branchMetric button').forEach(function(btn){btn.setAttribute('aria-pressed',btn.dataset.k===bm)});
+  }
+  $('#branchMetric').innerHTML=BM.map(function(m){return '<button class="chip" data-k="'+m.k+'" aria-pressed="false">'+m.l+'</button>'}).join('');
+  $('#branchMetric').addEventListener('click',function(e){var b=e.target.closest('button');if(b){bm=b.dataset.k;drawBranch()}});
+  drawBranch();
+
+  /* ---------- dbm contrast ---------- */
+  var dbm=BR.map(function(b){return [b[0],b[7]/b[1]*100,b[7],b[1]]}).sort(function(a,b){return b[1]-a[1]});
+  $('#dbmBars').innerHTML=dbm.map(function(d){return '<div class="brow'+(d[2]===0?'':'')+'"><span class="lbl">'+d[0]+'</span><div class="track"><div class="fill" style="width:'+d[1]+'%;background:'+(d[2]===0?'var(--good)':'var(--accent)')+'"></div></div><span class="val">'+pc(d[1])+'</span></div>'}).join('');
+
+  /* ---------- cluster table ---------- */
+  $('#clusterTable').innerHTML=[1,2,3,4].map(function(i){var c=CL[i];
+    return '<tr><td><span class="tag t'+i+'">'+c.k+'</span> '+c.n+'</td><td class="r mono">'+c.rules+'</td><td class="r mono">'+c.wo+'</td><td style="min-width:130px"><div class="track"><div class="fill" style="width:'+c.pwo+'%;background:var(--c'+i+')"></div></div><span class="mono note">'+pc(c.pwo)+'</span></td><td class="r mono">'+c.slot+'</td><td style="min-width:130px"><div class="track"><div class="fill" style="width:'+(c.pslot/40*100)+'%;background:var(--c'+i+')"></div></div><span class="mono note">'+pc(c.pslot)+'</span></td><td class="r mono">'+c.solo+'</td></tr>'}).join('');
+
+  /* ---------- RACI ---------- */
+  $('#raciBody').innerHTML=RACI.map(function(r){return '<tr><td>'+r[0]+'</td>'+r.slice(1).map(function(v){return '<td class="c"><span class="rc '+v+'">'+(v==='AR'?'A/R':v)+'</span></td>'}).join('')+'</tr>'}).join('');
+
+  /* ---------- cluster tabs ---------- */
+  var cur=1;
+  function drawTabs(){
+    $('#ctabs').innerHTML=[1,2,3,4].map(function(i){var c=CL[i];return '<button class="ctab" role="tab" aria-selected="'+(i===cur)+'" data-i="'+i+'" style="--cc:var(--c'+i+');--cs:var(--c'+i+'s)"><small>'+c.k+'</small><b>'+c.n+'</b></button>'}).join('');
+    var c=CL[cur];
+    $('#cpanel').innerHTML='<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px"><span class="tag t'+cur+'">'+c.k+'</span><h3>'+c.n+'</h3><span class="note">'+c.s+'</span></div>'+
+      '<div class="grid g4" style="margin-bottom:16px"><div class="kpi"><div class="v" style="font-size:24px">'+c.rules+'</div><div class="l">rule tercakup</div></div><div class="kpi"><div class="v" style="font-size:24px">'+c.wo+' <span style="font-size:14px;color:var(--muted)">'+pc(c.pwo)+' Abn</span></div><div class="l">WO terdampak</div></div><div class="kpi"><div class="v" style="font-size:24px">'+c.slot+' <span style="font-size:14px;color:var(--muted)">'+pc(c.pslot)+'</span></div><div class="l">slot gagal</div></div><div class="kpi good"><div class="v" style="font-size:24px">'+c.solo+' <span style="font-size:14px">+'+String(c.pp).replace('.',',')+' pp<sup class="fnref">1</sup></span></div><div class="l">WO solo-cluster, potensi naik Normal</div></div></div>'+
+      '<div class="cols"><div><h4 style="margin-bottom:8px;font-size:14px">Rule tercakup</h4><div class="rulelist">'+c.list.map(function(r){return '<div><span>'+r[0]+'</span><b>'+r[1]+'</b></div>'}).join('')+'</div><p class="note" style="margin-top:10px"><b>Fokus lokasi/teknisi:</b> '+c.focus+'</p></div>'+
+      '<div><h4 style="margin-bottom:8px;font-size:14px">Arah solusi &amp; catatan lapangan</h4><ol class="steps">'+c.act.map(function(a){return '<li>'+a+'</li>'}).join('')+'</ol></div></div>'+
+      '<p class="fn"><sup class="fnref">1</sup> <b>pp = percentage points (poin persentase)</b>, yaitu selisih langsung antara dua persentase. <b>Solo-cluster</b> adalah WO yang hanya gagal di klaster ini, jadi bila klaster tuntas WO tersebut langsung Normal. Untuk '+c.k+': '+c.solo+' WO ÷ 881 WO tervalidasi = '+String(c.pp).replace('.',',')+' pp. Proporsi WO Normal nasional naik dari 24,1% menjadi sekitar '+(24.1+c.pp).toFixed(1).replace('.',',')+'% (24,1% + '+String(c.pp).replace('.',',')+' pp). Ini bukan kenaikan '+String(c.pp).replace('.',',')+'% dari 24,1%. Angka akhir adalah hitungan tambahan visualisasi ini, dokumen hanya mencantumkan +'+String(c.pp).replace('.',',')+' pp.</p>';
+    $('#cpanel').style.borderTop='4px solid var(--c'+cur+')';
+  }
+  $('#ctabs').addEventListener('click',function(e){var b=e.target.closest('button');if(b){cur=+b.dataset.i;drawTabs()}});
+  drawTabs();
+
+  /* ---------- pairs ---------- */
+  $('#pairs').innerHTML=[1,2,3,4].map(function(i){var c=CL[i];return '<div class="pair"><div><span class="tag t'+i+'">'+c.k+'</span><div class="note" style="margin-top:2px">'+c.n+'</div></div><div class="tracks"><div class="track"><div class="fill" style="width:'+(c.wo/475*100)+'%;background:var(--c'+i+');opacity:.45"></div><span>'+c.wo+' WO</span></div><div class="track"><div class="fill" style="width:'+(c.solo/475*100)+'%;background:var(--c'+i+')"></div><span style="'+(c.solo/475<0.12?'left:'+(c.solo/475*100+1)+'%;right:auto':'color:#fff')+'">'+c.solo+' solo</span></div></div></div>'}).join('');
+
+  /* ---------- survey ---------- */
+  var SV={},SN={};
+  try{SV=JSON.parse(localStorage.getItem('psb-sv')||'{}');}catch(e){}
+  function saveSV(){try{localStorage.setItem('psb-sv',JSON.stringify(SV))}catch(e){}}
+  function drawSurvey(){
+    var h='';
+    [1,2,3,4].forEach(function(i){var c=CL[i];
+      h+='<div class="opt"><div class="card" style="--cc:var(--c'+i+')"><div><span class="tag t'+i+'">'+c.k+'</span><h4 style="margin-top:6px">'+c.n+'</h4></div><dl class="kv"><dt>Dampak</dt><dd>'+c.imp+'</dd><dt>Fokus</dt><dd>'+c.focus+'</dd><dt>Rekomendasi</dt><dd>'+c.rec+'</dd></dl></div>'+
+        '<div class="card" style="--cc:var(--c'+i+')"><div class="eyebrow">Kolom survei · diisi User &amp; Direksi</div><div class="okr"><div class="opts" style="margin-top:6px">'+c.sv.map(function(s,j){return '<button data-k="o'+i+'" data-v="'+j+'" aria-pressed="'+(SV['o'+i]===j)+'">'+s+'</button>'}).join('')+'</div></div></div></div>';
+    });
+    h+='<div class="opt"><div class="hold"><span class="tag t2">On-Hold</span><h4 style="margin:6px 0">Opsi 5 · Pemisahan &amp; eskalasi jalur aset</h4><dl class="kv"><dt>Dampak</dt><dd>Belum terukur objektif (dBm mentah dan verifikasi fisik ODP belum tercatat terpisah)</dd><dt>Fokus</dt><dd>Berpotensi terkait Pasuruan Utara, Blimbing, Lawang, Temas, Dau (menunggu bukti)</dd><dt>Rekomendasi</dt><dd>DITUNDA: tunggu hasil verifikasi lapangan Opsi 1 dan 2</dd></dl></div>'+
+      '<div class="card"><div class="eyebrow">Kolom survei</div><div class="okr"><div class="opts" style="margin-top:6px">'+['Sepakat Ditunda (On-Hold)','Buka Lebih Awal dengan Syarat'].map(function(s,j){return '<button data-k="o5" data-v="'+j+'" aria-pressed="'+(SV.o5===j)+'">'+s+'</button>'}).join('')+'</div></div></div></div>';
+    $('#survey').innerHTML=h;
+    var sel=[1,2,3,4].filter(function(i){return SV['o'+i]!=null}).map(function(i){return '<span class="tag t'+i+'">'+CL[i].k+'</span> '+CL[i].sv[SV['o'+i]]});
+    if(SV.o5!=null) sel.push('<span class="tag t2">Opsi 5</span> '+(SV.o5===0?'Sepakat Ditunda (On-Hold)':'Buka Lebih Awal dengan Syarat'));
+    $('#surveySummary').innerHTML='<div class="eyebrow" style="margin-bottom:8px">Ringkasan pilihan simulasi</div>'+(sel.length?'<ul class="clean">'+sel.map(function(s){return '<li>'+s+'</li>'}).join('')+'</ul>':'<p class="note">Belum ada pilihan. Klik salah satu opsi di atas untuk mencoba.</p>');
+  }
+  $('#survey').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var k=b.dataset.k,v=+b.dataset.v;SV[k]=(SV[k]===v?null:v);saveSV();drawSurvey()});
+  drawSurvey();
+
+  /* ---------- OKR ---------- */
+  var OS={};
+  try{OS=JSON.parse(localStorage.getItem('psb-okr')||'{}');}catch(e){}
+  function drawOKR(){
+    $('#okrList').innerHTML=OKR.map(function(o,i){return '<div class="card okr"><div class="eyebrow">Objective '+(i+1)+'</div><h4>'+o.o+'</h4><p class="note"><b>Key result:</b> '+o.kr+'</p><div class="base" style="margin-top:10px"><b>Baseline aktual:</b> '+o.base+'</div><div class="eyebrow" style="margin-top:12px">Opsi referensi target</div><div class="opts">'+o.opts.map(function(t,j){return '<button data-i="'+i+'" data-j="'+j+'" aria-pressed="'+(OS[i]===j)+'">'+t+'</button>'}).join('')+'</div></div>'}).join('');
+  }
+  $('#okrList').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var i=+b.dataset.i,j=+b.dataset.j;OS[i]=(OS[i]===j?null:j);try{localStorage.setItem('psb-okr',JSON.stringify(OS))}catch(e){}drawOKR()});
+  drawOKR();
+
+  /* ---------- rules table ---------- */
+  var rf=0,rq='';
+  $('#ruleFilter').innerHTML=['<button class="chip" data-f="0" aria-pressed="true">Semua (24)</button>'].concat([1,2,3,4].map(function(i){return '<button class="chip" data-f="'+i+'" aria-pressed="false">'+CL[i].k+' · '+CLS[i]+'</button>'})).join('');
+  function drawRules(){
+    var rows=RULES.filter(function(r){return (!rf||r[0]===rf)&&(!rq||(r[1]+' '+r[2]+' '+r[8]).toLowerCase().indexOf(rq)>-1)});
+    $('#ruleBody').innerHTML=rows.map(function(r){return '<tr><td><span class="tag t'+r[0]+'">'+CLS[r[0]]+'</span></td><td><b>'+r[1]+'</b></td><td>'+r[2]+'</td><td class="r mono">'+r[3]+'</td><td class="r mono">'+r[4]+'</td><td class="r mono">'+pc(r[5])+'</td><td class="r mono">'+pc(r[6])+'</td><td class="r mono">'+r[7]+'</td><td style="min-width:260px">'+r[8]+'</td></tr>'}).join('')||'<tr><td colspan="9" class="note">Tidak ada rule yang cocok.</td></tr>';
+    document.querySelectorAll('#ruleFilter button').forEach(function(b){b.setAttribute('aria-pressed',+b.dataset.f===rf)});
+  }
+  $('#ruleFilter').addEventListener('click',function(e){var b=e.target.closest('button');if(b){rf=+b.dataset.f;drawRules()}});
+  $('#ruleSearch').addEventListener('input',function(e){rq=e.target.value.trim().toLowerCase();drawRules()});
+  drawRules();
+
+  /* ---------- branch + tech tables ---------- */
+  $('#branchBody').innerHTML=BR.map(function(b,i){return '<tr><td class="r mono">'+(i+1)+'</td><td><b>'+b[0]+'</b></td><td class="r mono">'+b[1]+'</td><td class="r mono">'+b[2]+'</td><td class="r mono">'+b[3]+'</td><td class="r mono">'+pc(b[4])+'</td><td class="r mono">'+fmt(b[5])+'</td><td class="r mono">'+pc(b[6])+'</td><td class="r mono">'+b[7]+' ('+b[8]+')</td><td class="r mono">'+b[9]+'</td></tr>'}).join('')+'<tr class="total"><td></td><td>Total 15 cabang</td><td class="r mono">881</td><td class="r mono">212</td><td class="r mono">669</td><td class="r mono">75,9%</td><td class="r mono">1.560</td><td class="r mono">100,0%</td><td class="r mono">385 (127)</td><td class="r mono">194</td></tr>';
+  var cum=0;
+  $('#techBars').innerHTML=TECH.map(function(t){return '<div class="brow'+(t[2]==='Temas'?' hl':'')+'"><span class="lbl">'+t[1]+' · '+t[2]+'</span><div class="track"><div class="fill" style="width:'+(t[7]/109*100)+'%;'+(t[2]==='Temas'?'':'')+'"></div></div><span class="val">'+t[7]+'</span></div>'}).join('');
+  $('#techBody').innerHTML=TECH.map(function(t){cum+=t[7];return '<tr><td class="r mono">'+t[0]+'</td><td><b>'+t[1]+'</b></td><td>'+t[2]+'</td><td>'+t[3]+'</td><td class="r mono">'+t[4]+'</td><td class="r mono">'+t[5]+'</td><td class="r mono">'+pc(t[6])+'</td><td class="r mono">'+t[7]+'</td><td class="r mono">'+pc(cum/1560*100)+'</td><td style="min-width:240px">'+t[8]+'</td></tr>'}).join('')+'<tr class="total"><td></td><td>Total Top 15</td><td>15 dari 50 teknisi</td><td></td><td class="r mono">308</td><td class="r mono">275</td><td class="r mono">89,3%</td><td class="r mono">825</td><td class="r mono">52,9%</td><td>52,9% dari 1.560 slot gagal nasional</td></tr>';
+})();
+</script>
+
+</body></html>

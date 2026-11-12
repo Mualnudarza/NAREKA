@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Roadmap Kepatuhan Keamanan API SNAP BCA (22 Syarat Wajib)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true">BCA</span>
+    <div>
+      <h1>Roadmap Kepatuhan Keamanan API SNAP BCA</h1>
+      <p>Peta Jalan 22 Syarat Wajib Bank Central Asia &amp; Bank Indonesia (POJK No. 11/POJK.03/2022)</p>
+    </div>
+  </div>
+
+  <div class="tools">
+    <div class="progress">
+      <span id="progress-text">0 dari 0 terpenuhi</span>
+      <div class="bar" aria-hidden="true"><i id="progress-bar"></i></div>
+      <button type="button" class="link-btn" id="reset-progress">Reset</button>
+    </div>
+    <div class="zoom" role="group" aria-label="Zoom roadmap">
+      <button type="button" id="zoom-out" aria-label="Perkecil">−</button>
+      <button type="button" id="zoom-fit" title="Sesuaikan &amp; pusatkan layar">100%</button>
+      <button type="button" id="zoom-in" aria-label="Perbesar">+</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <ul class="legend" aria-label="Keterangan">
+    <li><i class="sw sw-main"></i>Pusat Arsitektur</li>
+    <li><i class="sw sw-p1"></i>Pilar 1: Orang &amp; Akses (5)</li>
+    <li><i class="sw sw-p2"></i>Pilar 2: Koding &amp; Kunci (5)</li>
+    <li><i class="sw sw-p3"></i>Pilar 3: Server &amp; Bencana (8)</li>
+    <li><i class="sw sw-p4"></i>Pilar 4: Bukti Lembaga Luar (4)</li>
+    <li><i class="sw sw-phase"></i>Fase Eksekusi 3 Bulan</li>
+    <li><i class="sw sw-okr"></i>Target OKR &amp; Go-Live</li>
+    <li><i class="sw sw-fin"></i>Aliran Finansial</li>
+    <li><i class="sw sw-risk"></i>Mitigasi Risiko</li>
+    <li><i class="ln ln-p1"></i>Alur Akses</li>
+    <li><i class="ln ln-p2"></i>Alur Koding</li>
+    <li><i class="ln ln-p3"></i>Alur Server</li>
+    <li><i class="ln ln-p4"></i>Alur Audit</li>
+    <li><i class="ln ln-phase"></i>Alur Waktu</li>
+  </ul>
+
+  <div class="stage" id="stage">
+    <div class="canvas" id="canvas">
+
+      <!-- SVG Layer untuk Garis Penghubung & Arrow Markers -->
+      <svg class="edges" id="edges" aria-hidden="true" focusable="false">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="10" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+            <path d="M0 0 L10 4 L0 8 Z" fill="#000000"/>
+          </marker>
+          <marker id="arr-main" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="10" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+            <path d="M0 0 L10 4 L0 8 Z" fill="#000000"/>
+          </marker>
+          <marker id="arr-p1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="10" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+            <path d="M0 0 L10 4 L0 8 Z" fill="#1d4ed8"/>
+          </marker>
+          <marker id="arr-p2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="10" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+            <path d="M0 0 L10 4 L0 8 Z" fill="#ea580c"/>
+          </marker>
+          <marker id="arr-p3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="10" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+            <path d="M0 0 L10 4 L0 8 Z" fill="#16a34a"/>
+          </marker>
+          <marker id="arr-p4" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="10" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+            <path d="M0 0 L10 4 L0 8 Z" fill="#7c3aed"/>
+          </marker>
+          <marker id="arr-phase" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="10" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+            <path d="M0 0 L10 4 L0 8 Z" fill="#d97706"/>
+          </marker>
+          <marker id="arr-okr" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="10" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+            <path d="M0 0 L10 4 L0 8 Z" fill="#059669"/>
+          </marker>
+          <marker id="arr-fin" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="10" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+            <path d="M0 0 L10 4 L0 8 Z" fill="#475569"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="edge-labels" id="edge-labels" aria-hidden="true"></div>
+
+      <!-- ============ BARIS 1: JUDUL UTAMA ============ -->
+      <div class="r-center">
+        <button type="button" class="node n-root" data-id="title">
+          Roadmap Kepatuhan Keamanan API SNAP BCA
+        </button>
+      </div>
+
+      <!-- ============ BARIS 2: HUB ARSITEKTUR KEPATUHAN ============ -->
+      <div class="r-center">
+        <button type="button" class="node n-hub" data-id="hub">
+          22 Syarat Wajib Keamanan Sistem Integrasi API Produksi BCA &amp; Standar SNAP BI
+        </button>
+      </div>
+
+      <!-- ============ BARIS 3: 4 PILAR UTAMA KEPATUHAN (SIDE-BY-SIDE) ============ -->
+      <div class="r-pillars">
+
+        <!-- PILAR 1: ATURAN ORANG & AKSES (5 Klausul) -->
+        <section class="group g-p1" data-id="pilar1">
+          <button type="button" class="group-title">Pilar 1: Aturan Orang &amp; Akses (5 Klausul)</button>
+          <div class="list">
+            <button type="button" class="node n-leaf n-p1" data-id="pt23">
+              Point 23 — User &amp; Access Management (12 Chars, Lockout 5x, Session 15m)
+            </button>
+            <button type="button" class="node n-leaf n-p1" data-id="pt24">
+              Point 24 — Access Review &amp; Revocation (Review 3 Bulan, Cabut 24 Jam)
+            </button>
+            <button type="button" class="node n-leaf n-p1" data-id="pt25">
+              Point 25 — Segregation of Duties (SoD: Maker, Checker, Approver)
+            </button>
+            <button type="button" class="node n-leaf n-p1" data-id="pt26">
+              Point 26 — Multi-Factor Authentication (MFA / TOTP VPN &amp; Transfer)
+            </button>
+            <button type="button" class="node n-leaf n-p1" data-id="pt27">
+              Point 27 — Privileged Access Management (PAM &amp; Rekam Sesi Terminal)
+            </button>
+          </div>
+        </section>
+
+        <!-- PILAR 2: BENTENG KODINGAN & KUNCI (5 Klausul) -->
+        <section class="group g-p2" data-id="pilar2">
+          <button type="button" class="group-title">Pilar 2: Benteng Kodingan &amp; Kunci (5 Klausul)</button>
+          <div class="list">
+            <button type="button" class="node n-leaf n-p2" data-id="pt14">
+              Point 14 — Application Security (Rate Limit 100/min &amp; Sanitasi Input)
+            </button>
+            <button type="button" class="node n-leaf n-p2" data-id="pt17">
+              Point 17 — Source Code Security (Main Protection, PR Review &amp; SAST)
+            </button>
+            <button type="button" class="node n-leaf n-p2" data-id="is5a">
+              Kontrol IS 5A — Secret Management (.env Chmod 600, Zero Hardcoding)
+            </button>
+            <button type="button" class="node n-leaf n-p2" data-id="pt28">
+              Point 28 — Cryptographic Key Management (RSA 2048 SNAP Signature)
+            </button>
+            <button type="button" class="node n-leaf n-p2" data-id="pt20">
+              Point 20 — Fraud Detection System (Velocity Check &amp; Auto-Hold)
+            </button>
+          </div>
+        </section>
+
+        <!-- PILAR 3: KETAHANAN SERVER & BENCANA (8 Klausul dalam 2 Subgrup) -->
+        <section class="group g-p3" data-id="pilar3">
+          <button type="button" class="group-title">Pilar 3: Ketahanan Server &amp; Bencana (8 Klausul)</button>
+          <div class="grid-2">
+            <!-- Subgrup 3A: Proteksi Sistem & Jaringan -->
+            <div class="list">
+              <button type="button" class="node n-leaf n-p3" data-id="pt4">
+                Point 4 — Hardening Linux &amp; Patch Bulanan
+              </button>
+              <button type="button" class="node n-leaf n-p3" data-id="is3">
+                Kontrol IS 3 — Antivirus Server ClamAV Aktif
+              </button>
+              <button type="button" class="node n-leaf n-p3" data-id="pt18">
+                Point 18 — Firewall Deny All, WAF &amp; Fail2ban
+              </button>
+              <button type="button" class="node n-leaf n-p3" data-id="pt19">
+                Point 19 — Segmentasi 4 Zona (DMZ, App, DB, Dev)
+              </button>
+            </div>
+            <!-- Subgrup 3B: Audit Trail & Bencana -->
+            <div class="list">
+              <button type="button" class="node n-leaf n-p3" data-id="pt21">
+                Point 21 — NTP Sync &amp; Audit Log Append-Only
+              </button>
+              <button type="button" class="node n-leaf n-p3" data-id="pt22">
+                Point 22 — Monitoring Attack Surface &amp; SSL Expiry
+              </button>
+              <button type="button" class="node n-leaf n-p3" data-id="pt5">
+                Point 5 — BCP / DRP Multi-Zone (DRC RTO &lt; 1 Jam)
+              </button>
+              <button type="button" class="node n-leaf n-p3" data-id="pt11">
+                Point 11 — Backup Offsite &amp; Retensi WORM 10 Tahun
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- PILAR 4: BUKTI LEMBAGA LUAR & SERTIFIKASI (4 Klausul) -->
+        <section class="group g-p4" data-id="pilar4">
+          <button type="button" class="group-title">Pilar 4: Bukti Lembaga Luar &amp; Sertifikasi (4 Klausul)</button>
+          <div class="list">
+            <button type="button" class="node n-leaf n-p4" data-id="pt15">
+              Point 15 — TLS / SSL Komersial (DigiCert/Sectigo, TLS 1.3 &amp; HSTS)
+            </button>
+            <button type="button" class="node n-leaf n-p4" data-id="pt6">
+              Point 6 — Vulnerability Assessment (VA Semesteran &amp; SLA 3 Hari)
+            </button>
+            <button type="button" class="node n-leaf n-p4" data-id="pt16">
+              Point 16 — Pentest Berlisensi CREST/OSCP (0 Temuan Kritis/Tinggi)
+            </button>
+            <button type="button" class="node n-leaf n-p4" data-id="pt3">
+              Point 3 — IT Audit Independen SNAP BI (Auditor CISA, Opini WTP)
+            </button>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- ============ BARIS 4: PETA JALAN EKSEKUSI 3 BULAN ============ -->
+      <div class="r-timeline">
+        <section class="group g-phase" data-id="b1">
+          <button type="button" class="group-title">Bulan 1: Fondasi Akses &amp; Infra</button>
+          <p style="margin: 0; font-size: 13px; color: #451a03; line-height: 1.5;">
+            Pengesahan SOP Keamanan, Password 12 Chars, MFA VPN, PAM, Hardening Linux, NTP id.pool.ntp.org, dan Desain DRC.
+          </p>
+        </section>
+
+        <section class="group g-phase" data-id="b2">
+          <button type="button" class="group-title">Bulan 2: Koding, Kripto &amp; DRC</button>
+          <p style="margin: 0; font-size: 13px; color: #451a03; line-height: 1.5;">
+            Implementasi FDS, Rate Limiter 100 req/min, Kunci RSA 2048, ClamAV host, WAF Cloudflare, Segmentasi 4 Zona, DRC Replikasi, dan S3 WORM 10 Tahun.
+          </p>
+        </section>
+
+        <section class="group g-phase" data-id="b3">
+          <button type="button" class="group-title">Bulan 3: Audit Eksternal &amp; Go-Live</button>
+          <p style="margin: 0; font-size: 13px; color: #451a03; line-height: 1.5;">
+            Pemasangan TLS Komersial DigiCert, Pentest CREST/OSCP bebas temuan kritis, Uji Simulasi DR Drill tahunan, dan Audit IT CISA beropini WTP.
+          </p>
+        </section>
+      </div>
+
+      <!-- ============ BARIS 5: ALIRAN FINANSIAL, OKR GO-LIVE, & MITIGASI RISIKO ============ -->
+      <div class="r-bottom">
+
+        <!-- ALIRAN FINANSIAL (CAPEX & OPEX) -->
+        <section class="group g-fin" data-id="finansial">
+          <button type="button" class="group-title">Aliran Finansial &amp; Anggaran Kepatuhan</button>
+          <div class="list">
+            <button type="button" class="node n-leaf n-fin" data-id="capex">
+              Capex (Investasi Awal): Pentest CREST, Audit CISA &amp; Setup DRC
+            </button>
+            <button type="button" class="node n-leaf n-fin" data-id="opex">
+              Opex (Biaya Rutin): Sewa Cloud DRC, WAF, TLS Tahunan &amp; S3 WORM
+            </button>
+          </div>
+        </section>
+
+        <!-- TARGET OKR & GERBANG GO-LIVE -->
+        <section class="group g-okr" data-id="target-golive">
+          <button type="button" class="group-title">Target OKR &amp; Gerbang Kelulusan Produksi BCA</button>
+          <div class="list">
+            <button type="button" class="node n-leaf n-okr" data-id="okr1">
+              KR 1 — 100% Bukti Fisik: 22 Klausul Keamanan Disahkan BCA
+            </button>
+            <button type="button" class="node n-leaf n-okr" data-id="okr2">
+              KR 2 — RTO Failover DRC Teruji &lt; 45 Menit (Standar BCA 1 Jam)
+            </button>
+            <button type="button" class="node n-leaf n-okr" data-id="okr3">
+              KR 3 — Nol Kebocoran Transaksi Finansial &amp; Fraud Tercegah
+            </button>
+            <button type="button" class="node n-leaf n-golive" data-id="golive">
+              GERBANG KELULUSAN: Go-Live BCA Produksi &amp; Opini WTP
+            </button>
+          </div>
+        </section>
+
+        <!-- MATRIKS MITIGASI RISIKO KRISIS -->
+        <section class="group g-risk" data-id="matriks-risiko">
+          <button type="button" class="group-title">Mitigasi Risiko Krisis Audit BCA</button>
+          <div class="list">
+            <button type="button" class="node n-leaf n-risk" data-id="risk-user">
+              Mitigasi 1 — Penolakan Audit Akun Root / Shared Credentials
+            </button>
+            <button type="button" class="node n-leaf n-risk" data-id="risk-vuln">
+              Mitigasi 2 — Temuan Kritis Pentest Tidak Selesai dalam 3 Hari
+            </button>
+            <button type="button" class="node n-leaf n-risk" data-id="risk-drc">
+              Mitigasi 3 — Gagal Simulasi Failover Disaster Recovery DRC
+            </button>
+            <button type="button" class="node n-leaf n-risk" data-id="risk-fds">
+              Mitigasi 4 — Pembobolan Saldo / Transaksi Palsu Lolos
+            </button>
+            <button type="button" class="node n-leaf n-risk" data-id="risk-audit">
+              Mitigasi 5 — Auditor CISA Menerbitkan Opini WDP (Tidak Lulus)
+            </button>
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- ============ SIDEBAR DRAWER DETAIL KLAUSUL ============ -->
+<aside class="panel" id="panel" aria-label="Detail klausul keamanan" aria-hidden="true" inert>
+  <div class="panel-bar">
+    <div class="seg" role="group" aria-label="Status kepatuhan klausul">
+      <button type="button" data-set="done">Terpenuhi</button>
+      <button type="button" data-set="learning">Sedang Dikerjakan</button>
+      <button type="button" data-set="skip">Dikecualikan</button>
+    </div>
+    <button type="button" class="icon-btn" id="panel-close" aria-label="Tutup panel">×</button>
+  </div>
+
+  <div class="panel-scroll">
+    <p class="crumb" id="panel-crumb"></p>
+    <h2 id="panel-title"></h2>
+    <p class="tag-row"><span class="tag" id="panel-kind"></span></p>
+    <div id="panel-body"></div>
+    <section class="related" id="panel-related" hidden>
+      <h3>Keterkaitan Alur &amp; Dependensi</h3>
+      <ul id="panel-related-list"></ul>
+    </section>
+  </div>
+</aside>
+
+<!-- Skrip Modular Eksternal -->
+<script src="content.js"></script>
+<script src="edges.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

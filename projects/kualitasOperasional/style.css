@@ -1,0 +1,907 @@
+/* =========================================================
+   Tema Neobrutalist Kualitas Operasional (Slide 8-15)
+   Konsisten dengan arsitektur visual E:\WORKSPACE\PROJECT\WEB-APPS\NAREKA\projects\roadmapLMS
+   ========================================================= */
+
+:root {
+  --ink: #000000;
+  --bg-app: #f8fafc;
+  --surface: #ffffff;
+  --yellow: #ffe599;
+  --yellow-strong: #ffd966;
+  --blue: #2b78e4;
+  --blue-ink: #1d4ed8;
+  --line: #e2e8f0;
+  --muted: #64748b;
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Balsamiq Sans", "Comic Neue", "Trebuchet MS", system-ui, sans-serif;
+
+  /* Semantik Warna roadmapLMS */
+  --c-doc-bg: #93c5fd;
+  --c-doc-border: #1d4ed8;
+  --c-doc-ink: #0f172a;
+
+  --c-mat-bg: #fcd34d;
+  --c-mat-border: #b45309;
+  --c-mat-ink: #451a03;
+
+  --c-eva-bg: #86efac;
+  --c-eva-border: #15803d;
+  --c-eva-ink: #052e16;
+
+  --c-pro-bg: #d8b4fe;
+  --c-pro-border: #6d28d9;
+  --c-pro-ink: #1e1b4b;
+
+  --c-asset-bg: #5eead4;
+  --c-asset-border: #0f766e;
+  --c-asset-ink: #042f2e;
+
+  --c-need-bg: #cbd5e1;
+  --c-need-border: #334155;
+  --c-need-ink: #0f172a;
+
+  --shadow-sm: 2px 2px 0 var(--ink);
+  --shadow-md: 4px 4px 0 var(--ink);
+  --shadow-lg: 6px 6px 0 var(--ink);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-app);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* =========================================================
+   Top Bar & Navigasi Presentasi
+   ========================================================= */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  border-bottom: 2px solid var(--ink);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-mark {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  background: var(--yellow);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.brand-text h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.brand-text p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.nav-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.slide-stepper {
+  display: flex;
+  align-items: center;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.btn-step {
+  padding: 6px 14px;
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  font-size: 13px;
+  transition: background-color 0.15s;
+}
+
+.btn-step:hover:not(:disabled) {
+  background: var(--yellow);
+}
+
+.btn-step:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.step-indicator {
+  padding: 6px 12px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  border-left: 2px solid var(--ink);
+  border-right: 2px solid var(--ink);
+  background: var(--surface);
+  white-space: nowrap;
+}
+
+.btn-pill {
+  padding: 6px 12px;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  font-size: 13px;
+  font-weight: 600;
+  transition: transform 0.1s, box-shadow 0.1s, background-color 0.15s;
+}
+
+.btn-pill:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+  background: var(--c-doc-bg);
+}
+
+.btn-pill:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+/* =========================================================
+   Quick Jump Slide Selector
+   ========================================================= */
+
+.quick-bar {
+  background: #ffffff;
+  border-bottom: 2px solid var(--ink);
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.jump-btn {
+  flex: none;
+  padding: 5px 12px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: var(--surface);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  transition: all 0.12s;
+  box-shadow: var(--shadow-sm);
+}
+
+.jump-btn:hover {
+  background: var(--yellow);
+}
+
+.jump-btn.active {
+  background: var(--ink);
+  color: #ffffff;
+}
+
+/* =========================================================
+   Layout Utama & Kontainer Slide
+   ========================================================= */
+
+.app-container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 24px 20px 80px;
+}
+
+.slide-deck {
+  position: relative;
+}
+
+.slide-card {
+  display: none;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.slide-card.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================================
+   Komponen Kartu Header Slide
+   ========================================================= */
+
+.slide-hero {
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.slide-badge-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border: 1.5px solid var(--ink);
+  border-radius: 6px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 1.5px 1.5px 0 var(--ink);
+}
+
+.tag-doc   { background: var(--c-doc-bg); border-color: var(--c-doc-border); color: var(--c-doc-ink); }
+.tag-mat   { background: var(--c-mat-bg); border-color: var(--c-mat-border); color: var(--c-mat-ink); }
+.tag-eva   { background: var(--c-eva-bg); border-color: var(--c-eva-border); color: var(--c-eva-ink); }
+.tag-pro   { background: var(--c-pro-bg); border-color: var(--c-pro-border); color: var(--c-pro-ink); }
+.tag-need  { background: var(--c-need-bg); border-color: var(--c-need-border); color: var(--c-need-ink); }
+.tag-asset { background: var(--c-asset-bg); border-color: var(--c-asset-border); color: var(--c-asset-ink); }
+
+.slide-title {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.punchline-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--yellow);
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.punchline-box .icon-box {
+  flex: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  background: #ffffff;
+  border: 1.5px solid var(--ink);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 11px;
+}
+
+/* =========================================================
+   Grid Komponen ADHD (Bite-Sized Chunks)
+   ========================================================= */
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.chunk-card {
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  padding: 16px 18px;
+  transition: transform 0.12s, box-shadow 0.12s;
+  display: flex;
+  flex-direction: column;
+}
+
+.chunk-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-md);
+}
+
+.chunk-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1.5px dashed var(--line);
+}
+
+.chunk-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.chunk-num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 12px;
+  background: #000;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+
+.chunk-body {
+  flex: 1;
+}
+
+.micro-points {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.micro-points li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 13.5px;
+  color: #1e293b;
+  line-height: 1.4;
+}
+
+.micro-points li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 7px;
+  width: 6px;
+  height: 6px;
+  background: var(--ink);
+  border-radius: 50%;
+}
+
+.consequence-box {
+  margin-top: auto;
+  padding: 8px 10px;
+  border: 1.5px solid var(--ink);
+  border-radius: 6px;
+  background: #fee2e2;
+  font-size: 12px;
+  font-weight: 600;
+  color: #991b1b;
+}
+
+/* =========================================================
+   Analogi & Visual Box (ADHD Mental Anchors)
+   ========================================================= */
+
+.analogy-banner {
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: var(--c-mat-bg);
+  box-shadow: var(--shadow-sm);
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.analogy-label {
+  flex: none;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: #000;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.analogy-text {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #451a03;
+}
+
+/* =========================================================
+   Visual Math Cards (Rumus + Penjelasan ADHD)
+   ========================================================= */
+
+.formula-card {
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: var(--shadow-md);
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+
+.formula-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.formula-head h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.math-display-box {
+  background: #f1f5f9;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  overflow-x: auto;
+  box-shadow: inset 2px 2px 0 rgba(0,0,0,0.06);
+}
+
+.variable-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.var-pill {
+  border: 1.5px solid var(--ink);
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: #ffffff;
+  font-size: 12.5px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.var-symbol {
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+  font-size: 14px;
+  background: var(--c-doc-bg);
+  padding: 2px 6px;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  flex: none;
+}
+
+.adhd-intuition {
+  background: var(--c-eva-bg);
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--c-eva-ink);
+}
+
+/* =========================================================
+   Interactive Simulator: Cp & Cpk
+   ========================================================= */
+
+.sim-box {
+  background: #ffffff;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-top: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.sim-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.slider-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+input[type="range"] {
+  accent-color: var(--blue-ink);
+  height: 6px;
+  cursor: pointer;
+}
+
+.sim-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+  text-align: center;
+}
+
+.metric-badge {
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  box-shadow: var(--shadow-sm);
+}
+
+.metric-badge.highlight {
+  background: var(--yellow);
+}
+
+.metric-val {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-top: 4px;
+}
+
+.metric-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.status-pill {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 3px 8px;
+  border: 1.5px solid var(--ink);
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.status-good { background: #86efac; color: #052e16; }
+.status-warn { background: #fde047; color: #713f12; }
+.status-bad  { background: #fca5a5; color: #7f1d1d; }
+
+/* =========================================================
+   Interactive Tool: 7 QC Tools Tabs
+   ========================================================= */
+
+.tools-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.tool-tab-btn {
+  padding: 8px 14px;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  background: #ffffff;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.12s;
+}
+
+.tool-tab-btn:hover {
+  background: var(--yellow);
+}
+
+.tool-tab-btn.active {
+  background: var(--ink);
+  color: #ffffff;
+  box-shadow: none;
+  transform: translate(2px, 2px);
+}
+
+.tool-detail-card {
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: var(--shadow-md);
+  padding: 20px 24px;
+}
+
+/* =========================================================
+   PAF Cost Calculator (Interactive)
+   ========================================================= */
+
+.paf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.paf-card {
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+.paf-card.prev { background: #dcfce7; border-color: #15803d; }
+.paf-card.appr { background: #e0f2fe; border-color: #0369a1; }
+.paf-card.fail-int { background: #fef3c7; border-color: #b45309; }
+.paf-card.fail-ext { background: #fee2e2; border-color: #b91c1c; }
+
+.paf-header {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.paf-cost {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* =========================================================
+   Footer / Help
+   ========================================================= */
+
+.app-footer {
+  margin-top: 40px;
+  padding: 20px 0;
+  border-top: 2px solid var(--ink);
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.shortcut-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  background: #ffffff;
+  font-family: monospace;
+  font-size: 11px;
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+/* =========================================================
+   Visual Canvas Simulations & Live Radar (Slide 11, 13, 14)
+   ========================================================= */
+
+.canvas-container {
+  position: relative;
+  width: 100%;
+  margin: 16px 0;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.sim-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #ffffff;
+}
+
+.preset-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 16px;
+}
+
+.btn-preset {
+  padding: 6px 12px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: #f1f5f9;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 1.5px 1.5px 0 var(--ink);
+  transition: all 0.12s;
+}
+
+.btn-preset:hover {
+  background: var(--yellow);
+  transform: translate(-1px, -1px);
+}
+
+.btn-preset.active {
+  background: var(--ink);
+  color: #ffffff;
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+
+/* --- Andon Beacon (Slide 13) --- */
+
+.andon-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: #0f172a;
+  color: #ffffff;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  padding: 12px 18px;
+  margin-bottom: 14px;
+}
+
+.andon-lights {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.andon-bulb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #000;
+  opacity: 0.25;
+  transition: opacity 0.2s, box-shadow 0.2s;
+}
+
+.andon-bulb.green  { background: #22c55e; }
+.andon-bulb.yellow { background: #eab308; }
+.andon-bulb.red    { background: #ef4444; }
+
+.andon-bulb.active {
+  opacity: 1;
+}
+
+.andon-bulb.green.active  { box-shadow: 0 0 12px #22c55e; }
+.andon-bulb.yellow.active { box-shadow: 0 0 12px #eab308; }
+.andon-bulb.red.active    { box-shadow: 0 0 16px #ef4444; }
+
+.andon-status-text {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.stream-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.btn-stream {
+  padding: 7px 14px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: var(--surface);
+  font-family: var(--font-display);
+  font-size: 12.5px;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.12s;
+}
+
+.btn-stream:hover {
+  background: var(--yellow);
+}
+
+.btn-stream.active {
+  background: var(--ink);
+  color: #ffffff;
+}
+
+.btn-stream.danger {
+  background: #fee2e2;
+  border-color: #b91c1c;
+  color: #991b1b;
+}
+
+.btn-stream.danger:hover {
+  background: #fca5a5;
+}
+
+.conveyor-track {
+  height: 8px;
+  background: repeating-linear-gradient(
+    45deg,
+    #cbd5e1,
+    #cbd5e1 10px,
+    #94a3b8 10px,
+    #94a3b8 20px
+  );
+  border-radius: 4px;
+  border: 1px solid var(--ink);
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .topbar { padding: 10px 14px; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .slide-hero { padding: 16px; }
+  .slide-title { font-size: 22px; }
+}

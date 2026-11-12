@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulasi Sederhana Slide 13 & 14 - Kualitas Operasional (Bahasa ADHD & Kasus Nyata)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@700&family=Fira+Code:wght@600;700&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #000000;
+      --bg-app: #f8fafc;
+      --surface: #ffffff;
+      --yellow: #ffd966;
+      --yellow-light: #fff2cc;
+      --green: #86efac;
+      --green-dark: #15803d;
+      --red: #fca5a5;
+      --red-dark: #b91c1c;
+      --blue: #93c5fd;
+      --blue-dark: #1d4ed8;
+      --purple: #d8b4fe;
+      --slate: #f1f5f9;
+      --muted: #475569;
+      --shadow-sm: 2px 2px 0 var(--ink);
+      --shadow-md: 4px 4px 0 var(--ink);
+      --shadow-lg: 6px 6px 0 var(--ink);
+      --font-ui: "Inter", system-ui, sans-serif;
+      --font-display: "Balsamiq Sans", sans-serif;
+      --font-mono: "Fira Code", monospace;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg-app);
+      color: var(--ink);
+      font-family: var(--font-ui);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1420px;
+      margin: 0 auto;
+      padding: 24px 28px 100px;
+    }
+
+    /* Header Nav */
+    .header-bar {
+      border: 3px solid var(--ink);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: var(--shadow-md);
+      padding: 20px 28px;
+      margin-bottom: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand-title {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .brand-subtitle {
+      margin: 4px 0 0;
+      font-size: 15px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .tab-nav {
+      display: flex;
+      gap: 12px;
+    }
+
+    .tab-btn {
+      padding: 12px 24px;
+      border: 2.5px solid var(--ink);
+      border-radius: 10px;
+      background: var(--surface);
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.12s;
+    }
+
+    .tab-btn:hover {
+      background: var(--yellow-light);
+      transform: translate(-1px, -1px);
+    }
+
+    .tab-btn.active {
+      background: var(--ink);
+      color: #ffffff;
+      box-shadow: none;
+      transform: translate(2px, 2px);
+    }
+
+    /* Section Panels */
+    .sim-section {
+      display: none;
+      animation: fadeIn 0.15s ease-out;
+    }
+
+    .sim-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Kotak Kasus Nyata di Atas (Gaya Bahasa ADHD Visual) */
+    .case-banner {
+      border: 3px solid var(--ink);
+      border-radius: 14px;
+      background: #fef08a;
+      box-shadow: var(--shadow-md);
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .case-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .case-tag {
+      background: #000000;
+      color: #ffffff;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .case-title {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 700;
+      margin: 0;
+      color: #422006;
+    }
+
+    .adhd-anchors {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .anchor-card {
+      border: 2px solid var(--ink);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 12px 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .anchor-title {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      margin: 0 0 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .anchor-desc {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.45;
+      color: #1e293b;
+    }
+
+    /* Grid Kerja Utama: 2 Kolom */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 460px 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 1080px) {
+      .workspace-grid { grid-template-columns: 1fr; }
+    }
+
+    .panel-card {
+      border: 3px solid var(--ink);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: var(--shadow-md);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-title {
+      margin: 0 0 18px;
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2.5px dashed var(--ink);
+      padding-bottom: 10px;
+    }
+
+    /* Form Input Sederhana & Besar */
+    .form-item {
+      background: #f8fafc;
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-question {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 4px;
+      line-height: 1.35;
+    }
+
+    .form-hint {
+      font-size: 13.5px;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 10px;
+      line-height: 1.45;
+    }
+
+    .form-hint span.tech-alias {
+      background: #e2e8f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 10px 14px;
+      border: 2px solid var(--ink);
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 700;
+      background: #ffffff;
+      box-shadow: inset 1px 1px 0 rgba(0,0,0,0.08);
+      transition: border-color 0.1s;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--blue-dark);
+    }
+
+    textarea.input-field {
+      resize: vertical;
+      min-height: 80px;
+      line-height: 1.45;
+      font-size: 15px;
+    }
+
+    .preset-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .btn-chip {
+      padding: 6px 12px;
+      border: 2px solid var(--ink);
+      border-radius: 6px;
+      background: #ffffff;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 1.5px 1.5px 0 var(--ink);
+      transition: all 0.1s;
+    }
+
+    .btn-chip:hover {
+      background: var(--yellow);
+    }
+
+    /* Status Andon Display */
+    .andon-status-bar {
+      border: 2.5px solid var(--ink);
+      border-radius: 10px;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .andon-bulbs {
+      display: flex;
+      gap: 10px;
+    }
+
+    .bulb {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2.5px solid #000;
+      opacity: 0.25;
+      transition: all 0.15s;
+    }
+
+    .bulb.g { background: #22c55e; }
+    .bulb.y { background: #eab308; }
+    .bulb.r { background: #ef4444; }
+
+    .bulb.active.g { opacity: 1; box-shadow: 0 0 14px #22c55e; }
+    .bulb.active.y { opacity: 1; box-shadow: 0 0 14px #eab308; }
+    .bulb.active.r { opacity: 1; box-shadow: 0 0 18px #ef4444; }
+
+    .andon-verdict {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    /* Kartu Ringkasan Metrik (Teks & Angka Besar) */
+    .metrics-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .mini-metric {
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      background: var(--slate);
+      padding: 12px 14px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .mini-metric.hi-green { background: #dcfce7; }
+    .mini-metric.hi-yellow { background: var(--yellow-light); }
+    .mini-metric.hi-red { background: #fee2e2; }
+
+    .mini-metric-lbl {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--muted);
+      line-height: 1.25;
+    }
+
+    .mini-metric-val {
+      font-family: var(--font-mono);
+      font-size: 28px;
+      font-weight: 700;
+      margin-top: 4px;
+      line-height: 1.1;
+    }
+
+    .mini-metric-sub {
+      font-size: 12px;
+      font-weight: 700;
+      color: #475569;
+      margin-top: 4px;
+    }
+
+    /* Kanvas Wadah */
+    .canvas-wrap {
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      background: #ffffff;
+      padding: 12px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    canvas.sim-canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #ffffff;
+    }
+
+    /* Kotak Kesimpulan Awam */
+    .verdict-box {
+      border: 2.5px solid var(--ink);
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.55;
+      margin-bottom: 16px;
+    }
+
+    .verdict-box.good { background: #dcfce7; color: #14532d; border-color: #15803d; }
+    .verdict-box.warn { background: #fef3c7; color: #78350f; border-color: #b45309; }
+    .verdict-box.danger { background: #fee2e2; color: #7f1d1d; border-color: #b91c1c; }
+
+    /* =========================================================
+       BAGIAN 4: BACKEND PERHITUNGAN TRANSPARAN
+       ========================================================= */
+    .backend-card {
+      border: 3px solid var(--ink);
+      border-radius: 14px;
+      background: #ffffff;
+      box-shadow: var(--shadow-md);
+      padding: 24px 28px;
+      margin-top: 10px;
+    }
+
+    .backend-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+      border-bottom: 2.5px solid var(--ink);
+      padding-bottom: 12px;
+    }
+
+    .backend-title {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .step-item {
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      background: #f8fafc;
+      padding: 16px 20px;
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+
+    .step-badge {
+      display: inline-block;
+      background: var(--ink);
+      color: #ffffff;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 99px;
+      margin-bottom: 8px;
+    }
+
+    .step-desc {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 0 0 8px;
+      color: #1e293b;
+      line-height: 1.45;
+    }
+
+    .step-formula-box {
+      background: #ffffff;
+      border: 1.5px solid var(--ink);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: var(--font-mono);
+      font-size: 16px;
+      color: #0f172a;
+      overflow-x: auto;
+      white-space: nowrap;
+      line-height: 1.5;
+    }
+
+    .step-formula-box .highlight {
+      background: var(--yellow);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .app-footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Header & Tab Pilihan (Hanya Slide 13 & 14) -->
+    <header class="header-bar">
+      <div>
+        <h1 class="brand-title">Simulator Operasional Sederhana (Slide 13 & 14)</h1>
+        <p class="brand-subtitle">Simulasi Interaktif untuk Presentasi: Formulir Nyata &bull; Hitung Otomatis &bull; Hasil Jelas &bull; Logika Backend Terbuka</p>
+      </div>
+      <div class="tab-nav">
+        <button type="button" class="tab-btn active" id="tab-btn-13" data-target="sec-13">Slide 13: Radar Cup Kopi (SPC)</button>
+        <button type="button" class="tab-btn" id="tab-btn-14" data-target="sec-14">Slide 14: Colokan Charger HP (Cp & Cpk)</button>
+      </div>
+    </header>
+
+    <!-- =========================================================
+         SLIDE 13: PETA KENDALI SPC (KASUS CUP KOPI VIRAL)
+         ========================================================= -->
+    <section class="sim-section active" id="sec-13">
+
+      <!-- Kotak Kasus Nyata di Atas -->
+      <div class="case-banner">
+        <div class="case-header">
+          <span class="case-tag">Kasus Super Nyata</span>
+          <h2 class="case-title">Mesin Dispenser Es Kopi Susu Cup (Janji Isi: 250 ml)</h2>
+        </div>
+        <p class="case-story" style="margin-bottom:6px;">
+          Bayangkan kamu buka gerai kopi susu viral di mall. Kamu janji ke semua pembeli: <strong>"Setiap cup isinya pas 250 ml!"</strong><br>
+          Kenyataannya, dispenser kopi otomatis kamu itu mesin biasa. Tidak ada mesin di dunia ini yang bisa menuang persis 250.00 ml setiap detik tanpa goyang.
+        </p>
+
+        <!-- 3 Kartu Jangkar Pikiran ADHD -->
+        <div class="adhd-anchors">
+          <div class="anchor-card">
+            <h4 class="anchor-title">1. Goyang Alami (Wajar)</h4>
+            <p class="anchor-desc">Kadang mesin muncrat 249 ml, kadang 251 ml. Selisih 1-2 ml itu <strong>sangat normal</strong>. Otak jangan panik, jangan gatal mengutak-atik mesin!</p>
+          </div>
+          <div class="anchor-card">
+            <h4 class="anchor-title">2. Tumpah Bencana (Outlier)</h4>
+            <p class="anchor-desc">Tiba-tiba ada cup isinya <strong>258 ml</strong> (kopi luber kena tangan pembeli, sealer plastik bocor) atau cuma <strong>240 ml</strong> (cup kopong, pembeli ngamuk dituduh pelit!).</p>
+          </div>
+          <div class="anchor-card">
+            <h4 class="anchor-title">3. Tombol Stop Lini (Jidoka)</h4>
+            <p class="anchor-desc">Lampu Andon adalah alarm darurat: kapan barista boleh santai nge-brew (Hijau), kapan kran mulai aus (Kuning), dan kapan harus <strong>TERIAK STOP MESIN</strong> (Merah)!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="workspace-grid">
+
+        <!-- KOLOM 1: INPUT NILAI SEPERTI FORMULIR BIASA -->
+        <div class="panel-card">
+          <h3 class="panel-title">
+            <span>1. Isi Formulir Pengawasan Mesin Kopi</span>
+            <span style="font-size:13px; color:var(--muted);">Ketik Angka Bebas</span>
+          </h3>
+
+          <div class="form-item">
+            <div class="form-question">Berapa ml Isi Bersih yang Kamu Janjikan ke Pembeli?</div>
+            <div class="form-hint">Ukuran pas yang tertera di menu atau label cup kopi. <span class="tech-alias">Istilah Teknis: Target / CL (Central Line)</span></div>
+            <input type="number" id="spc-in-cl" class="input-field" value="250" step="1">
+          </div>
+
+          <div class="form-item">
+            <div class="form-question">Berapa Goyangan Wajar Mesin Kamu Sehari-hari?</div>
+            <div class="form-hint">Saat mesin sehat tanpa masalah, biasanya semprotan kopi meleset berapa ml dari target? <span class="tech-alias">Istilah Teknis: Standar Deviasi (&sigma;)</span></div>
+            <input type="number" id="spc-in-sigma" class="input-field" value="2.0" step="0.1" min="0.1">
+          </div>
+
+          <div class="form-item">
+            <div class="form-question">Tingkat Toleransi Alarm (Berapa Kali Goyangan)?</div>
+            <div class="form-hint">Berapa kali lipat goyangan yang masih dimaafkan sebelum membunyikan sirine? Standar pabrik dunia adalah 3 kali lipat. <span class="tech-alias">Istilah Teknis: Faktor Pengali Shewhart (k)</span></div>
+            <input type="number" id="spc-in-k" class="input-field" value="3.0" step="0.5" min="1.0" max="6.0">
+          </div>
+
+          <div class="form-item">
+            <div class="form-question">Catatan Hasil Timbangan Cup yang Baru Jadi (ml)</div>
+            <div class="form-hint">Ketik beberapa angka timbangan cup kopi di meja barista (pisahkan koma/spasi):</div>
+            <textarea id="spc-in-points" class="input-field">249.2, 251.0, 250.4, 248.8, 251.8, 252.5, 253.1, 257.5, 250.2</textarea>
+
+            <div class="preset-row">
+              <span style="font-size:13px; font-weight:800;">Contoh Kejadian:</span>
+              <button type="button" class="btn-chip" id="spc-pre-stable">1. Seduhan Normal (Aman)</button>
+              <button type="button" class="btn-chip" id="spc-pre-wear">2. Kran Aus (Makin Penuh)</button>
+              <button type="button" class="btn-chip" id="spc-pre-shock">3. Selang Lepas (Bocor Parah!)</button>
+            </div>
+          </div>
+
+          <div class="form-item" style="margin-top:auto; background:var(--yellow-light);">
+            <div class="form-question">Uji Coba 1 Cup Baru yang Baru Keluar Kran:</div>
+            <div class="form-hint">Ketik isi ml cup kopi terbaru untuk mengecek apakah aman atau bikin gerai stop:</div>
+            <div style="display:flex; gap:8px;">
+              <input type="number" id="spc-in-add" class="input-field" placeholder="Contoh: 258" value="258" step="0.1">
+              <button type="button" class="btn-chip" id="btn-spc-add-pt" style="background:var(--yellow); white-space:nowrap; padding:0 16px; font-size:14px; font-weight:800;">+ Cek Cup Ini</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- KOLOM 2: HASIL OTOMATIS & VISUALISASI -->
+        <div class="panel-card">
+          <h3 class="panel-title">
+            <span>2 & 3. Hasil Pengawasan & Radar Meja Barista</span>
+            <span style="font-size:13px; color:var(--muted);">Otomatis Dihitung</span>
+          </h3>
+
+          <!-- Lampu Menara Andon -->
+          <div class="andon-status-bar">
+            <div class="andon-bulbs">
+              <span class="bulb g" id="andon-g"></span>
+              <span class="bulb y" id="andon-y"></span>
+              <span class="bulb r" id="andon-r"></span>
+            </div>
+            <div class="andon-verdict" id="andon-text">MEMUAT STATUS...</div>
+          </div>
+
+          <!-- Kartu Angka Batas -->
+          <div class="metrics-summary-grid">
+            <div class="mini-metric hi-red">
+              <div class="mini-metric-lbl">Batas Tumpah (UCL)</div>
+              <div class="mini-metric-val" id="disp-ucl">256.00</div>
+              <div class="mini-metric-sub">Paling Penuh Ditolerir</div>
+            </div>
+            <div class="mini-metric hi-green">
+              <div class="mini-metric-lbl">Janji Menu (Target)</div>
+              <div class="mini-metric-val" id="disp-cl">250.00</div>
+              <div class="mini-metric-sub">Ukuran Pas Label Cup</div>
+            </div>
+            <div class="mini-metric hi-red">
+              <div class="mini-metric-lbl">Batas Kopong (LCL)</div>
+              <div class="mini-metric-val" id="disp-lcl">244.00</div>
+              <div class="mini-metric-sub">Paling Sedikit Ditolerir</div>
+            </div>
+            <div class="mini-metric hi-yellow">
+              <div class="mini-metric-lbl">Total Cup Dicek</div>
+              <div class="mini-metric-val" id="disp-count">9</div>
+              <div class="mini-metric-sub">Sampel yang Diukur</div>
+            </div>
+          </div>
+
+          <!-- Kanvas Grafik Peta Kendali -->
+          <div class="canvas-wrap">
+            <canvas id="spc-chart-canvas" width="760" height="260" class="sim-canvas"></canvas>
+          </div>
+
+          <!-- Penjelasan Hasil Bahasa Awam -->
+          <div class="verdict-box" id="spc-verdict-box">
+            Memuat evaluasi cup kopi...
+          </div>
+        </div>
+
+      </div>
+
+      <!-- BAGIAN 4: BACKEND TRANSPARAN PERHITUNGAN SPC -->
+      <div class="backend-card">
+        <div class="backend-head">
+          <h3 class="backend-title">
+            <span style="background:#000; color:#fff; font-size:13px; padding:4px 10px; border-radius:4px;">BACKEND</span>
+            <span>Cara Komputer Menghitung Batas Cup Kopi (Langkah Demi Langkah)</span>
+          </h3>
+          <span style="font-size:14px; font-weight:700; color:var(--muted);">Buka Rumus & Logika</span>
+        </div>
+
+        <div class="step-list" id="spc-backend-steps">
+          <!-- Diisi otomatis oleh JavaScript -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- =========================================================
+         SLIDE 14: PROCESS CAPABILITY ANALYSIS (KASUS COLOKAN CHARGER HP)
+         ========================================================= -->
+    <section class="sim-section" id="sec-14">
+
+      <!-- Kotak Kasus Nyata di Atas -->
+      <div class="case-banner">
+        <div class="case-header">
+          <span class="case-tag">Kasus Super Nyata</span>
+          <h2 class="case-title">Pabrik Colokan Kabel Charger USB-C (Target Lebar: 8.30 mm)</h2>
+        </div>
+        <p class="case-story" style="margin-bottom:6px;">
+          Semua orang pasti pernah beli <strong>kabel charger HP murah</strong> yang bermasalah. Ada yang seret banget gak muat dicolok ke HP, ada yang oblak gampang lepas, dan ada yang kepalanya miring sampai merusak konektor dalam HP!<br>
+          Pabrik smartphone memberi batas ukuran lubang: paling tebal <strong>8.45 mm</strong> (kalau lebih tebal, macet total!) dan paling tipis <strong>8.15 mm</strong> (kalau kurang dari ini, kabel copot sendiri dan baterai gak ngecas).
+        </p>
+
+        <!-- 3 Kartu Jangkar Pikiran ADHD -->
+        <div class="adhd-anchors">
+          <div class="anchor-card">
+            <h4 class="anchor-title">1. Nilai Cp (Uji Bodi Colokan)</h4>
+            <p class="anchor-desc">Apakah mesin cetak pabrik kamu cukup ramping untuk muat di lubang HP? <em>(Analogi: Apakah bodi mobil kamu muat masuk ke pintu garasi?)</em></p>
+          </div>
+          <div class="anchor-card">
+            <h4 class="anchor-title">2. Nilai Cpk (Uji Miring / Bengkok)</h4>
+            <p class="anchor-desc">Colokan kamu ramping, TAPI kepalanya bengkok miring ke kanan! Pas dicolok, jarum lubang HP patah! <em>(Analogi: Sopir mabuk parkir miring sampai spion patah!)</em></p>
+          </div>
+          <div class="anchor-card">
+            <h4 class="anchor-title">3. Jebakan Maut Kabel KW</h4>
+            <p class="anchor-desc">Bos pabrik pamer: <em>"Mesin kita hebat bro, nilai Cp tinggi!"</em> Tapi pembeli demo karena chargernya bengkok semua. Tanpa Cpk yang tinggi, produk kamu sampah!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="workspace-grid">
+
+        <!-- KOLOM 1: INPUT NILAI SEPERTI FORMULIR BIASA -->
+        <div class="panel-card">
+          <h3 class="panel-title">
+            <span>1. Isi Formulir Cetakan Kabel Charger</span>
+            <span style="font-size:13px; color:var(--muted);">Ketik Angka Bebas</span>
+          </h3>
+
+          <div class="form-item">
+            <div class="form-question">Batas Paling Tebal Lubang HP Pembeli?</div>
+            <div class="form-hint">Jika kepala charger lebih tebal dari angka ini, macet total dan ditolak pembeli! <span class="tech-alias">Istilah Teknis: USL (Upper Specification Limit)</span></div>
+            <input type="number" id="cap-in-usl" class="input-field" value="8.45" step="0.01">
+          </div>
+
+          <div class="form-item">
+            <div class="form-question">Batas Paling Tipis Lubang HP Pembeli?</div>
+            <div class="form-hint">Jika kepala charger lebih kurus dari ini, colokan oblak dan tidak mau mengisi baterai. <span class="tech-alias">Istilah Teknis: LSL (Lower Specification Limit)</span></div>
+            <input type="number" id="cap-in-lsl" class="input-field" value="8.15" step="0.01">
+          </div>
+
+          <div class="form-item">
+            <div class="form-question">Kenyataannya, Rata-rata Cetakan Mesin Kamu Berapa?</div>
+            <div class="form-hint">Apakah hasil cetakan mesin kamu pas 8.30 mm di tengah, atau ternyata miring condong ke kanan/kiri? <span class="tech-alias">Istilah Teknis: Nilai Rata-rata Aktual (&mu;)</span></div>
+            <input type="number" id="cap-in-mu" class="input-field" value="8.30" step="0.01">
+          </div>
+
+          <div class="form-item">
+            <div class="form-question">Tingkat Goyangan Mesin Cetak Kamu?</div>
+            <div class="form-hint">Mesin presisi Jepang goyangnya sangat tipis (misal 0.02 mm), mesin tua murahan goyangnya melebar (misal 0.08 mm). <span class="tech-alias">Istilah Teknis: Standar Deviasi (&sigma;)</span></div>
+            <input type="number" id="cap-in-sigma" class="input-field" value="0.025" step="0.005" min="0.001">
+          </div>
+
+          <div class="form-item">
+            <div class="form-question">Contoh Skenario Pabrik Kabel:</div>
+            <div class="preset-row">
+              <button type="button" class="btn-chip" id="cap-pre-ideal">1. Kabel Original (Senter & Masuk Mulus)</button>
+              <button type="button" class="btn-chip" id="cap-pre-trap">2. Jebakan Kabel KW (Ramping tapi Bengkok!)</button>
+              <button type="button" class="btn-chip" id="cap-pre-broken">3. Mesin Murahan (Kegemukan / Aus)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- KOLOM 2: HASIL OTOMATIS & KURVA LONCENG -->
+        <div class="panel-card">
+          <h3 class="panel-title">
+            <span>2 & 3. Hasil Uji Kelayakan & Bentuk Kurva</span>
+            <span style="font-size:13px; color:var(--muted);">Otomatis Dihitung</span>
+          </h3>
+
+          <!-- Kartu Nilai Cp & Cpk -->
+          <div class="metrics-summary-grid">
+            <div class="mini-metric" id="card-cp">
+              <div class="mini-metric-lbl">Kerapian Bodi (Cp)</div>
+              <div class="mini-metric-val" id="disp-cp">2.00</div>
+              <div class="mini-metric-sub" id="lbl-cp-status">Muat di Lubang HP</div>
+            </div>
+            <div class="mini-metric" id="card-cpk">
+              <div class="mini-metric-lbl">Kelurusan Colokan (Cpk)</div>
+              <div class="mini-metric-val" id="disp-cpk">2.00</div>
+              <div class="mini-metric-sub" id="lbl-cpk-status">Lurus di Tengah</div>
+            </div>
+            <div class="mini-metric hi-yellow">
+              <div class="mini-metric-lbl">Lebar Izin Lubang HP</div>
+              <div class="mini-metric-val" id="disp-tol-w">0.30 mm</div>
+              <div class="mini-metric-sub">Paling Tebal - Paling Tipis</div>
+            </div>
+            <div class="mini-metric hi-yellow">
+              <div class="mini-metric-lbl">Lebar Goyangan Cetakan</div>
+              <div class="mini-metric-val" id="disp-6sigma">0.15 mm</div>
+              <div class="mini-metric-sub">Total Goyangan Mesin (6x)</div>
+            </div>
+          </div>
+
+          <!-- Kanvas Kurva Lonceng Normal -->
+          <div class="canvas-wrap">
+            <canvas id="cap-chart-canvas" width="760" height="260" class="sim-canvas"></canvas>
+          </div>
+
+          <!-- Penjelasan Hasil Bahasa Awam -->
+          <div class="verdict-box" id="cap-verdict-box">
+            Memuat evaluasi kepala charger...
+          </div>
+        </div>
+
+      </div>
+
+      <!-- BAGIAN 4: BACKEND TRANSPARAN PERHITUNGAN Cp & Cpk -->
+      <div class="backend-card">
+        <div class="backend-head">
+          <h3 class="backend-title">
+            <span style="background:#000; color:#fff; font-size:13px; padding:4px 10px; border-radius:4px;">BACKEND</span>
+            <span>Cara Komputer Menghitung Cp & Cpk Kabel Charger (Langkah Demi Langkah)</span>
+          </h3>
+          <span style="font-size:14px; font-weight:700; color:var(--muted);">Buka Rumus & Logika</span>
+        </div>
+
+        <div class="step-list" id="cap-backend-steps">
+          <!-- Diisi otomatis oleh JavaScript -->
+        </div>
+      </div>
+
+    </section>
+
+    <footer class="app-footer">
+      Simulator Kualitas Operasional &bull; Slide 13 (Cup Kopi Susu) & Slide 14 (Colokan Kabel Charger USB-C) &bull; Bahasa Ramah ADHD & Kasus Nyata Sehari-hari
+    </footer>
+
+  </div>
+
+  <script>
+    (function() {
+      "use strict";
+
+      // =========================================================
+      // 1. MANAJEMEN TAB (SLIDE 13 & 14)
+      // =========================================================
+      const tabBtn13 = document.getElementById("tab-btn-13");
+      const tabBtn14 = document.getElementById("tab-btn-14");
+      const sec13 = document.getElementById("sec-13");
+      const sec14 = document.getElementById("sec-14");
+
+      function switchTab(target) {
+        if (target === "sec-13") {
+          tabBtn13.classList.add("active");
+          tabBtn14.classList.remove("active");
+          sec13.classList.add("active");
+          sec14.classList.remove("active");
+          recalculateSPC();
+        } else {
+          tabBtn14.classList.add("active");
+          tabBtn13.classList.remove("active");
+          sec14.classList.add("active");
+          sec13.classList.remove("active");
+          recalculateCapability();
+        }
+      }
+
+      tabBtn13.addEventListener("click", () => switchTab("sec-13"));
+      tabBtn14.addEventListener("click", () => switchTab("sec-14"));
+
+
+      // =========================================================
+      // 2. ENGINE SLIDE 13: RADAR CUP KOPI SUSU (SPC)
+      // =========================================================
+      const spcInCL = document.getElementById("spc-in-cl");
+      const spcInSigma = document.getElementById("spc-in-sigma");
+      const spcInK = document.getElementById("spc-in-k");
+      const spcInPoints = document.getElementById("spc-in-points");
+      const spcInAdd = document.getElementById("spc-in-add");
+      const btnSpcAddPt = document.getElementById("btn-spc-add-pt");
+
+      const dispUCL = document.getElementById("disp-ucl");
+      const dispCL = document.getElementById("disp-cl");
+      const dispLCL = document.getElementById("disp-lcl");
+      const dispCount = document.getElementById("disp-count");
+
+      const andonG = document.getElementById("andon-g");
+      const andonY = document.getElementById("andon-y");
+      const andonR = document.getElementById("andon-r");
+      const andonText = document.getElementById("andon-text");
+      const spcVerdictBox = document.getElementById("spc-verdict-box");
+      const spcChartCanvas = document.getElementById("spc-chart-canvas");
+      const spcBackendSteps = document.getElementById("spc-backend-steps");
+
+      const spcPreStable = document.getElementById("spc-pre-stable");
+      const spcPreWear = document.getElementById("spc-pre-wear");
+      const spcPreShock = document.getElementById("spc-pre-shock");
+
+      function parsePoints(text) {
+        if (!text) return [];
+        return text
+          .split(/[\s,]+/)
+          .map(v => parseFloat(v.trim()))
+          .filter(v => !isNaN(v));
+      }
+
+      function recalculateSPC() {
+        const target = parseFloat(spcInCL.value) || 250.0;
+        const goyangan = parseFloat(spcInSigma.value) || 2.0;
+        const faktor = parseFloat(spcInK.value) || 3.0;
+        const points = parsePoints(spcInPoints.value);
+
+        // Batas Atas dan Bawah
+        const batasAtas = target + (faktor * goyangan);
+        const batasBawah = target - (faktor * goyangan);
+
+        dispUCL.textContent = batasAtas.toFixed(2);
+        dispCL.textContent = target.toFixed(2);
+        dispLCL.textContent = batasBawah.toFixed(2);
+        dispCount.textContent = points.length;
+
+        // Analisis Pelanggaran
+        let hasOutlier = false;
+        let isTrending = false;
+        let violatedPoints = [];
+
+        points.forEach((val, idx) => {
+          if (val > batasAtas || val < batasBawah) {
+            hasOutlier = true;
+            violatedPoints.push({ idx: idx + 1, val });
+          }
+        });
+
+        // Deteksi kran aus: 4 cup berturut-turut konsisten makin penuh atau makin sedikit
+        if (points.length >= 4) {
+          const last4 = points.slice(-4);
+          if (last4.every(p => p > target + 0.6 * goyangan) || last4.every(p => p < target - 0.6 * goyangan)) {
+            isTrending = true;
+          }
+        }
+
+        // Terapkan Lampu Andon Pabrik
+        andonG.classList.remove("active");
+        andonY.classList.remove("active");
+        andonR.classList.remove("active");
+
+        spcVerdictBox.className = "verdict-box";
+
+        if (hasOutlier) {
+          andonR.classList.add("active");
+          andonText.textContent = "STOP DISPENSER SEKARANG! (LAMPU MERAH / JIDOKA)";
+          andonText.style.color = "#f87171";
+          spcVerdictBox.classList.add("danger");
+          spcVerdictBox.innerHTML = `
+            <strong>BAHAYA - KOPI TUMPAH ATAU KOPONG!</strong><br>
+            Ada cup nomor ${violatedPoints.map(p => `<strong>#${p.idx} (${p.val} ml)</strong>`).join(", ")} yang menembus pagar aman (${batasBawah.toFixed(1)} s/d ${batasAtas.toFixed(1)} ml).<br>
+            <em>Apa artinya untuk barista?</em> Ini bukan goyangan wajar mesin lagi! Ada masalah berat seperti selang dispenser pecah, sensor kotor, atau setelan pompa jebol. Barista wajib menekan tombol darurat (Jidoka) untuk mematikan dispenser sekarang sebelum meja becek dan ratusan cup rusak terbuang rugi!
+          `;
+        } else if (isTrending) {
+          andonY.classList.add("active");
+          andonText.textContent = "PERINGATAN: KRAN DISPENSER MULAI AUS / GAYANG";
+          andonText.style.color = "#fde047";
+          spcVerdictBox.classList.add("warn");
+          spcVerdictBox.innerHTML = `
+            <strong>WASPADA - TREN PENYIMPANGAN KRAN MULAI TERLIHAT:</strong><br>
+            Meskipun belum ada kopi yang tumpah keluar batas merah, cup-cup terakhir terlihat merangkak naik konsisten mendekati batas atas (${batasAtas.toFixed(1)} ml).<br>
+            <em>Tindakan:</em> Pahat kran dispenser mulai aus atau pemanas memuai. Panggil teknisi untuk memeriksa kran sebelum dia benar-benar melanggar batas merah!
+          `;
+        } else {
+          andonG.classList.add("active");
+          andonText.textContent = "STATUS GERAI: AMAN (BARISTA NGE-BREW TERUS)";
+          andonText.style.color = "#4ade80";
+          spcVerdictBox.classList.add("good");
+          spcVerdictBox.innerHTML = `
+            <strong>SEMUANYA AMAN & NORMAL:</strong><br>
+            Seluruh ${points.length} cup kopi yang diukur berada di dalam koridor aman (${batasBawah.toFixed(1)} ml s/d ${batasAtas.toFixed(1)} ml).<br>
+            <em>Aturan Emas Barista:</em> Perbedaan kecil antar cup (misal 249 ml vs 251 ml) itu adalah <strong>goyangan alami wajar</strong> mesin. Jangan sekali-kali iseng mengubah setelan mesin kalau lampu masih hijau, karena malah bikin mesin jadi kacau!
+          `;
+        }
+
+        renderSPCChart(target, batasAtas, batasBawah, points);
+        renderSPCBackend(target, goyangan, faktor, batasAtas, batasBawah, points, violatedPoints);
+      }
+
+      function renderSPCChart(cl, ucl, lcl, points) {
+        if (!spcChartCanvas) return;
+        const ctx = spcChartCanvas.getContext("2d");
+        const W = spcChartCanvas.width;
+        const H = spcChartCanvas.height;
+
+        ctx.clearRect(0, 0, W, H);
+
+        const padL = 75;
+        const padR = 140;
+        const padT = 30;
+        const padB = 36;
+        const plotW = W - padL - padR;
+        const plotH = H - padT - padB;
+
+        let allVals = [cl, ucl, lcl, ...points];
+        let minVal = Math.min(...allVals);
+        let maxVal = Math.max(...allVals);
+        const margin = (maxVal - minVal) * 0.25 || 2.5;
+        minVal -= margin;
+        maxVal += margin;
+
+        function toY(val) {
+          return padT + plotH - ((val - minVal) / (maxVal - minVal)) * plotH;
+        }
+
+        const yUCL = toY(ucl);
+        const yLCL = toY(lcl);
+        const yCL = toY(cl);
+
+        // 1. Zona Aman Hijau Transparan
+        ctx.fillStyle = "rgba(134, 239, 172, 0.28)";
+        ctx.fillRect(padL, yUCL, plotW, yLCL - yUCL);
+
+        // 2. Garis Batas Paling Penuh (UCL)
+        ctx.setLineDash([6, 5]);
+        ctx.strokeStyle = "#dc2626";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(padL, yUCL);
+        ctx.lineTo(padL + plotW, yUCL);
+        ctx.stroke();
+
+        // 3. Garis Tengah Target (CL)
+        ctx.setLineDash([]);
+        ctx.strokeStyle = "#16a34a";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(padL, yCL);
+        ctx.lineTo(padL + plotW, yCL);
+        ctx.stroke();
+
+        // 4. Garis Batas Paling Sedikit (LCL)
+        ctx.setLineDash([6, 5]);
+        ctx.strokeStyle = "#dc2626";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(padL, yLCL);
+        ctx.lineTo(padL + plotW, yLCL);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Label Garis
+        ctx.font = "800 13px Inter, sans-serif";
+        ctx.textAlign = "left";
+
+        ctx.fillStyle = "#dc2626";
+        ctx.fillText(`Maks: ${ucl.toFixed(1)} ml`, padL + plotW + 10, yUCL + 5);
+
+        ctx.fillStyle = "#15803d";
+        ctx.fillText(`Target: ${cl.toFixed(1)} ml`, padL + plotW + 10, yCL + 5);
+
+        ctx.fillStyle = "#dc2626";
+        ctx.fillText(`Min: ${lcl.toFixed(1)} ml`, padL + plotW + 10, yLCL + 5);
+
+        // Label Sumbu Y
+        ctx.fillStyle = "#475569";
+        ctx.font = "700 12px Fira Code, monospace";
+        ctx.textAlign = "right";
+        ctx.fillText(maxVal.toFixed(1) + " ml", padL - 10, padT + 10);
+        ctx.fillText(minVal.toFixed(1) + " ml", padL - 10, padT + plotH);
+
+        // 5. Gambar Titik Cup
+        if (points.length > 0) {
+          const stepX = points.length > 1 ? plotW / (points.length - 1) : plotW / 2;
+
+          ctx.strokeStyle = "#000000";
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          points.forEach((val, i) => {
+            const x = points.length > 1 ? padL + i * stepX : padL + plotW / 2;
+            const y = toY(val);
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          });
+          ctx.stroke();
+
+          points.forEach((val, i) => {
+            const x = points.length > 1 ? padL + i * stepX : padL + plotW / 2;
+            const y = toY(val);
+            const isOut = val > ucl || val < lcl;
+
+            ctx.beginPath();
+            ctx.arc(x, y, isOut ? 8 : 6, 0, Math.PI * 2);
+
+            if (isOut) {
+              ctx.fillStyle = "#ef4444";
+              ctx.strokeStyle = "#000000";
+              ctx.lineWidth = 2.5;
+            } else {
+              ctx.fillStyle = (i === points.length - 1) ? "#3b82f6" : "#ffffff";
+              ctx.strokeStyle = "#000000";
+              ctx.lineWidth = 2;
+            }
+            ctx.fill();
+            ctx.stroke();
+
+            // Label Nomor Cup
+            ctx.fillStyle = "#334155";
+            ctx.font = "700 12px Inter, sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("Cup#" + (i + 1), x, padT + plotH + 20);
+          });
+        }
+      }
+
+      function renderSPCBackend(cl, sigma, k, ucl, lcl, points, violatedPoints) {
+        const jarakPagar = (k * sigma).toFixed(2);
+        spcBackendSteps.innerHTML = `
+          <div class="step-item">
+            <span class="step-badge">Langkah 1: Menentukan Janji Menu (Target Kopi / CL)</span>
+            <div class="step-desc">Komputer mengambil angka target isi cup kopi yang kamu janjikan di menu gerai.</div>
+            <div class="step-formula-box">Janji Menu (Target) = <span class="highlight">${cl.toFixed(2)} ml</span></div>
+          </div>
+
+          <div class="step-item">
+            <span class="step-badge">Langkah 2: Menghitung Jarak Pagar Pengaman Alarm (${k} &times; Goyangan)</span>
+            <div class="step-desc">Toleransi alarm dihitung dari: ${k} kali goyangan alami dispenser kopi (${sigma.toFixed(2)} ml).</div>
+            <div class="step-formula-box">Jarak Pagar = ${k.toFixed(1)} &times; ${sigma.toFixed(2)} ml = <span class="highlight">${jarakPagar} ml</span></div>
+          </div>
+
+          <div class="step-item">
+            <span class="step-badge">Langkah 3: Menghitung Batas Tumpah (UCL) dan Batas Kopong (LCL)</span>
+            <div class="step-desc">Menambahkan dan mengurangkan jarak pagar terhadap target isi cup kopi.</div>
+            <div class="step-formula-box">
+              Batas Tumpah Luber (UCL) = Target + Jarak Pagar = ${cl.toFixed(2)} + ${jarakPagar} = <span class="highlight">${ucl.toFixed(2)} ml</span><br>
+              Batas Terlalu Kopong (LCL) = Target - Jarak Pagar = ${cl.toFixed(2)} - ${jarakPagar} = <span class="highlight">${lcl.toFixed(2)} ml</span>
+            </div>
+          </div>
+
+          <div class="step-item">
+            <span class="step-badge">Langkah 4: Memeriksa Setiap Cup yang Keluar Kran (Audit Jidoka)</span>
+            <div class="step-desc">Komputer mencocokkan setiap angka cup: apakah berada di dalam pagar aman [${lcl.toFixed(2)} ml s/d ${ucl.toFixed(2)} ml]?</div>
+            <div class="step-formula-box">
+              ${violatedPoints.length === 0
+                ? `<span style="color:#15803d; font-weight:700;">&check; HASIL: Semua ${points.length} cup berada di dalam pagar aman. Lampu HIJAU menyala (Barista jalan terus).</span>`
+                : `<span style="color:#b91c1c; font-weight:700;">&cross; HASIL: Ditemukan ${violatedPoints.length} cup yang keluar pagar: ${violatedPoints.map(p => `Cup #${p.idx} = ${p.val} ml`).join(", ")}. Memicu Lampu MERAH (Stop Mesin Dispenser)!</span>`
+              }
+            </div>
+          </div>
+        `;
+      }
+
+      // Event Listener SPC
+      [spcInCL, spcInSigma, spcInK, spcInPoints].forEach(elem => {
+        elem.addEventListener("input", recalculateSPC);
+      });
+
+      if (btnSpcAddPt) {
+        btnSpcAddPt.addEventListener("click", () => {
+          const val = parseFloat(spcInAdd.value);
+          if (!isNaN(val)) {
+            const current = parsePoints(spcInPoints.value);
+            current.push(val);
+            spcInPoints.value = current.join(", ");
+            recalculateSPC();
+          }
+        });
+      }
+
+      if (spcPreStable) {
+        spcPreStable.addEventListener("click", () => {
+          spcInCL.value = "250";
+          spcInSigma.value = "1.8";
+          spcInPoints.value = "249.1, 251.2, 250.5, 248.7, 251.0, 250.2, 249.8, 250.9";
+          recalculateSPC();
+        });
+      }
+
+      if (spcPreWear) {
+        spcPreWear.addEventListener("click", () => {
+          spcInCL.value = "250";
+          spcInSigma.value = "1.5";
+          spcInPoints.value = "249.8, 251.0, 252.2, 253.1, 254.0, 254.8, 255.4";
+          recalculateSPC();
+        });
+      }
+
+      if (spcPreShock) {
+        spcPreShock.addEventListener("click", () => {
+          spcInCL.value = "250";
+          spcInSigma.value = "2.0";
+          spcInPoints.value = "250.1, 249.4, 251.0, 248.9, 258.5, 250.2";
+          recalculateSPC();
+        });
+      }
+
+
+      // =========================================================
+      // 3. ENGINE SLIDE 14: ANALISIS KABEL CHARGER USB-C (Cp & Cpk)
+      // =========================================================
+      const capInUSL = document.getElementById("cap-in-usl");
+      const capInLSL = document.getElementById("cap-in-lsl");
+      const capInMu = document.getElementById("cap-in-mu");
+      const capInSigma = document.getElementById("cap-in-sigma");
+
+      const dispCp = document.getElementById("disp-cp");
+      const dispCpk = document.getElementById("disp-cpk");
+      const dispTolW = document.getElementById("disp-tol-w");
+      const disp6Sigma = document.getElementById("disp-6sigma");
+
+      const cardCp = document.getElementById("card-cp");
+      const cardCpk = document.getElementById("card-cpk");
+      const lblCpStatus = document.getElementById("lbl-cp-status");
+      const lblCpkStatus = document.getElementById("lbl-cpk-status");
+
+      const capVerdictBox = document.getElementById("cap-verdict-box");
+      const capChartCanvas = document.getElementById("cap-chart-canvas");
+      const capBackendSteps = document.getElementById("cap-backend-steps");
+
+      const capPreIdeal = document.getElementById("cap-pre-ideal");
+      const capPreTrap = document.getElementById("cap-pre-trap");
+      const capPreBroken = document.getElementById("cap-pre-broken");
+
+      function recalculateCapability() {
+        const palingTebal = parseFloat(capInUSL.value) || 8.45;
+        const palingTipis = parseFloat(capInLSL.value) || 8.15;
+        const rataMesin = parseFloat(capInMu.value) || 8.30;
+        const goyangMesin = parseFloat(capInSigma.value) || 0.025;
+
+        const lebarLubangHP = Math.max(0.001, palingTebal - palingTipis);
+        const lebarGoyanganCetakan = 6 * goyangMesin;
+
+        // Hitung Cp dan Cpk
+        const cp = lebarLubangHP / lebarGoyanganCetakan;
+        const jarakDindingAtas = (palingTebal - rataMesin) / (3 * goyangMesin);
+        const jarakDindingBawah = (rataMesin - palingTipis) / (3 * goyangMesin);
+        const cpk = Math.min(jarakDindingAtas, jarakDindingBawah);
+
+        dispCp.textContent = cp.toFixed(2);
+        dispCpk.textContent = cpk.toFixed(2);
+        dispTolW.textContent = lebarLubangHP.toFixed(2) + " mm";
+        disp6Sigma.textContent = lebarGoyanganCetakan.toFixed(2) + " mm";
+
+        // Evaluasi Bodi Colokan (Cp)
+        cardCp.className = "mini-metric";
+        if (cp >= 1.33) {
+          cardCp.classList.add("hi-green");
+          lblCpStatus.textContent = "Bodi Sangat Ramping (Cp ≥ 1.33)";
+        } else if (cp >= 1.0) {
+          cardCp.classList.add("hi-yellow");
+          lblCpStatus.textContent = "Bodi Mepet (Cp 1.0 - 1.33)";
+        } else {
+          cardCp.classList.add("hi-red");
+          lblCpStatus.textContent = "Bodi Kegemukan (Cp < 1.0)";
+        }
+
+        // Evaluasi Kelurusan Colokan (Cpk)
+        cardCpk.className = "mini-metric";
+        if (cpk >= 1.33) {
+          cardCpk.classList.add("hi-green");
+          lblCpkStatus.textContent = "Lurus Tengah & Masuk Mulus";
+        } else if (cpk >= 1.0) {
+          cardCpk.classList.add("hi-yellow");
+          lblCpkStatus.textContent = "Mepet Dinding Lubang HP";
+        } else {
+          cardCpk.classList.add("hi-red");
+          lblCpkStatus.textContent = "Bengkok / Merusak Lubang HP!";
+        }
+
+        // Kesimpulan Bahasa Awam ADHD
+        capVerdictBox.className = "verdict-box";
+        if (cp >= 1.33 && cpk >= 1.33) {
+          capVerdictBox.classList.add("good");
+          capVerdictBox.innerHTML = `
+            <strong>KONDISI KABEL ORIGINAL (SEMPURNA & BEBAS CACAT):</strong><br>
+            Lebar izin lubang HP pembeli adalah <strong>${lebarLubangHP.toFixed(2)} mm</strong>, sedangkan bodi kepala charger mesin kamu hanya selebar <strong>${lebarGoyanganCetakan.toFixed(2)} mm</strong>. Cetakan kamu tepat lurus di tengah (${rataMesin.toFixed(2)} mm). Kabel dicolok masuk dengan sangat mulus, baterai langsung ngecas, dan tidak ada kabel yang dibuang ke tong sampah!
+          `;
+        } else if (cp >= 1.33 && cpk < 1.0) {
+          capVerdictBox.classList.add("danger");
+          capVerdictBox.innerHTML = `
+            <strong>JEBAKAN MAUT KABEL KW (BODI RAMPING TAPI BENGKOK!):</strong><br>
+            Lihat angka <strong>Cp = ${cp.toFixed(2)}</strong> (sangat tinggi, bodi colokan kamu sebenarnya sangat ramping!). Tapi kenapa <strong>Cpk = ${cpk.toFixed(2)}</strong> hancur lebur?<br>
+            <em>Penyebabnya:</em> Mesin kamu mencetak miring ke angka ${rataMesin.toFixed(2)} mm sehingga kepala charger bengkok menabrak dinding batas (${palingTebal.toFixed(2)} mm). Saat pembeli mencoba mencolok ke smartphone, jarum konektor dalam HP langsung patah!<br>
+            <strong>Solusi Cepat:</strong> Kamu TIDAK PERLU beli mesin cetak baru. Cukup setel ulang posisi dudukan mesin agar titik tengahnya kembali lurus ke 8.30 mm!
+          `;
+        } else {
+          capVerdictBox.classList.add("danger");
+          capVerdictBox.innerHTML = `
+            <strong>MESIN CETAK MURAHAN / CETAKAN AUS:</strong><br>
+            Lebar sebaran bodi charger (${lebarGoyanganCetakan.toFixed(2)} mm) lebih besar daripada lubang HP pembeli (${lebarLubangHP.toFixed(2)} mm).<br>
+            <em>Penyebabnya:</em> Mesin kamu bergoyang terlalu kasar (&sigma; = ${goyangMesin.toFixed(3)} mm). Mau diposisikan selurus apa pun di tengah, kepala charger pasti banyak yang kegemukan sehingga seret macet dan ditolak pembeli.<br>
+            <strong>Solusi:</strong> Mesin cetak harus diganti cetakannya (moulding baru) atau beli mesin yang memiliki tingkat presisi tinggi!
+          `;
+        }
+
+        renderCapabilityChart(palingTebal, palingTipis, rataMesin, goyangMesin);
+        renderCapabilityBackend(palingTebal, palingTipis, rataMesin, goyangMesin, lebarLubangHP, lebarGoyanganCetakan, cp, jarakDindingAtas, jarakDindingBawah, cpk);
+      }
+
+      function renderCapabilityChart(usl, lsl, mu, sigma) {
+        if (!capChartCanvas) return;
+        const ctx = capChartCanvas.getContext("2d");
+        const W = capChartCanvas.width;
+        const H = capChartCanvas.height;
+
+        ctx.clearRect(0, 0, W, H);
+
+        const padL = 70;
+        const padR = 70;
+        const padT = 32;
+        const padB = 36;
+        const plotW = W - padL - padR;
+        const plotH = H - padT - padB;
+
+        const minX = Math.min(lsl - 3 * sigma, mu - 4 * sigma);
+        const maxX = Math.max(usl + 3 * sigma, mu + 4 * sigma);
+
+        function toPixelX(xVal) {
+          return padL + ((xVal - minX) / (maxX - minX)) * plotW;
+        }
+
+        function gaussian(x, m, s) {
+          const a = 1 / (s * Math.sqrt(2 * Math.PI));
+          const exp = Math.exp(-Math.pow(x - m, 2) / (2 * Math.pow(s, 2)));
+          return a * exp;
+        }
+
+        const peak = 1 / (sigma * Math.sqrt(2 * Math.PI));
+        function toPixelY(prob) {
+          return padT + plotH - (prob / peak) * (plotH * 0.9);
+        }
+
+        const baselineY = padT + plotH;
+        const pxLSL = toPixelX(lsl);
+        const pxUSL = toPixelX(usl);
+        const pxMu = toPixelX(mu);
+
+        const steps = 180;
+        const pts = [];
+        for (let i = 0; i <= steps; i++) {
+          const xVal = minX + (i / steps) * (maxX - minX);
+          const prob = gaussian(xVal, mu, sigma);
+          pts.push({ x: toPixelX(xVal), y: toPixelY(prob), val: xVal });
+        }
+
+        // 1. Area Aman (Hijau di antara LSL dan USL)
+        ctx.fillStyle = "rgba(134, 239, 172, 0.48)";
+        ctx.beginPath();
+        ctx.moveTo(pxLSL, baselineY);
+        pts.forEach(p => {
+          if (p.val >= lsl && p.val <= usl) ctx.lineTo(p.x, p.y);
+        });
+        ctx.lineTo(pxUSL, baselineY);
+        ctx.closePath();
+        ctx.fill();
+
+        // 2. Area Cacat Scrap Merah (Di luar dinding)
+        if (minX < lsl) {
+          ctx.fillStyle = "rgba(239, 68, 68, 0.70)";
+          ctx.beginPath();
+          ctx.moveTo(toPixelX(minX), baselineY);
+          pts.forEach(p => {
+            if (p.val <= lsl) ctx.lineTo(p.x, p.y);
+          });
+          ctx.lineTo(pxLSL, baselineY);
+          ctx.closePath();
+          ctx.fill();
+        }
+
+        if (maxX > usl) {
+          ctx.fillStyle = "rgba(239, 68, 68, 0.70)";
+          ctx.beginPath();
+          ctx.moveTo(pxUSL, baselineY);
+          pts.forEach(p => {
+            if (p.val >= usl) ctx.lineTo(p.x, p.y);
+          });
+          ctx.lineTo(toPixelX(maxX), baselineY);
+          ctx.closePath();
+          ctx.fill();
+        }
+
+        // 3. Garis Kontur Kurva
+        ctx.strokeStyle = "#000000";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        pts.forEach((p, i) => {
+          if (i === 0) ctx.moveTo(p.x, p.y);
+          else ctx.lineTo(p.x, p.y);
+        });
+        ctx.stroke();
+
+        // 4. Dinding Merah Paling Tipis (LSL) & Paling Tebal (USL)
+        ctx.strokeStyle = "#dc2626";
+        ctx.lineWidth = 3;
+
+        ctx.beginPath();
+        ctx.moveTo(pxLSL, padT - 8);
+        ctx.lineTo(pxLSL, baselineY);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(pxUSL, padT - 8);
+        ctx.lineTo(pxUSL, baselineY);
+        ctx.stroke();
+
+        // 5. Garis Rata-rata Mesin Saat Ini (Biru Putus-putus)
+        ctx.setLineDash([5, 4]);
+        ctx.strokeStyle = "#2563eb";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(pxMu, padT);
+        ctx.lineTo(pxMu, baselineY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Garis Dasar
+        ctx.strokeStyle = "#000000";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(padL - 10, baselineY);
+        ctx.lineTo(W - padR + 10, baselineY);
+        ctx.stroke();
+
+        // Teks Label (Ukuran Presentasi)
+        ctx.font = "800 13px Inter, sans-serif";
+        ctx.fillStyle = "#dc2626";
+        ctx.textAlign = "center";
+        ctx.fillText(`Paling Tipis: ${lsl.toFixed(2)} mm`, pxLSL, padT - 12);
+        ctx.fillText(`Paling Tebal: ${usl.toFixed(2)} mm`, pxUSL, padT - 12);
+
+        ctx.fillStyle = "#1d4ed8";
+        ctx.fillText(`Rata-rata Mesin: ${mu.toFixed(2)} mm`, pxMu, padT + 12);
+      }
+
+      function renderCapabilityBackend(usl, lsl, mu, sigma, tolW, natSpread, cp, cpu, cpl, cpk) {
+        capBackendSteps.innerHTML = `
+          <div class="step-item">
+            <span class="step-badge">Langkah 1: Menghitung Lebar Lubang HP Pembeli</span>
+            <div class="step-desc">Mengurangkan batas paling tebal (USL) dengan batas paling tipis (LSL).</div>
+            <div class="step-formula-box">Lebar Izin Lubang HP = Paling Tebal - Paling Tipis = ${usl.toFixed(2)} - ${lsl.toFixed(2)} = <span class="highlight">${tolW.toFixed(2)} mm</span></div>
+          </div>
+
+          <div class="step-item">
+            <span class="step-badge">Langkah 2: Menghitung Lebar Goyangan Mesin Cetak (6 &times; Goyangan)</span>
+            <div class="step-desc">Total variabilitas alami cetakan dihitung dari 6 kali standar deviasi mesin.</div>
+            <div class="step-formula-box">Lebar Goyangan Cetakan = 6 &times; Goyangan = 6 &times; ${sigma.toFixed(3)} = <span class="highlight">${natSpread.toFixed(2)} mm</span></div>
+          </div>
+
+          <div class="step-item">
+            <span class="step-badge">Langkah 3: Menghitung Apakah Bodi Colokan Cukup Ramping (Nilai Cp)</span>
+            <div class="step-desc">Membagi lebar izin lubang HP dengan lebar goyangan bodi colokan mesin.</div>
+            <div class="step-formula-box">Cp = Lebar Lubang HP / Lebar Goyangan Bodi = ${tolW.toFixed(2)} / ${natSpread.toFixed(2)} = <span class="highlight">${cp.toFixed(2)}</span> ${cp >= 1.33 ? "(Bodi sangat ramping & muat!)" : "(Bodi mepet / kegemukan)"}</div>
+          </div>
+
+          <div class="step-item">
+            <span class="step-badge">Langkah 4: Menghitung Jarak Colokan ke Dinding Kanan dan Kiri Lubang HP</span>
+            <div class="step-desc">Mengecek seberapa dekat posisi cetakan saat ini (&mu; = ${mu.toFixed(2)} mm) ke dinding pembatas lubang HP.</div>
+            <div class="step-formula-box">
+              Jarak ke Dinding Kanan (Tebal) = (Paling Tebal - Posisi Mesin) / (3 &times; Goyangan) = (${usl.toFixed(2)} - ${mu.toFixed(2)}) / ${(3 * sigma).toFixed(3)} = <span class="highlight">${cpu.toFixed(2)}</span><br>
+              Jarak ke Dinding Kiri (Tipis)  = (Posisi Mesin - Paling Tipis) / (3 &times; Goyangan) = (${mu.toFixed(2)} - ${lsl.toFixed(2)}) / ${(3 * sigma).toFixed(3)} = <span class="highlight">${cpl.toFixed(2)}</span>
+            </div>
+          </div>
+
+          <div class="step-item">
+            <span class="step-badge">Langkah 5: Mengambil Jarak yang Paling Rawan Menabrak / Bengkok (Nilai Cpk)</span>
+            <div class="step-desc">Cpk mengambil angka terkecil (jarak yang paling rawan merusak konektor lubang HP).</div>
+            <div class="step-formula-box">
+              Cpk = Nilai Terkecil dari Jarak Kanan atau Kiri = min(${cpu.toFixed(2)}, ${cpl.toFixed(2)}) = <span class="highlight">${cpk.toFixed(2)}</span> ${cpk >= 1.33 ? "(Lurus di tengah & masuk mulus)" : "(Bengkok atau merusak lubang HP pembeli!)"}
+            </div>
+          </div>
+        `;
+      }
+
+      // Event Listener Capability
+      [capInUSL, capInLSL, capInMu, capInSigma].forEach(elem => {
+        elem.addEventListener("input", recalculateCapability);
+      });
+
+      if (capPreIdeal) {
+        capPreIdeal.addEventListener("click", () => {
+          capInUSL.value = "8.45";
+          capInLSL.value = "8.15";
+          capInMu.value = "8.30";
+          capInSigma.value = "0.025";
+          recalculateCapability();
+        });
+      }
+
+      if (capPreTrap) {
+        capPreTrap.addEventListener("click", () => {
+          capInUSL.value = "8.45";
+          capInLSL.value = "8.15";
+          capInMu.value = "8.41";
+          capInSigma.value = "0.025";
+          recalculateCapability();
+        });
+      }
+
+      if (capPreBroken) {
+        capPreBroken.addEventListener("click", () => {
+          capInUSL.value = "8.45";
+          capInLSL.value = "8.15";
+          capInMu.value = "8.30";
+          capInSigma.value = "0.070";
+          recalculateCapability();
+        });
+      }
+
+
+      // =========================================================
+      // 4. INIT SAAT HALAMAN DIMUAT
+      // =========================================================
+      recalculateSPC();
+      recalculateCapability();
+
+    })();
+  </script>
+</body>
+</html>
