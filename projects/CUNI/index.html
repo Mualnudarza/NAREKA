@@ -191,7 +191,6 @@ ol.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:24px
 input[type=search]{font:inherit;font-size:13px;padding:7px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg);min-width:200px;max-width:100%}
 .scope{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 @media(max-width:760px){.scope{grid-template-columns:minmax(0,1fr)}}
-.hold{border:1px dashed var(--warn);background:var(--c2s);border-radius:10px;padding:16px}
 .fn{margin-top:16px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);max-width:80ch}
 .fn b{color:var(--fg)}
 sup.fnref{font-size:.65em;font-weight:600;margin-left:1px}
@@ -236,8 +235,8 @@ footer{padding-block:28px 48px;color:var(--muted);font-size:13px;border-top:1px 
   </div>
   <div class="flow" style="margin-top:14px">
     <div class="st"><span class="tag t4">1 · Temuan</span><h4 style="margin-top:8px">Diagnosis data aktual</h4><p class="note">Abnormal stagnan di 66,7–87,5% per hari. Durasi kerja bukan pembeda kualitas.</p></div>
-    <div class="st"><span class="tag t4">2 · Solusi</span><h4 style="margin-top:8px">24 rule jadi 4 klaster</h4><p class="note">Optik, Fisik &amp; Kerapian, Foto &amp; Label, Splicing. Opsi 5 (jalur aset) ditunda.</p></div>
-    <div class="st"><span class="tag t4">3 · Rekomendasi</span><h4 style="margin-top:8px">Dual-Track paralel</h4><p class="note">Track A: perbaikan cepat non-optik (Opsi 2, 3, 4). Track B: investigasi optik (Opsi 1).</p></div>
+    <div class="st"><span class="tag t4">2 · Solusi</span><h4 style="margin-top:8px">24 rule jadi 4 klaster</h4><p class="note">Optik, Fisik &amp; Kerapian, Foto &amp; Label, Splicing.</p></div>
+    <div class="st"><span class="tag t4">3 · Rekomendasi</span><h4 style="margin-top:8px">Dua jalur fokus</h4><p class="note">Track A: perbaikan cepat non-optik (Opsi 2, 3, 4). Track B: investigasi optik (Opsi 1).</p></div>
     <div class="st"><span class="tag t4">4 · Keputusan</span><h4 style="margin-top:8px">Rapat User &amp; Direksi</h4><p class="note">Urutan prioritas klaster dan target OKR ditentukan lewat kolom survei, bukan dikunci BPD.</p></div>
   </div>
 </section>
@@ -387,10 +386,11 @@ footer{padding-block:28px 48px;color:var(--muted);font-size:13px;border-top:1px 
   </div>
 
   <h3 class="sub-h">1.3 Tujuan</h3>
-  <div class="grid g3">
-    <div class="card"><span class="tag tmute">Tujuan 1</span><p style="margin-top:8px">Peta diagnosis faktual berbasis 885 WO dan 24 rule, plus perspektif lapangan, sebagai landasan diskusi bebas asumsi.</p></div>
-    <div class="card"><span class="tag tmute">Tujuan 2</span><p style="margin-top:8px">Kelompokkan 24 rule ke 4 klaster dengan WO terdampak dan potensi penyelamatan solo-cluster, supaya tiap tindakan terhubung ke temuan.</p></div>
-    <div class="card"><span class="tag tmute">Tujuan 3</span><p style="margin-top:8px">Sediakan matriks survei prioritas dan target OKR agar User dan Direksi (BOD) menentukan sendiri urutan dan target resmi.</p></div>
+  <div class="grid g2">
+    <div class="card"><span class="tag tmute">Tujuan 1</span><h4 style="margin:8px 0 6px">Menurunkan rasio abnormal lewat kepatuhan prosedur</h4><p class="note">Mengatasi stagnasi 75,9% Abnormal pada 4 klaster (24 rule) dengan penegakan standar kerja, alat bantu dasar, self-check pra-submit ERP, dan penguncian bertahap melalui DWP serta reward-punishment.</p></div>
+    <div class="card"><span class="tag tmute">Tujuan 2</span><h4 style="margin:8px 0 6px">Menekan ketimpangan kegagalan berbasis Pareto</h4><p class="note">Memusatkan targeted coaching dan perbaikan ke penyumbang utama — Temas (28,7% slot gagal), Top 15 teknisi (52,9%), serta isu spesifik cabang seperti label ODP Dau dan splicing Pasuruan Selatan.</p></div>
+    <div class="card"><span class="tag tmute">Tujuan 3</span><h4 style="margin:8px 0 6px">Memulihkan kontrol lini pertama BL dan Katim</h4><p class="note">Menyamakan pemahaman 24 rule (termasuk Lambda 1490 nm), mewajibkan review harian/story cabang untuk memutus regresi hari ke-3, dan menertibkan kepatuhan mikro (upload-before-lock, larangan foto PKL, komponen ODP, alur cetak label).</p></div>
+    <div class="card"><span class="tag tmute">Tujuan 4</span><h4 style="margin:8px 0 6px">Membangun pembuktian objektif dan pemantauan BI</h4><p class="note">Memverifikasi temuan optik secara terukur di lapangan, mengusulkan pencatatan nilai dBm aktual, serta menjalankan pemantauan rutin Superset bebas duplikasi sebagai landasan keputusan prioritas dan target OKR User dan Direksi.</p></div>
   </div>
 </section>
 
@@ -457,23 +457,12 @@ footer{padding-block:28px 48px;color:var(--muted);font-size:13px;border-top:1px 
     <div class="card"><span class="tag tmute">3</span><h4 style="margin:8px 0 6px">Pemantauan rutin BI (Superset)</h4><p class="note">Data 885 WO sudah cukup untuk mulai bertindak. Superset berjalan paralel untuk tren mingguan, termasuk perbaikan deduplikasi query dan usulan penarikan nilai dBm mentah.</p></div>
     <div class="card"><span class="tag tmute">4</span><h4 style="margin:8px 0 6px">DWP &amp; reward-punishment bertahap</h4><p class="note">Pengunci konsistensi jangka menengah, setelah kontrol BL, alat bantu dasar (pen cleaner, tisu basah, kunci ODP, label), dan pembuktian optik berjalan.</p></div>
   </div>
-
-  <div class="hold" style="margin-top:14px">
-    <span class="tag t2">DITUNDA · On-Hold</span>
-    <h3 style="margin:8px 0 8px">Opsi 5: Pemisahan &amp; eskalasi jalur aset</h3>
-    <p style="max-width:75ch">Ditunda pada fase ini karena tiga alasan empiris.</p>
-    <ul class="clean" style="margin-top:10px">
-      <li>Tidak ada data dBm aktual (actual_value hanya flag 0/1) dan belum ada catatan verifikasi yang membedakan redaman &gt; -21.50 dBm akibat konektor kotor, salah setting OPM (1510 nm), tekukan kabel, atau kerusakan port/hulu.</li>
-      <li>Kontras antara cabang 0% (Sawojajar, Bangil) dan cabang 51,9%–70,8% perlu diuji dulu di lapangan sebelum menyimpulkan faktor aset bawaan.</li>
-      <li>Dibuka kembali hanya bila verifikasi Opsi 1 dan 2 membuktikan kerusakan fisik aset signifikan dan tidak bisa diselesaikan tim PSB.</li>
-    </ul>
-  </div>
 </section>
 
 <!-- SURVEI -->
 <section class="sec" id="survei" data-nav="Matriks survei">
   <header><div class="eyebrow">Bab 2.2 D</div><h2>Rekomendasi analis dan kolom survei rapat</h2>
-  <p>Data mengarah ke strategi <b>Dual-Track Paralel</b>. Keputusan prioritas final ada di User dan Direksi. Panel di bawah meniru kolom survei di dokumen, untuk latihan diskusi (pilihan tidak terkirim ke mana pun).</p></header>
+  <p>Keputusan prioritas final ada di User dan Direksi. Panel di bawah meniru kolom survei di dokumen, untuk latihan diskusi (pilihan tidak terkirim ke mana pun).</p></header>
   <div class="grid g2" style="margin-bottom:14px">
     <div class="card"><span class="tag tgood">Track A · Perbaikan cepat</span><p style="margin-top:8px">Opsi 2, 3, dan 4. Karena 284 WO abnormal (42,5%) tidak punya masalah -21.50 dBm. Fokus tajam ke Temas dan Top 15 teknisi.</p></div>
     <div class="card"><span class="tag t1">Track B · Investigasi objektif</span><p style="margin-top:8px">Opsi 1: uji lapangan pen cleaner dan OPM 1490 nm di cabang tertinggi (Pasuruan Utara, Blimbing, Lawang, Kedungkandang).</p></div>
@@ -497,7 +486,7 @@ footer{padding-block:28px 48px;color:var(--muted);font-size:13px;border-top:1px 
     <tbody>
       <tr><td><b>Efek pembinaan memudar cepat</b> (regresi hari ke-3, Temas)</td><td>Abnormal kembali ke 80%+ setelah refreshment.</td><td>Kunci daily briefing, review story harian oleh BL, laporan tren mingguan di Superset.</td></tr>
       <tr><td><b>BL kurang paham standar teknis</b> (1510 vs 1490 nm)</td><td>BL gagal mendeteksi kesalahan atau memberi arahan keliru.</td><td>Sesi kalibrasi ringkas 24 rule untuk BL sebelum pengawasan berjalan.</td></tr>
-      <tr><td><b>Atribusi sepihak -21.50 dBm ke “aset”</b> tanpa bukti</td><td>Akar masalah (konektor, setting OPM, tekukan) tertutupi, rasio Normal gagal naik.</td><td>Pertahankan On-Hold Opsi 5, wajibkan log bukti lapangan dan pembanding cabang 0%.</td></tr>
+      <tr><td><b>Atribusi sepihak -21.50 dBm ke “aset”</b> tanpa bukti</td><td>Akar masalah (konektor, setting OPM, tekukan) tertutupi, rasio Normal gagal naik.</td><td>Wajibkan log bukti lapangan dan pembanding cabang 0% sebelum menyimpulkan masalah aset.</td></tr>
       <tr><td><b>Bias pencatatan data</b> (WO 41676 duplikat, tanpa dBm numerik)</td><td>Agregat meleset, selisih tipis sulit dibedakan dari kegagalan berat.</td><td>Perbaiki query deduplikasi, usulkan pencatatan numerik actual_value.</td></tr>
       <tr><td><b>Foto salah lolos ke ERP</b> atau diambil anak PKL</td><td>WO langsung terkunci Abnormal tanpa koreksi.</td><td>Self-check dengan hint dan foto referensi ERP sebelum submit, larang PKL mengambil foto validasi.</td></tr>
     </tbody></table></div>
@@ -505,7 +494,7 @@ footer{padding-block:28px 48px;color:var(--muted);font-size:13px;border-top:1px 
   <h3 class="sub-h">Manfaat yang diharapkan</h3>
   <div class="grid g3">
     <div class="card"><h4>Operasional</h4><p class="note" style="margin-top:6px">Dari pembinaan menyamaratakan ke intervensi berbasis bukti: Temas (28,7%), Dau (label), 15 teknisi penyumbang 52,9%.</p></div>
-    <div class="card"><h4>Efisiensi sumber daya</h4><p class="note" style="margin-top:6px">Hemat waktu refreshment massal, cegah pemborosan biaya eskalasi aset (Opsi 5) sebelum bukti terverifikasi.</p></div>
+    <div class="card"><h4>Efisiensi sumber daya</h4><p class="note" style="margin-top:6px">Hemat waktu refreshment massal, cegah pemborosan biaya eskalasi aset sebelum bukti terverifikasi.</p></div>
     <div class="card"><h4>Kualitas layanan &amp; tata kelola</h4><p class="note" style="margin-top:6px">Cegah gangguan loss akibat ODP tidak terkunci, tukar port, konektor tercemar, dan pulihkan fungsi pengawasan BL.</p></div>
   </div>
 </section>
@@ -564,18 +553,18 @@ footer{padding-block:28px 48px;color:var(--muted);font-size:13px;border-top:1px 
            'Mitigasi konektor dan cuaca: pen cleaner untuk adapter/SC (kasus ODP -24 vs pelanggan -19 akibat hujan/debu), hindari buka ODP saat hujan.',
            'Audit OPM dan Lambda 1490 nm: cek setting alat ukur (cegah salah ukur 1510 nm, khususnya Sawojajar 5 WO) dan inspeksi patch cord / tekukan ekstrem (> 1 dBm).',
            'Catat angka dBm numerik saat verifikasi agar selisih tipis dan degradasi berat terpisah secara objektif.'],
-      focus:'Pasuruan Utara (36 solo -21.50), Blimbing (62), Temas (51), Dau (40), Kota Lama (39), Sawojajar (Lambda 1490)',rec:'Track B (paralel, fase investigasi dan verifikasi objektif): audit setting OPM + uji pen cleaner + catat angka dBm sebelum klaim aset.',
+      focus:'Pasuruan Utara (36 solo -21.50), Blimbing (62), Temas (51), Dau (40), Kota Lama (39), Sawojajar (Lambda 1490)',rec:'Track B (fase investigasi dan verifikasi objektif): audit setting OPM + uji pen cleaner + catat angka dBm sebelum klaim aset.',
       imp:'Tertinggi secara volume (71,0% Abn) dan potensi penyelamatan tunggal (199 WO solo, +22,6 pp Normal)',
-      sv:['Prioritas 1 (Langsung Eksekusi)','Prioritas 2 / Paralel Track B (Investigasi Dulu)','Prioritas Lanjutan']},
+      sv:['Prioritas 1 (Langsung Eksekusi)','Prioritas 2 · Track B (Investigasi Dulu)','Prioritas Lanjutan']},
     2:{k:'Opsi 2',n:'Disiplin Fisik ODP & Kerapian Modem',s:'Quick-win kontrol prosedur dan alat bantu',rules:7,wo:301,pwo:45.0,slot:449,pslot:28.8,solo:68,pp:7.7,
       list:[['ODP terkunci & terputar rapat','130 WO'],['Modem bersih','122 WO'],['Kabel masuk ke lubang sesuai','93 WO'],['ODP terklik & tertutup rapat','38 WO'],['Pemakaian twistie','29 WO'],['Port sesuai WO','21 WO'],['Patchcord sesuai alur kaset','16 WO']],
       act:['Urutan “Kunci dulu baru foto/upload”: hentikan upload-before-lock di Temas, wajibkan cek klik fisik tutup ODP.',
            'Komponen pelindung ODP: patch cord sesuai alur kaset (rear odd / front even), larang lepas karet grommet, kembalikan dust cap untuk cegah semut dan debu.',
            'Kebersihan modem: tisu basah/lap di tas teknisi, cek kebersihan modem saat serah terima dari gudang (WH) atau BL.',
            'Kunci dan port: kunci ODP standar cabang (Wendit), verifikasi Port Sesuai WO agar layanan pelanggan lain tidak terganggu, foto bila baut berkarat/terhalang (sebagai data bukti, bukan pengecualian sepihak).'],
-      focus:'Temas (ODP terkunci 51, Lubang 31, Terklik 26, Twistie 25), Blimbing, Pakis, Kedungkandang',rec:'Track A (paralel, quick-win eksekusi langsung): mulai dari Temas (upload-before-lock, kunci/klik, tisu modem, grommet).',
+      focus:'Temas (ODP terkunci 51, Lubang 31, Terklik 26, Twistie 25), Blimbing, Pakis, Kedungkandang',rec:'Track A (quick-win eksekusi langsung): mulai dari Temas (upload-before-lock, kunci/klik, tisu modem, grommet).',
       imp:'Tertinggi di kategori non-optik (45,0% Abn; 68 WO solo, +7,7 pp Normal)',
-      sv:['Prioritas 1 (Quick-Win Utama)','Prioritas 2 / Paralel Track A','Prioritas Lanjutan']},
+      sv:['Prioritas 1 (Quick-Win Utama)','Prioritas 2 · Track A','Prioritas Lanjutan']},
     3:{k:'Opsi 3',n:'Kelengkapan Foto, Standar Visual & Pelabelan',s:'Pencegahan pra-submit dan alur label',rules:11,wo:248,pwo:37.1,slot:362,pslot:23.2,solo:57,pp:6.5,
       list:[['9 rule standar/kelengkapan foto','314 slot'],['Redaman ODP','71'],['Instalasi modem','50'],['Tutup ODP','49'],['Splice modem','47'],['Patchcord','39'],['Foto layar splicer','24'],['Splice ODP','21'],['Redaman customer','7'],['Fisik ODP','6'],['Label sudah tercetak di ODP','43 WO'],['Terdapat label modem','5 WO']],
       act:['Self-check dan retake pra-submit ERP: karena ERP satu arah, teknisi wajib mencocokkan foto dengan hint dan foto referensi sebelum menekan submit.',
@@ -584,7 +573,7 @@ footer{padding-block:28px 48px;color:var(--muted);font-size:13px;border-top:1px 
            'Bottleneck label: atur jadwal cetak stiker lebih awal atau distribusi alat cetak di Dau (20 WO) dan Temas (11 WO) agar tidak antre di BL.'],
       focus:'Dau (Label ODP 20/43), Temas (Foto tutup 29, Foto splicer 21), Kota Lama, Karangploso',rec:'Track A (gabung kontrol harian BL dan larangan PKL): wajib self-check hint ERP pra-submit + urai cetak label di Dau dan Temas.',
       imp:'Cukup besar dan murni kontrol kerja (37,1% Abn; 57 WO solo, +6,5 pp Normal)',
-      sv:['Prioritas 1','Prioritas 2 / Paralel bersama Opsi 2','Prioritas Lanjutan']},
+      sv:['Prioritas 1','Prioritas 2 (Bersama Opsi 2)','Prioritas Lanjutan']},
     4:{k:'Opsi 4',n:'Kualitas Teknis Splicing',s:'Kalibrasi alat dan coaching teknik inti',rules:2,wo:108,pwo:16.1,slot:126,pslot:8.1,solo:11,pp:1.2,
       list:[['Tidak ada bubble/titik di sambungan core','99 WO / 107 slot (45 ODP + 62 Cust)'],['Nilai sambungan max 0.01 dB','16 WO / 19 slot']],
       act:['Perawatan splicer dan cleaver: cek V-groove, mata pisau cleaver, kondisi elektroda pada regu penyumbang bubble/titik dan loss > 0.01 dB (Temas 68,4% slot max 0.01 dB).',
@@ -631,7 +620,7 @@ footer{padding-block:28px 48px;color:var(--muted);font-size:13px;border-top:1px 
   var OKR=[
    {o:'Meningkatkan kualitas kelulusan WO PSB secara objektif dan terarah',kr:'Kenaikan proporsi WO Normal nasional pada periode evaluasi pasca-intervensi.',base:'24,1% Normal (212 / 881 WO tervalidasi; 75,9% Abnormal)',opts:['A · Moderat: naik ke ≥ 35%–40% dalam 1 bulan','B · Progresif: naik ke ≥ 50% (fokus klaster non-optik + optik ringan)','C · Bertahap per cabang pilot terlebih dahulu']},
    {o:'Menekan beban kegagalan pada cabang dan teknisi outlier',kr:'Penurunan jumlah slot gagal di Cabang Temas dan kelompok Top 15 Teknisi.',base:'Temas: 447 slot (28,7% nasional; 94,5% Abn). Top 15 Teknisi: 825 slot (52,9% nasional)',opts:['A · Pangkas slot gagal Temas minimal -40% dalam 3 minggu','B · Tekan kepadatan gagal Temas dari 5,20 ke ≤ 2,5 slot/WO Abn','C · Target per individu pada daftar Top 15 teknisi']},
-   {o:'Menuntaskan verifikasi objektif klaster optik (Opsi 1) sebelum membuka isu aset (Opsi 5)',kr:'Persentase sampel WO -21.50 dBm di cabang tinggi yang selesai diverifikasi lapangan (pen cleaner, setting 1490 nm, kondisi port/hulu).',base:'385 WO gagal -21.50 dBm (0 angka dBm numerik tersimpan di CSV)',opts:['A · Audit sampel lapangan pada 6 cabang tinggi (≥ 50% gagal -21.50) dalam 2 minggu','B · Fokus awal Pasuruan Utara (36 solo -21.50) dan Blimbing, pembanding Sawojajar (0%)','Wajibkan semua cabang tinggi']},
+   {o:'Menuntaskan verifikasi objektif klaster optik (Opsi 1) sebelum membuka isu aset',kr:'Persentase sampel WO -21.50 dBm di cabang tinggi yang selesai diverifikasi lapangan (pen cleaner, setting 1490 nm, kondisi port/hulu).',base:'385 WO gagal -21.50 dBm (0 angka dBm numerik tersimpan di CSV)',opts:['A · Audit sampel lapangan pada 6 cabang tinggi (≥ 50% gagal -21.50) dalam 2 minggu','B · Fokus awal Pasuruan Utara (36 solo -21.50) dan Blimbing, pembanding Sawojajar (0%)','Wajibkan semua cabang tinggi']},
    {o:'Mengaktifkan kontrol lini pertama Branch Leader dan kepatuhan mikro',kr:'Kepatuhan review harian/story oleh BL, penghentian foto oleh anak PKL, penyelesaian isu lokal (Dau label, Temas kunci).',base:'Review BL dan story belum merata; gap teknis BL (1510 nm); ketergantungan label (Dau 20 WO)',opts:['A · 100% BL melakukan briefing dan review temuan harian cabang + kalibrasi 24 rule','B · 0 insiden foto oleh anak PKL dan penurunan kasus Label ODP Dau minimal -50%','Wajibkan Opsi A & B penuh','Pilot terbatas di cabang prioritas']},
    {o:'Menjaga keandalan monitoring rutin BI (Superset)',kr:'Perbaikan deduplikasi data NICE dan ketersediaan laporan mingguan per klaster di Superset.',base:'28 baris duplikat pada WO 41676; actual_value masih flag 0/1',opts:['A · 100% query Superset bebas duplikasi + tampilkan 4 klaster opsi','B · Tambah pencatatan angka dBm numerik bila disepakati IT/CUNI']}
   ];
@@ -710,11 +699,8 @@ footer{padding-block:28px 48px;color:var(--muted);font-size:13px;border-top:1px 
       h+='<div class="opt"><div class="card" style="--cc:var(--c'+i+')"><div><span class="tag t'+i+'">'+c.k+'</span><h4 style="margin-top:6px">'+c.n+'</h4></div><dl class="kv"><dt>Dampak</dt><dd>'+c.imp+'</dd><dt>Fokus</dt><dd>'+c.focus+'</dd><dt>Rekomendasi</dt><dd>'+c.rec+'</dd></dl></div>'+
         '<div class="card" style="--cc:var(--c'+i+')"><div class="eyebrow">Kolom survei · diisi User &amp; Direksi</div><div class="okr"><div class="opts" style="margin-top:6px">'+c.sv.map(function(s,j){return '<button data-k="o'+i+'" data-v="'+j+'" aria-pressed="'+(SV['o'+i]===j)+'">'+s+'</button>'}).join('')+'</div></div></div></div>';
     });
-    h+='<div class="opt"><div class="hold"><span class="tag t2">On-Hold</span><h4 style="margin:6px 0">Opsi 5 · Pemisahan &amp; eskalasi jalur aset</h4><dl class="kv"><dt>Dampak</dt><dd>Belum terukur objektif (dBm mentah dan verifikasi fisik ODP belum tercatat terpisah)</dd><dt>Fokus</dt><dd>Berpotensi terkait Pasuruan Utara, Blimbing, Lawang, Temas, Dau (menunggu bukti)</dd><dt>Rekomendasi</dt><dd>DITUNDA: tunggu hasil verifikasi lapangan Opsi 1 dan 2</dd></dl></div>'+
-      '<div class="card"><div class="eyebrow">Kolom survei</div><div class="okr"><div class="opts" style="margin-top:6px">'+['Sepakat Ditunda (On-Hold)','Buka Lebih Awal dengan Syarat'].map(function(s,j){return '<button data-k="o5" data-v="'+j+'" aria-pressed="'+(SV.o5===j)+'">'+s+'</button>'}).join('')+'</div></div></div></div>';
     $('#survey').innerHTML=h;
     var sel=[1,2,3,4].filter(function(i){return SV['o'+i]!=null}).map(function(i){return '<span class="tag t'+i+'">'+CL[i].k+'</span> '+CL[i].sv[SV['o'+i]]});
-    if(SV.o5!=null) sel.push('<span class="tag t2">Opsi 5</span> '+(SV.o5===0?'Sepakat Ditunda (On-Hold)':'Buka Lebih Awal dengan Syarat'));
     $('#surveySummary').innerHTML='<div class="eyebrow" style="margin-bottom:8px">Ringkasan pilihan simulasi</div>'+(sel.length?'<ul class="clean">'+sel.map(function(s){return '<li>'+s+'</li>'}).join('')+'</ul>':'<p class="note">Belum ada pilihan. Klik salah satu opsi di atas untuk mencoba.</p>');
   }
   $('#survey').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var k=b.dataset.k,v=+b.dataset.v;SV[k]=(SV[k]===v?null:v);saveSV();drawSurvey()});
